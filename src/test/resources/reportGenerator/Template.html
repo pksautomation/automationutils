@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+  	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+<body style="font-family: Verdana;">
+<p>Hi All,</p>
+<p>Please refer QA validation results of Jenkins job for Build <a href="$joburl" target="_blank" >#$buildnumber</a> of $jobname project</p></br>
+<h3 style="color:#57cbd4;text-align: center;">QA Execution Status Summary Report</h3></br>
+<table style="width:90%; margin-left:5%; margin-right:5%; border: 1px solid #ddd; text-align: left; border-collapse: collapse;"> <tr style="background: #dc43;"><th style="border: 1px solid #ddd; text-align: left; padding: 15px;">Suite Name</th>
+    <th style="border: 1px solid #ddd; text-align: left; padding: 12px;">Product Branch</th>
+    <th style="border: 1px solid #ddd; text-align: left; padding: 12px;">Project Name</th>
+    <th style="border: 1px solid #ddd; text-align: left; padding: 12px;">Build Status</th>
+    </tr>
+    <tr>
+    <td style="border: 1px solid #ddd; text-align: left; padding: 12px;">$suiteName</td>
+    <td style="border: 1px solid #ddd; text-align: left; padding: 12px;">$productBranch</td>
+    <td style="border: 1px solid #ddd; text-align: left; padding: 12px;">$projectName</td>
+    <td style="border: 1px solid #ddd; text-align: left; padding: 12px;">$buildstatus</td>
+  </tr>
+  <div><tr><td style="border: 1px solid #ddd; text-align: left; padding: 12px; background: #34a8eb;">Pre Product Tags</td><td>$pretag</td></tr></div>
+  <div><tr><td style="border: 1px solid #ddd; text-align: left; padding: 12px; background: #34a8eb;">Post Product Tags</td><td>$posttag</td></tr></div>
+  </table>
+  <br>
+  <h3 style="color:#458a5f;text-align: center;">Features Statistics Summary Report</h3>
+  
+<table id="statics" style="width:90%; margin-left:5%; margin-right:5%; border: 1px solid #ddd; text-align: left; border-collapse: collapse;">
+
+<tr style="background:#dcf1f5;">
+ <th style="border: 1px solid #ddd; text-align: center; padding: 11px;">Feature Name</th>
+    <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#309c6d;">Steps Passed</th>
+    <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#b84448;">Steps Failed</th>
+     <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#2b80c2;">Steps Skipped</th>
+      <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:gray;">Steps Total</th>
+      <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#309c6d;">Scenarios Passed</th>
+      <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#b84448;">Scenarios Failed</th>
+       <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#808054;">Scenarios Total</th>
+       <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:black;">Execution Time</th>
+       <th style="border: 1px solid #ddd; text-align: center; padding: 11px; color:#386aff;">Feature Status (Pass/Total)</th></tr>
+       
+ <tr><td style="border: 1px solid #ddd; text-align: center; padding: 5px;">$featurename</td></tr>
+ <tr><td style="border: 1px solid #ddd; text-align: center; padding: 7px;">$footer</td></tr></table> 
+<br>
+<h3 style="color:#577a5c;text-align:center;"><a href="$reporturl" target="_blank" >Click Here for Detailed QA Execution Report</a></h3>
+<p><b>Note:</b> Click on above cucumber reports link for detailed report.</p>
+<p style="color:#577a5c;text-align:center;">
+<h4"><a style="background-color: #34a8eb; color: white; padding: 15px 40px; text-align: center; text-decoration: none; display: inline-block;" href="$jiratestcycle" target="_blank" >Click Here for Jira Execution TestCycle</a></h4>
+<h4"><a style="background-color: #34a8eb; color: white; padding: 15px 40px; text-align: center; text-decoration: none; display: inline-block;" href="$jiratestdetail" target="_blank" >Click Here for Jira Execution Test Details Report</a></h4>
+</p>
+<p style="color:#63592c;"><b>
+Happy Testing,<br>
+Innovaccer QA Automation Team<br>
+Date : $date<br></b></p>
+<p><b>Contact: </b> $contactName if any information required related to project.</p>
+
+</body></html>

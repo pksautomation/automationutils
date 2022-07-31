@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+
+  healenium:
+    image: healenium/hlm-backend:3.1.5
+    ports:
+      - "7878:7878"
+    restart: always
+    environment:
+      - SPRING_POSTGRES_DB=healenium
+      - SPRING_POSTGRES_USER=pramod
+      - SPRING_POSTGRES_PASSWORD=password
+      - SPRING_POSTGRES_URL=jdbc:postgresql://host.docker.internal:5432/healenium?currentSchema=healenium
+    networks:
+      - healenium
+
+  selector-imitator:
+    image: healenium/hlm-selector-imitator:1
+    restart: on-failure
+    ports:
+      - "8000:8000"
+
+networks:
+  healenium:
