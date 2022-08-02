@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -137,10 +139,11 @@ public class Config
 	public Config(String configPath,Scenario scenario)
 	{
 		//endExecutionOnfailure = true;
+		String timeStamp = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
 
 		this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
 				Helper.generateRandomAlphaNumericString(5) + "-" +
-				Helper.generateRandomAlphaNumericString(4);
+				Helper.generateRandomAlphaNumericString(4) + " " + timeStamp;
 		this.testResult = true;
 		this.DBConnection = null;
 		this.testLog = "";
