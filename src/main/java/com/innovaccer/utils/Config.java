@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -123,6 +125,7 @@ public class Config
 	public String previousPage="";
 	public SessionId session=null;
 	public String uniqueId = null;
+	public String timeStamp = null;
 	public String encryptionKey = "amVxSX10V0ppZHlJal1qXHx3Z1x+Vw0N";
 	public String privateKey="010100000000000";
 	
@@ -137,7 +140,6 @@ public class Config
 	public Config(String configPath,Scenario scenario)
 	{
 		//endExecutionOnfailure = true;
-
 		this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
 				Helper.generateRandomAlphaNumericString(5) + "-" +
 				Helper.generateRandomAlphaNumericString(4);
@@ -473,13 +475,15 @@ public class Config
 	 */
 	public void logComment(String message)
 	{
-		message = "[" + this.uniqueId + "]  " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		Log.Comment(message, this);
 	}
 
 	public void logHighLight(String message)
 	{
-		message = "[" + this.uniqueId + "]  " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		Log.Comment(message, this, "HotPink");
 	}
 	
@@ -583,7 +587,8 @@ public class Config
 			break;
 		}
 
-		 message = "[" + this.uniqueId + "] [Exception] --> " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Exception] --> " + message;
 		 	
 		if (!islogExceptionSkip) {
 			if (IsTakeScreenShot.length == 0) {
@@ -622,7 +627,8 @@ public class Config
 	public void logFail(String message,boolean ...isLoadPageinfo)
 	{
 		testResult = false;
-		message = "[" + this.uniqueId + "]  " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		Log.Fail(message, this);
 	}
 	
@@ -637,7 +643,8 @@ public class Config
 	public <T> void logFail(String what, T expected, T actual)
 	{
 		testResult = false;
-		String message = "[" + this.uniqueId + "] [Fail] -->  Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		String message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "][Fail] -->  Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
 		Log.Fail(message, this);
 	}
 	/**
@@ -660,7 +667,8 @@ public class Config
 		else
 			message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
 
-		message = "[" + this.uniqueId + "]  " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		Log.Fail(message, this);
 	}
 
@@ -674,7 +682,8 @@ public class Config
 	public void logWarning(String what, String expected, String actual)
 	{
 		//testResult = false;
-		String message = "[" + this.uniqueId + "] [Warning]--> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		String message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Warning]--> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
 		Log.Warning(message, this);
 	}
 
@@ -686,7 +695,8 @@ public class Config
 	public void logFailureException(Throwable e)
 	{
 		testResult = false;
-		Log.Failfinal("[" + this.uniqueId + "] [Fail]--> " + ExceptionUtils.getFullStackTrace(e), this);
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		Log.Failfinal("[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Fail]--> " + ExceptionUtils.getFullStackTrace(e), this);
 	}
 	
 	/**
@@ -696,7 +706,8 @@ public class Config
 	 */
 	public void logPass(String message)
 	{
-		message = "[" + this.uniqueId + "]" + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		Log.Pass(message, this);
 	}
 	/**
@@ -708,7 +719,8 @@ public class Config
 	 */
 	public <T> void logPass(String what, T actual)
 	{
-		String message = "[" + this.uniqueId + "]  Verified '" + what + "' as :-'" + actual + "'";
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		String message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "]  Verified '" + what + "' as :-'" + actual + "'";
 		Log.Pass(message, this);
 	}
 
@@ -720,8 +732,9 @@ public class Config
 	 */
 	public void logPass(String what, String actual)
 	{
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
 		String message = StringUtils.replaceEach(actual, new String[] { "&", "\"", "<", ">" }, new String[] { "&amp;", "&quot;", "&lt;", "&gt;" });
-		message = "[" + this.uniqueId + "]  Verified '" + what + "' as :-'" + message + "'";
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] Verified '" + what + "' as :-'" + message + "'";
 		Log.Pass(message, this);
 	}
 
@@ -731,7 +744,8 @@ public class Config
 	 */
 	public void logWarning(String message)
 	{
-		message = "[" + this.uniqueId + "] [Warning] --> " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Warning] --> " + message;
 		Log.Warning(message, this);
 	}
 
@@ -743,7 +757,8 @@ public class Config
 	 */
 	public void logWarning(String message, boolean logPageInfo)
 	{
-		message = "[" + this.uniqueId + "] [Warning]--> " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Warning]--> " + message;
 		Log.Warning(message, this, logPageInfo);
 	}
 	
@@ -755,7 +770,8 @@ public class Config
 	 */
 	public void logFail(String message, boolean logPageInfo)
 	{
-		message = "[" + this.uniqueId + "] [Fail] --> " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] [Fail] --> " + message;
 		if(logPageInfo)
 			Log.Fail(message, this);
 		else
@@ -1048,7 +1064,8 @@ public class Config
 	 */
 	public void logCommentWithoutPHMData(String message)
 	{
-		message = "[" + this.uniqueId + "]  " + message;
+		timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+		message = "[" + this.uniqueId + "] "+  "[" + timeStamp+ "] " + message;
 		if(message.length() <=21)
 			Log.Comment(message, this);
 		else {
