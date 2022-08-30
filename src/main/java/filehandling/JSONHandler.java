@@ -33,11 +33,17 @@ import com.jayway.restassured.response.Response;
 
 public class JSONHandler {
 	
-	private static String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
-    private static Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);
-    public static boolean autoConvertISO8601 = true;
+	private String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
+    private Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);
+    boolean autoConvertISO8601 = true;
 	
-	//Gets the value from JSONResponse
+    /**
+	 * Gets the value from json.
+	 * @author ranjeetkumar-i0803
+	 * @param response the response
+	 * @param nodePath the node path
+	 * @return the value from json
+	 */
 	public static String getValueFromJson(Config testConfig, Response response, String nodePath) {
 		String value = null;
 		try {
@@ -48,7 +54,13 @@ public class JSONHandler {
 		return value; 
 	}
 	
-	//Gets the values (list of values) from JSONResponse
+	/**
+	 * Gets the values from json.
+	 * @author ranjeetkumar-i0803
+	 * @param response the response
+	 * @param nodePath the node path
+	 * @return the values from json
+	 */
 	public static List<String> getValuesFromJson(Config testConfig, Response response, String nodePath) {
 		List<String> value = null;
 		try{
@@ -60,7 +72,13 @@ public class JSONHandler {
 		return value; 
 	}
 	
-	//Gets the value (HashMap) from JSONResponse
+	/**
+	 * Gets the value (HashMap) from JSONResponse.
+	 * @author ranjeetkumar-i0803
+	 * @param response the response
+	 * @param nodePath the node path
+	 * @return the hashmap of values from json
+	 */
 	public static Map<String, Object> getValueInHashMapFromJson(Config testConfig, Response response, String nodePath) {
 		Map<String, Object> valueMap = null;
 		try {
@@ -71,7 +89,12 @@ public class JSONHandler {
 		return valueMap; 
 	}
 	
-	//Extracts the Json Body response from the raw Rest Assured Response.
+	/**
+	 * Extracts the Json Body response from the raw restassured Response.
+	 * @param testConfig the test config
+	 * @param response complete raw restassured Response
+	 * @return Json response body
+	 */
 	public static JSONObject parseResponseAsJSON(Config testConfig, Response response)
 	{
 		String responseAsString = response.asString();
@@ -102,7 +125,12 @@ public class JSONHandler {
 		return null;
 	}
 	
-	//Extracts the Json Body response from the raw Rest Assured Response.
+	/**
+	 * Extracts the Json Body response from the raw restassured Response.
+	 * @param testConfig the test config
+	 * @param response complete raw restassured Response
+	 * @return Json response Array
+	 */
 	public static JSONArray parseResponseAsJSONArray(Config testConfig, Response response)
 	{
 		String responseAsString = response.asString();
@@ -133,7 +161,12 @@ public class JSONHandler {
 		return null;
 	}
 	
-	//Convert Map of parameters
+	/**
+	 *  Convert Map of parameters.
+	 * @param testConfig the test config
+	 * @param parameters the parameters
+	 * @return paramaters in JSON format
+	 */
 	public static String createJsonParameters(Config testConfig, HashMap<String, String> parameters){
 		JSONObject jsonPostParameters = new JSONObject();
 		for (Entry<String, String> entry : parameters.entrySet())
@@ -150,7 +183,11 @@ public class JSONHandler {
     		return jsonPostParameters.toString();
 	}
 	
-	//Function to convert JSON file to JSON object.
+	/**
+	 * Function to convert JSON file to JSON object.
+	 * @param fileLocationURL the file location URL
+	 * @return the JSON object
+	 */
 	public static JSONObject parseJSONFileInJSONObject(String fileLocationURL) {
 		JSONObject jo = null;
 		InputStream  is;
@@ -173,6 +210,12 @@ public class JSONHandler {
 		return jo;
 	}
 	
+	/**
+	 * Extracts the Json Body response from the raw restassured Response
+	 * @param testConfig
+	 * @param response	complete raw restassured Response
+	 * @return	Json response body
+	 */
 	public static JSONArray parseJSONFileInJSONArray(String fileLocationURL) {
 		JSONArray ja = null;
 		InputStream  is;
@@ -193,7 +236,11 @@ public class JSONHandler {
 		return ja;
 	}
 	
-	//Encrypts the JSON body
+	/**
+	 * Encrypts given Json Body 
+	 * @param Jason body String
+	 * @return Encrypted json String
+	 */
 	public static String encryptJson(Config testConfig, String toBeEncrupt) {
 		PyString result = null;
 		try {
@@ -215,7 +262,13 @@ public class JSONHandler {
 
 	}
 	
-	//Convert LinkedHashMap of parameters to JSONString, maintain insertion order of data in map .
+	/**
+	 *  Convert LinkedHashMap of parameters to JSONString, maintain insertion order of data in map.
+	 * @param testConfig the test config
+	 * @param parameters the parameters --> map of values
+	 * @return paramaters in JSON format
+	 * @author i0465 (pramod.singh)
+	 */
 	public static String createJsonParameters(Config testConfig, Map<String, String> parameters){
 		LinkedHashMap<String,String> hasMap = new LinkedHashMap<String,String>(parameters);
 		JSONObject jsonPostParameters = new JSONObject(hasMap);
@@ -241,10 +294,15 @@ public class JSONHandler {
     		return jsonPostParameters.toString();
 	}
 	
-	 public static Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException
-	    {
+	/**
+     * JSONObject is an unordered collection of name/value pairs -> convert to Map (equivalent to Freemarker "hash")
+     * @param jo
+     * @return
+     * @throws JSONException
+     * @author pramod.singh
+     */
+	 public Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException {
 	        Map<String, Object> model = new HashMap<String, Object>();
-	        
 	        Iterator<String> itr = (Iterator<String>)jo.keys();
 	        while (itr.hasNext())
 	        {
@@ -275,7 +333,11 @@ public class JSONHandler {
 	       return model;
 	    }
 	 
-	 public static List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException
+	 /**
+	     * JSONArray is an ordered sequence of values -> convert to List (equivalent to Freemarker "sequence")
+	     * @author pramod.singh
+	     */
+	 public  List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException
 	    {
 	        List<Object> model = new ArrayList<Object>();
 	       
@@ -306,7 +368,11 @@ public class JSONHandler {
 	        }
 	       return model;
 	    }
-	   
+	  
+	 /* Read data from JSON File and return Map of Map with all the details
+      * @return Map of Map of String
+      * @author nikita.gatagat
+	  */
 	 public static HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
 			JSONArray orgArray;
 			JSONObject parentObj,childObj,orgObj;
@@ -350,6 +416,12 @@ public class JSONHandler {
 		}
 	 
 	 
+	 /* Convert String Object to JSON Object
+	  * @param String jsonString
+      * @return JSONObject
+      * @throws JSONException
+      * @author nikita.gatagat
+	  */
 	 public static JSONObject convertStringToJSONObject (String jsonString) throws Throwable {
 		 JSONObject jo = null;
 		 JSONParser parser = new JSONParser(); 
@@ -362,8 +434,9 @@ public class JSONHandler {
 		 return jo;
 	 }
 	 
-	 //placeholder
-	 public static JSONObject validateJSONObject (JSONObject jo) {
+	 //placeholder to validate the JSON File and return the correct JSONObject
+	 public static JSONObject validateJSONObject (String filePathName) {
+		 JSONObject jo = null;
 		 return jo;
 	 }
 	 
