@@ -1,13 +1,12 @@
-package com.innovaccer.utils.filehandlers;
+package com.innovaccer.utils.fileutils;
 
 
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.Log;
+import com.innovaccer.utils.v2.LoggerHelper;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.w3c.dom.Document;
@@ -18,15 +17,19 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-public class ExcelFileHandler {
+public class ExcelUtils {
 
-    public static Config config;
+    private final Config config;
+    private final LoggerHelper loggerHelper;
 
-    public ExcelFileHandler(Config testConfig) {
+    public ExcelUtils(Config testConfig) {
         config = testConfig;
+        loggerHelper = new LoggerHelper(config);
     }
 
     public int getRowCountInWorkSheet(String workbookName, String worksheetName) throws IOException {
@@ -54,12 +57,12 @@ public class ExcelFileHandler {
             HSSFRow row = worksheet.getRow(rowIndex);
             numberOfColumns = row.getPhysicalNumberOfCells();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
         return numberOfColumns;
     }
 
-    public static String readValueUsingRowAndColumn(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
+    public String readValueUsingRowAndColumn(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         String cellValue = "";
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -73,13 +76,13 @@ public class ExcelFileHandler {
                 cellValue = "";
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
         return cellValue;
     }
 
 
-    public static String[][] createReplicaOfSheetData(String workbookName, String worksheetName) {
+    public String[][] createReplicaOfSheetData(String workbookName, String worksheetName) {
         String[][] sheetData = new String[100][100];
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -104,12 +107,12 @@ public class ExcelFileHandler {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
         return sheetData;
     }
 
-    public static String saveXmlAsExcel(String filename, String OutputFileName) {
+    public String saveXmlAsExcel(String filename, String OutputFileName) {
         String fileTimeName = null;
         try {
             fileTimeName = Helper.getCurrentDateTime("HH-mm-ss");
@@ -136,28 +139,28 @@ public class ExcelFileHandler {
                     xlsCell = xlsRow.createCell(Column);
                     SettlementInputXLS.setColumnWidth(Column, 4200);
                     xlsCell.setCellValue(Inputdata);
-                    config.logComment("Entered Value of " + Inputdata);
+                    loggerHelper.logComment("Entered Value of " + Inputdata);
                 }
             }
             FileOutputStream output = new FileOutputStream(new File(OutputFileName));
             wb.write(output);
             output.flush();
             output.close();
-            Log.Comment("File: " + filename + " has been saved as Excel with name as: " + OutputFileName, config);
+            loggerHelper.logComment("File: " + filename + " has been saved as Excel with name as: " + OutputFileName);
             return OutputFileName;
         } catch (IOException e) {
-            config.logComment("IOException " + e.getMessage());
+            loggerHelper.logComment("IOException " + e.getMessage());
             return null;
         } catch (ParserConfigurationException e) {
-            config.logComment("ParserConfigurationException " + e.getMessage());
+            loggerHelper.logComment("ParserConfigurationException " + e.getMessage());
             return null;
         } catch (SAXException e) {
-            config.logComment("SAXException " + e.getMessage());
+            loggerHelper.logComment("SAXException " + e.getMessage());
             return OutputFileName;
         }
     }
 
-    public static void changeCellValueToBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
+    public void changeCellValueToBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
             HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -173,11 +176,11 @@ public class ExcelFileHandler {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 
-    public static void setRowAsBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
+    public void setRowAsBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
             HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -195,11 +198,11 @@ public class ExcelFileHandler {
                 fileOut.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 
-    public static void writeStringToSheet(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string) {
+    public void writeStringToSheet(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string) {
         try {
             FileOutputStream fileout = new FileOutputStream(workbookName);
             HSSFWorkbook workbook = new HSSFWorkbook();
@@ -217,11 +220,11 @@ public class ExcelFileHandler {
             fileout.flush();
             fileout.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 
-    public static void writeOrEditXlsFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, String description) {
+    public void writeOrEditXlsFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, String description) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
             HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -234,15 +237,15 @@ public class ExcelFileHandler {
             worksheet.setColumnWidth(columnIndex, 4200);
             cell.setCellValue(string);
             FileOutputStream fileOut = new FileOutputStream(workbookName);
-            config.logComment("Entered Value of " + description + " as " + string);
+            loggerHelper.logComment("Entered Value of " + description + " as " + string);
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 
-    public static void writeOrEditXssFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
+    public void writeOrEditXssFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
             Workbook workbook = null;
@@ -286,7 +289,7 @@ public class ExcelFileHandler {
         }
     }
 
-    public static void writeOrEditExcelFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
+    public void writeOrEditExcelFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
             HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -316,7 +319,7 @@ public class ExcelFileHandler {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 

@@ -1,7 +1,7 @@
-package com.innovaccer.utils.filehandlers;
+package com.innovaccer.utils.fileutils;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.Log;
+import com.innovaccer.utils.v2.LoggerHelper;
 import org.apache.xml.utils.XMLChar;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -14,19 +14,28 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
-public class XmlFileHandler {
+public class XMLUtils {
 
-    public static Config config;
+    private final Config config;
+    private final LoggerHelper loggerHelper;
 
-    public XmlFileHandler(Config testConfig) {
+    public XMLUtils(Config testConfig) {
         config = testConfig;
+        loggerHelper = new LoggerHelper(config);
     }
 
-    public static String convertStringToXmlFile(String xmlString, String fileName) {
+    /**
+     * *
+     *
+     * @param xmlString -> Input XML String to be written in the file
+     * @param fileName  -> File Name to be given to the file
+     * @return file path of the newly created XML file
+     */
+    public String convertStringToXmlFile(String xmlString, String fileName) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         String path = null;
-        Log.Comment("Converting String to XML File", config);
+        loggerHelper.logComment("Converting String to XML File");
         try {
             builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
@@ -37,28 +46,41 @@ public class XmlFileHandler {
             StreamResult result = new StreamResult(new File(path));
             transformer.transform(source, result);
         } catch (Exception e) {
-            config.logException(e);
+            loggerHelper.logException(e);
         }
-        Log.Comment("String converted to XML file", config);
+        loggerHelper.logComment("String converted to XML file");
         return path;
     }
 
-    public static String trimXmlFile(Config testConfig, String path, String fileName) {
+    /**
+     * *
+     *
+     * @param path     -> XML Path to be read
+     * @param fileName -> File Name of the XML File
+     * @return file path of the newly created XML file
+     */
+    public String trimXmlFile(String path, String fileName) {
         String newPath = null;
         try {
             String xmlString = convertXmlStringIntoString(path);
-            Log.Comment("trimming leading and trailing spaces in string", testConfig);
+            loggerHelper.logComment("trimming leading and trailing spaces in string");
             String trimmedXMLString = xmlString.trim();
             newPath = convertStringToXmlFile(trimmedXMLString, fileName);
         } catch (Exception e) {
-            testConfig.logException(e);
+            loggerHelper.logException(e);
         }
         return newPath;
     }
 
-    private static String convertXmlStringIntoString(String path) {
+    /**
+     * *
+     *
+     * @param path -> File Path of the XML File
+     * @return XML String from the XML File
+     */
+    private String convertXmlStringIntoString(String path) {
         StringBuilder sb = new StringBuilder();
-        Log.Comment("Converting XML File to String", config);
+        loggerHelper.logComment("Converting XML File to String");
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -67,14 +89,20 @@ public class XmlFileHandler {
                 sb.append(currentLine);
             }
             bufferedReader.close();
-        } catch (IOException io) {
-            config.logException(io);
+        } catch (IOException e) {
+            loggerHelper.logException(e);
         }
-        Log.Comment("XML file converted to String", config);
+        loggerHelper.logComment("XML file converted to String");
         return sb.toString();
     }
 
-    public static String stripInvalidXmlCharacters(File file) {
+    /**
+     * *
+     *
+     * @param file -> File of the XML File
+     * @return file path of the newly created XML file
+     */
+    public String stripInvalidXmlCharacters(File file) {
         StringBuilder fileData = new StringBuilder();
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader;
@@ -95,13 +123,10 @@ public class XmlFileHandler {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
         String xmlStr = stringBuilder.toString();
         return convertStringToXmlFile(xmlStr, file.getName());
     }
-
-
-
 
 }
