@@ -31,7 +31,7 @@ import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.ISO8601DateFormat;
 import com.jayway.restassured.response.Response;
 
-public class JSONHandler {
+public class JSONUtils {
 	
 	private String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
     private Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);

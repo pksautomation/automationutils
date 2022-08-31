@@ -39,7 +39,7 @@ import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.networknt.schema.*;
 import enums.APIMethodType.APIMethodsType;
-import filehandling.JSONHandler;
+import filehandling.JSONUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -90,7 +90,7 @@ public class APIHelper {
 			}
 			
 			String fullUrl = YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName").toLowerCase()+".baseURL") + YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName").toLowerCase()+".authorizationAPIEndPoint");
-			String jsonBody = JSONHandler.createJsonParameters(testConfig,apiParameters);
+			String jsonBody = JSONUtils.createJsonParameters(testConfig,apiParameters);
 			header.put("Content-Type", "application/json");
 			
 			Response response = APIHelper.executeAndGetResponse(testConfig, fullUrl, APIMethodsType.POST.getValue(), header, jsonBody);
@@ -113,13 +113,13 @@ public class APIHelper {
    		    if(withEncryption) {
    		    	apiParameters.put("email", YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".userName"));
    		    	apiParameters.put("password", YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".passWord"));
-   		    	String jsonBody = JSONHandler.createJsonParameters(testConfig,apiParameters);
-   		    	loginReq = JSONHandler.encryptJson(testConfig, jsonBody);
+   		    	String jsonBody = JSONUtils.createJsonParameters(testConfig,apiParameters);
+   		    	loginReq = JSONUtils.encryptJson(testConfig, jsonBody);
 
    		    }else {
    		    	apiParameters.put(YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".userName").split("=")[0], YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".userName").split("=")[1]);
    				apiParameters.put(YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".passWord").split("=")[0], YamlReaderWriter.getYamlValue(testConfig, testConfig.getRunTimeProperty("projectName")+".passWord").split("=")[1]);
-   			    loginReq = JSONHandler.createJsonParameters(testConfig,apiParameters);
+   			    loginReq = JSONUtils.createJsonParameters(testConfig,apiParameters);
    		    }
 			// Enable when proxy is On
 			if(isProxyEnable) {
@@ -288,7 +288,7 @@ public class APIHelper {
 			apiParameters.put(testConfig.getRunTimeProperty("userName").split("=")[0], testConfig.getRunTimeProperty("userName").split("=")[1]);
 			apiParameters.put(testConfig.getRunTimeProperty("password").split("=")[0], testConfig.getRunTimeProperty("password").split("=")[1]);
 			String fullUrl = testConfig.getRunTimeProperty("AuthorizationAPIBaseURL") + testConfig.getRunTimeProperty("AuthorizationAPIEndPoint");
-			String jsonBody = JSONHandler.createJsonParameters(testConfig,apiParameters);
+			String jsonBody = JSONUtils.createJsonParameters(testConfig,apiParameters);
 			header.put("Content-Type", "application/json");
 			Response response = executeAndGetResponse( testConfig,  fullUrl,APIMethodsType.POST.getValue(), null,header, jsonBody,true);
 			authorization.put("token", response.jsonPath().getString("token"));
@@ -342,10 +342,10 @@ public class APIHelper {
 			apiParameters.put(testConfig.getRunTimeProperty("userName").split("=")[0], testConfig.getRunTimeProperty("userName").split("=")[1]);
 			apiParameters.put(testConfig.getRunTimeProperty("password").split("=")[0], testConfig.getRunTimeProperty("password").split("=")[1]);
 			String fullUrl = testConfig.getRunTimeProperty("InAPIAuthorizationAPIBaseURL") + testConfig.getRunTimeProperty("InAPIAuthorizationAPIEndPoint");
-			String jsonBody = JSONHandler.createJsonParameters(testConfig,apiParameters);
+			String jsonBody = JSONUtils.createJsonParameters(testConfig,apiParameters);
 			header.put("Content-Type", "application/fhir+json; fhirVersion=4.0;");
 			Response response = executeAndGetResponse( testConfig,  fullUrl,APIMethodsType.POST.getValue(), null,header, jsonBody,true);
-			jsonObject = JSONHandler.parseResponseAsJSON(testConfig, response);
+			jsonObject = JSONUtils.parseResponseAsJSON(testConfig, response);
 			authorization.put("token", jsonObject.getJSONObject("data").getString("token"));
 			authorization.put("cookie", response.getHeader("Set-Cookie"));
 			testConfig.logComment("<<---------------Got Authorization userVal as:- " + authorization + "------------------->>");
@@ -464,7 +464,7 @@ public class APIHelper {
 		JSONObject jsonobj = new JSONObject();		
 		jsonobj.put("email",userName);
 		jsonobj.put("password",Password);
-	    return JSONHandler.encryptJson(testConfig,jsonobj.toString());
+	    return JSONUtils.encryptJson(testConfig,jsonobj.toString());
 				
 	}
 	
