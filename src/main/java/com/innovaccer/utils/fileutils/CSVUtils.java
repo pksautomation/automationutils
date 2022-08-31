@@ -122,4 +122,38 @@ public class CSVUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param fileName -> File Name for the CSV File
+     * @param data     -> 2D array of String to be written into CSV File
+     */
+    public void writeDataToCsvFile(String fileName, List<List<String>> data) {
+        final String NEW_LINE_SEPARATOR = "\n";
+        final String NEW_VALUE_SEPARATOR = ",";
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName, false);
+            for (int i = 0; i < data.size(); i++) {
+                for (int j = 0; j < data.get(i).size(); j++) {
+                    if (data.get(i).get(j) != null)
+                        fileWriter.append(data.get(i).get(j));
+                    if (j != data.get(i).size() - 1)
+                        fileWriter.append(NEW_VALUE_SEPARATOR);
+                }
+                fileWriter.append(NEW_LINE_SEPARATOR);
+            }
+        } catch (Exception e) {
+            loggerHelper.logComment("Error Occurred.");
+            loggerHelper.logException(e);
+        } finally {
+            try {
+                fileWriter.flush();
+                fileWriter.close();
+            } catch (IOException e) {
+                loggerHelper.logComment("Error while flushing/closing File Writer.");
+                loggerHelper.logException(e);
+            }
+        }
+    }
 }

@@ -32,6 +32,14 @@ public class ExcelUtils {
         loggerHelper = new LoggerHelper(config);
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @return Number of Rows in the Sheet
+     * @throws IOException
+     */
     public int getRowCountInWorkSheet(String workbookName, String worksheetName) throws IOException {
         int numberOfRows = 0;
         FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -47,7 +55,12 @@ public class ExcelUtils {
         return numberOfRows;
     }
 
-
+    /**
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @return Number of Columns in the Row
+     */
     public int getNumberOfColumnsInARow(String workbookName, String worksheetName, int rowIndex) {
         int numberOfColumns = 0;
         try {
@@ -62,6 +75,15 @@ public class ExcelUtils {
         return numberOfColumns;
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     * @return Value at the Cell pointed be Row and Column
+     */
     public String readValueUsingRowAndColumn(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         String cellValue = "";
         try {
@@ -81,7 +103,11 @@ public class ExcelUtils {
         return cellValue;
     }
 
-
+    /**
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @return Replica of Sheet Table Data
+     */
     public String[][] createReplicaOfSheetData(String workbookName, String worksheetName) {
         String[][] sheetData = new String[100][100];
         try {
@@ -112,16 +138,23 @@ public class ExcelUtils {
         return sheetData;
     }
 
-    public String saveXmlAsExcel(String filename, String OutputFileName) {
+    /**
+     * *
+     *
+     * @param xmlFileName   -> XML File Name
+     * @param excelFileName -> Excel File Name
+     * @return Convert XML File into Excel File
+     */
+    public String saveXmlAsExcel(String xmlFileName, String excelFileName) {
         String fileTimeName = null;
         try {
             fileTimeName = Helper.getCurrentDateTime("HH-mm-ss");
-            OutputFileName = config.downloadPath + OutputFileName + fileTimeName + ".xls";
+            excelFileName = config.downloadPath + excelFileName + fileTimeName + ".xls";
             HSSFWorkbook wb = new HSSFWorkbook();
             HSSFSheet SettlementInputXLS = wb.createSheet("SettlementInputXLS");
             HSSFRow xlsRow;
             HSSFCell xlsCell;
-            File fXmlFile = new File(filename);
+            File fXmlFile = new File(xmlFileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -142,12 +175,12 @@ public class ExcelUtils {
                     loggerHelper.logComment("Entered Value of " + Inputdata);
                 }
             }
-            FileOutputStream output = new FileOutputStream(new File(OutputFileName));
+            FileOutputStream output = new FileOutputStream(new File(excelFileName));
             wb.write(output);
             output.flush();
             output.close();
-            loggerHelper.logComment("File: " + filename + " has been saved as Excel with name as: " + OutputFileName);
-            return OutputFileName;
+            loggerHelper.logComment("File: " + xmlFileName + " has been saved as Excel with name as: " + excelFileName);
+            return excelFileName;
         } catch (IOException e) {
             loggerHelper.logComment("IOException " + e.getMessage());
             return null;
@@ -156,10 +189,18 @@ public class ExcelUtils {
             return null;
         } catch (SAXException e) {
             loggerHelper.logComment("SAXException " + e.getMessage());
-            return OutputFileName;
+            return excelFileName;
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     */
     public void changeCellValueToBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -180,6 +221,14 @@ public class ExcelUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     */
     public void setRowAsBlank(String workbookName, String worksheetName, int rowIndex, int columnIndex) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -202,6 +251,15 @@ public class ExcelUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     * @param string        -> String to be written in the Cell
+     */
     public void writeStringToSheet(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string) {
         try {
             FileOutputStream fileout = new FileOutputStream(workbookName);
@@ -224,6 +282,16 @@ public class ExcelUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     * @param string        -> String to be written in the Cell
+     * @param description   -> Description to be added for Value
+     */
     public void writeOrEditXlsFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, String description) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -245,6 +313,16 @@ public class ExcelUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     * @param string        -> String to be written in the Cell
+     * @param colourFlag    -> Font Colour
+     */
     public void writeOrEditXssFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -289,6 +367,16 @@ public class ExcelUtils {
         }
     }
 
+    /**
+     * *
+     *
+     * @param workbookName  -> Excel Workbook Name
+     * @param worksheetName -> Excel Sheet Name
+     * @param rowIndex      -> Row Index
+     * @param columnIndex   -> Column Index
+     * @param string        -> String to be written in the Cell
+     * @param colourFlag    -> Font Colour
+     */
     public void writeOrEditExcelFile(String workbookName, String worksheetName, int rowIndex, int columnIndex, String string, int colourFlag) {
         try {
             FileInputStream fileInputStream = new FileInputStream(workbookName);
@@ -322,6 +410,5 @@ public class ExcelUtils {
             loggerHelper.logException(e);
         }
     }
-
 
 }
