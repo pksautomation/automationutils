@@ -16,8 +16,8 @@ import java.io.*;
 
 public class XMLUtils {
 
-    private final Config config;
-    private final LoggerHelper loggerHelper;
+    private Config config;
+    private LoggerHelper loggerHelper;
 
     public XMLUtils(Config testConfig) {
         config = testConfig;

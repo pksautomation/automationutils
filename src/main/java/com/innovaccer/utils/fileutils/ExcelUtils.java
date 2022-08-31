@@ -24,8 +24,8 @@ import java.io.IOException;
 
 public class ExcelUtils {
 
-    private final Config config;
-    private final LoggerHelper loggerHelper;
+    private Config config;
+    private LoggerHelper loggerHelper;
 
     public ExcelUtils(Config testConfig) {
         config = testConfig;
@@ -363,7 +363,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            loggerHelper.logException(e);
         }
     }
 

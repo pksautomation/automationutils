@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class TextUtils {
 
-    private final Config config;
-    private final LoggerHelper loggerHelper;
+    private Config config;
+    private LoggerHelper loggerHelper;
 
     public TextUtils(Config testConfig) {
         config = testConfig;

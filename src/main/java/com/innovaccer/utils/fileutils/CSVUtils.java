@@ -12,8 +12,8 @@ import java.util.List;
 
 public class CSVUtils {
 
-    private final Config config;
-    private final LoggerHelper loggerHelper;
+    private Config config;
+    private LoggerHelper loggerHelper;
 
     public CSVUtils(Config testConfig) {
         config = testConfig;
