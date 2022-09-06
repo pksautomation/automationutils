@@ -1,6 +1,7 @@
 package com.innovaccer.utils.v2;
 
 import com.innovaccer.utils.Config;
+import com.innovaccer.utils.Log;
 
 public class LoggerHelper {
 
@@ -36,6 +37,10 @@ public class LoggerHelper {
 
     public void logFailureException(Exception exception) {
         testConfig.logFailureException(exception);
+    }
+    
+    public void embedStringAsHTMLInReport(String text) {
+    	Log.embedMessageAsHTMLInReport(testConfig, text);
     }
 
 }
