@@ -36,37 +36,42 @@ public class JSONUtils {
 	private String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
     private Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);
     boolean autoConvertISO8601 = true;
+    public Config configInstance;
+	
+    public JSONUtils(Config testConfig) {
+		configInstance=testConfig;
+	}
 	
     /**
 	 * Gets the value from json.
-	 * @author ranjeetkumar-i0803
+	 * @author nikita.gatagat-i2080
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the value from json
 	 */
-	public static String getValueFromJson(Config testConfig, Response response, String nodePath) {
+	public String getValueFromJson(Response response ,String nodePath) {
 		String value = null;
 		try {
 			value =response.jsonPath().getString(nodePath);
 		}catch (Exception e) {
-			testConfig.logException("Exception in getValueFromJson :", e , false);
+			configInstance.logException("Exception in getValueFromJson :", e , false);
 		}
 		return value; 
 	}
 	
 	/**
 	 * Gets the values from json.
-	 * @author ranjeetkumar-i0803
+	 * @author nikita.gatagat-i2080
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the values from json
 	 */
-	public static List<String> getValuesFromJson(Config testConfig, Response response, String nodePath) {
+	public  List<String> getValuesFromJson(Response response, String nodePath) {
 		List<String> value = null;
 		try{
 			value =response.jsonPath().getList(nodePath);
 		}catch (Exception e) {
-			testConfig.logException("Exception in getValuesFromJson : ", e, false);
+			configInstance.logException("Exception in getValuesFromJson : ", e, false);
 		}
 		
 		return value; 
@@ -74,17 +79,17 @@ public class JSONUtils {
 	
 	/**
 	 * Gets the value (HashMap) from JSONResponse.
-	 * @author ranjeetkumar-i0803
+	 * @author nikita.gatagat-i2080
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the hashmap of values from json
 	 */
-	public static Map<String, Object> getValueInHashMapFromJson(Config testConfig, Response response, String nodePath) {
+	public Map<String, Object> getValueInHashMapFromJson(Response response, String nodePath) {
 		Map<String, Object> valueMap = null;
 		try {
 			valueMap = response.jsonPath().getMap(nodePath);
 		}catch (Exception e) {
-			testConfig.logException("Exception in getValueInHashMapFromJson : ", e, false);
+			configInstance.logException("Exception in getValueInHashMapFromJson : ", e, false);
 		}
 		return valueMap; 
 	}
@@ -95,7 +100,7 @@ public class JSONUtils {
 	 * @param response complete raw restassured Response
 	 * @return Json response body
 	 */
-	public static JSONObject parseResponseAsJSON(Config testConfig, Response response)
+	public JSONObject parseResponseAsJSON(Response response)
 	{
 		String responseAsString = response.asString();
 		JSONObject jObject = null;
@@ -103,10 +108,10 @@ public class JSONUtils {
 		switch (response.getStatusCode()) 
 		{
 		case 504:
-			Browser.wait(testConfig, 90);
+			Browser.wait(configInstance, 90);
 			break;
 		case 505:
-			Browser.wait(testConfig, 30);
+			Browser.wait(configInstance, 30);
 			break;
 		default:
 			responseAsString = response.asString();
@@ -119,7 +124,7 @@ public class JSONUtils {
 			return jObject;
 		} 
 		catch (JSONException e) {
-			testConfig.logException(e);
+			configInstance.logException(e);
 		} 
 
 		return null;
@@ -131,7 +136,7 @@ public class JSONUtils {
 	 * @param response complete raw restassured Response
 	 * @return Json response Array
 	 */
-	public static JSONArray parseResponseAsJSONArray(Config testConfig, Response response)
+	public JSONArray parseResponseAsJSONArray(Response response)
 	{
 		String responseAsString = response.asString();
 		JSONArray jarray = null;
@@ -139,10 +144,10 @@ public class JSONUtils {
 		switch (response.getStatusCode()) 
 		{
 		case 504:
-			Browser.wait(testConfig, 90);
+			Browser.wait(configInstance, 90);
 			break;
 		case 505:
-			Browser.wait(testConfig, 30);
+			Browser.wait(configInstance, 30);
 			break;
 		default:
 			responseAsString = response.asString();
@@ -155,7 +160,7 @@ public class JSONUtils {
 			return jarray;
 		} 
 		catch (JSONException e) {
-			testConfig.logException(e);
+			configInstance.logException(e);
 		} 
 
 		return null;
@@ -167,7 +172,7 @@ public class JSONUtils {
 	 * @param parameters the parameters
 	 * @return paramaters in JSON format
 	 */
-	public static String createJsonParameters(Config testConfig, HashMap<String, String> parameters){
+	public String createJsonParameters(HashMap<String, String> parameters){
 		JSONObject jsonPostParameters = new JSONObject();
 		for (Entry<String, String> entry : parameters.entrySet())
 		{
@@ -177,7 +182,7 @@ public class JSONUtils {
 				 jsonPostParameters.put(key, value);
 				
 			} catch (JSONException e) {
-				testConfig.logException(e);
+				configInstance.logException(e);
 			}
 		}
     		return jsonPostParameters.toString();
@@ -188,7 +193,7 @@ public class JSONUtils {
 	 * @param fileLocationURL the file location URL
 	 * @return the JSON object
 	 */
-	public static JSONObject parseJSONFileInJSONObject(String fileLocationURL) {
+	public JSONObject parseJSONFileInJSONObject(String fileLocationURL) {
 		JSONObject jo = null;
 		InputStream  is;
 		try {
@@ -216,7 +221,7 @@ public class JSONUtils {
 	 * @param response	complete raw restassured Response
 	 * @return	Json response body
 	 */
-	public static JSONArray parseJSONFileInJSONArray(String fileLocationURL) {
+	public JSONArray parseJSONFileInJSONArray(String fileLocationURL) {
 		JSONArray ja = null;
 		InputStream  is;
 		try {
@@ -241,10 +246,10 @@ public class JSONUtils {
 	 * @param Jason body String
 	 * @return Encrypted json String
 	 */
-	public static String encryptJson(Config testConfig, String toBeEncrupt) {
+	public String encryptJson(String toBeEncrupt) {
 		PyString result = null;
 		try {
-			APIHelper.createEncryptCredsFile(testConfig);
+			APIHelper.createEncryptCredsFile(configInstance);
 			Properties properties = new Properties();
 			String pythonConfigPath = System.getProperty("user.dir")+"/src/test/resources/";
 			properties.setProperty("python.path", pythonConfigPath);
@@ -256,7 +261,7 @@ public class JSONUtils {
 			pi.exec("print(result)");
 			result = (PyString) pi.get("result");
 		} catch (Exception e) {
-			testConfig.logException("Exception in JsonEncryption : ", e, false);
+			configInstance.logException("Exception in JsonEncryption : ", e, false);
 		}
 		return result.toString();
 
@@ -269,7 +274,7 @@ public class JSONUtils {
 	 * @return paramaters in JSON format
 	 * @author i0465 (pramod.singh)
 	 */
-	public static String createJsonParameters(Config testConfig, Map<String, String> parameters){
+	public String createJsonParameters(Map<String, String> parameters){
 		LinkedHashMap<String,String> hasMap = new LinkedHashMap<String,String>(parameters);
 		JSONObject jsonPostParameters = new JSONObject(hasMap);
 		try {
@@ -278,7 +283,7 @@ public class JSONUtils {
 		      changeMap.set(jsonPostParameters, new LinkedHashMap<>());
 		      changeMap.setAccessible(false);
 		    } catch (IllegalAccessException | NoSuchFieldException e) {
-		      testConfig.logException(e);
+		    	configInstance.logException(e);
 		    }
 		for (Entry<String, String> entry : parameters.entrySet())
 		{
@@ -288,7 +293,7 @@ public class JSONUtils {
 				 jsonPostParameters.put(key, value);
 				
 			} catch (JSONException e) {
-				testConfig.logException(e);
+				configInstance.logException(e);
 			}
 		}
     		return jsonPostParameters.toString();
@@ -373,7 +378,7 @@ public class JSONUtils {
       * @return Map of Map of String
       * @author nikita.gatagat
 	  */
-	 public static HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
+	 public HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
 			JSONArray orgArray;
 			JSONObject parentObj,childObj,orgObj;
 			HashMap<String,HashMap<String,String>> jsonMapofMap = new HashMap<String,HashMap<String,String>>();
@@ -422,7 +427,7 @@ public class JSONUtils {
       * @throws JSONException
       * @author nikita.gatagat
 	  */
-	 public static JSONObject convertStringToJSONObject (String jsonString) throws Throwable {
+	 public JSONObject convertStringToJSONObject (String jsonString) throws Throwable {
 		 JSONObject jo = null;
 		 JSONParser parser = new JSONParser(); 
 		 try {
@@ -435,7 +440,7 @@ public class JSONUtils {
 	 }
 	 
 	 //placeholder to validate the JSON File and return the correct JSONObject
-	 public static JSONObject validateJSONObject (String filePathName) {
+	 public JSONObject validateJSONObject (String filePathName) {
 		 JSONObject jo = null;
 		 return jo;
 	 }
