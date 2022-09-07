@@ -5,23 +5,23 @@ import com.innovaccer.utils.Config;
 public class UtilityObjectManager {
 
 
-    private AssertionManager assertHelper;
+    private AssertionHelper assertHelper;
     private BrowserHelper browserHelper;
     private LoggerHelper loggerHelper;
     private YamlHelper yamlHelper;
 
     public UtilityObjectManager(Config config) {
-        this.assertHelper = new AssertionManager(config);
+        this.assertHelper = new AssertionHelper(config);
         this.browserHelper = new BrowserHelper(config);
         this.loggerHelper = new LoggerHelper(config);
         this.yamlHelper = new YamlHelper(config);
     }
 
-    public AssertionManager getAssertion() {
+    public AssertionHelper getAssertion() {
         return this.assertHelper;
     }
 
-    public void setAssertionHelper(AssertionManager assertionManager) {
+    public void setAssertionHelper(AssertionHelper assertionManager) {
         this.assertHelper = assertionManager;
     }
 

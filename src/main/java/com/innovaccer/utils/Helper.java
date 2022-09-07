@@ -1102,13 +1102,22 @@ public class Helper {
 			testConfig.logFail(what + "", expectedList, actualList);
 		}
 	}
-	
+	/**
+	 * 
+	 * @param filePath
+	 * @param fileName
+	 * @return
+	 * @throws Throwable
+	 */
 	public static HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
 		JSONArray orgArray;
-		JSONObject parentObj,childObj,orgObj;
+		JSONObject parentObj,testDataObj,orgObj;
+		
 		HashMap<String,HashMap<String,String>> jsonMapofMap = new HashMap<String,HashMap<String,String>>();
 		HashMap<String,String> jsonMap = new HashMap<String,String> ();
+		
 		String value="",key="";
+		
 		filePath=filePath+fileName+".json";
 		InputStream is = new FileInputStream(new File(filePath));
         JSONTokener tokener = new JSONTokener(is); 
@@ -1116,26 +1125,26 @@ public class Helper {
 			parentObj = new JSONObject(tokener);
 			Iterator<String> iterator = parentObj.keys();
 			while (iterator.hasNext()) {
-				String tagName = iterator.next().toString();
-				childObj = parentObj.getJSONObject(tagName);
-				Iterator<String> childit = childObj.keys();
-				while (childit.hasNext()) {
-					key = childit.next().toString();
-					if(childObj.get(key) instanceof JSONObject && childObj.get(key).toString().contains("selection") && childObj.get(key).toString().contains("values")) {
-						orgObj = childObj.getJSONObject(key);
+				String testDataName = iterator.next().toString();
+				testDataObj = parentObj.getJSONObject(testDataName);
+				Iterator<String> testDataKeys = testDataObj.keys();
+				while (testDataKeys.hasNext()) {
+					key = testDataKeys.next().toString();
+					if(testDataObj.get(key) instanceof JSONObject && testDataObj.get(key).toString().contains("selection") && testDataObj.get(key).toString().contains("values")) {
+						orgObj = testDataObj.getJSONObject(key);
 						orgArray = orgObj.getJSONArray("values");
-						value = (String)orgArray.get(orgObj.getInt("selection") - 1);
+						value = (String) orgArray.get(orgObj.getInt("selection") - 1);
 					}
-					else if (childObj.get(key) instanceof JSONObject) {
-						value = generateDynamicValue((JSONObject)childObj.get(key));
+					else if (testDataObj.get(key) instanceof JSONObject) {
+						value = generateDynamicValue((JSONObject)testDataObj.get(key));
 						
 					}
 					else 
-						value=childObj.get(key).toString();
+						value=testDataObj.get(key).toString();
 				
 					jsonMap.put(key,value);
 			}
-			jsonMapofMap.put(tagName, jsonMap);
+			jsonMapofMap.put(testDataName, jsonMap);
 			jsonMap = new HashMap<String,String> ();
 			}
         }catch (Exception e) {
@@ -1145,6 +1154,12 @@ public class Helper {
 		return jsonMapofMap;
 	}
 	
+	/**
+	 * 
+	 * @param dynamicObje
+	 * @return
+	 * @throws Throwable
+	 */
 	public static String generateDynamicValue(JSONObject dynamicObje) throws Throwable{
     	int length=dynamicObje.getInt("length");
     	String email="",prefix="",suffix="",dynamicValue="";
@@ -1174,4 +1189,31 @@ public class Helper {
     	}
     	return dynamicValue;
     }
+	
+	/**
+	 * 
+	 * @param listOfSteps
+	 * @return
+	 */
+	public static String getTextReportForFailureTestSteps(List<String> listOfSteps) {
+		StringBuilder finalReport = new StringBuilder();
+		finalReport.append("===================================================================================================\n");
+		finalReport.append("<h2> Following list of Steps are failed due to exceptions or failure of Soft Assertion check </h2>");
+		for (int i = 0; i < listOfSteps.size(); i++) {
+			finalReport.append("<h4>" + listOfSteps.get(i) + " is failed due to some handled exception or Soft Assertion </h4> </br>");
+		}
+		finalReport.append("\n ---------------------------------------------------------------------------------------------------- \n");	
+		finalReport.append("</br> <h3> Attention Please  -> Please follow any one instructions to get details of failure reason of above mention steps </h3></br> ");
+		finalReport.append("<li> a) Follow attached html reports where step wise failure reasons are fiven </li> </br>");
+		finalReport.append("<li> b) For particular step sequence number, Follow after hook of that step or Last html file attached </li> </br>");
+		finalReport.append("---------------------------------------------------------------------------------------------------- \n");	
+		finalReport.append("<p> Please Find Failure reason in details Step wise </p> ");
+		for (int i = 0; i < listOfSteps.size(); i++) {
+			finalReport.append("/</br></br> <h3> Failure reason details for  " + listOfSteps.get(i) + "</h3>");
+			finalReport.append("</br> ------------------------------- Step Failure reason in details-------------------- </br>");
+			finalReport.append(listOfSteps.get(i));
+		}
+		return finalReport.toString();
+		
+	}
 }
