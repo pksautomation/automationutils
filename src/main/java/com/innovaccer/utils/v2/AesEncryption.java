@@ -9,6 +9,14 @@ import java.util.Base64;
 
 public class AesEncryption {
 
+    private Config config;
+    private LoggerHelper loggerHelper;
+
+    public AesEncryption(Config testConfig) {
+        config = testConfig;
+        loggerHelper = new LoggerHelper(config);
+    }
+
     private static String encrypt(Config testConfig, String str) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, AesEncryption.getKey(testConfig));
@@ -25,24 +33,24 @@ public class AesEncryption {
         return new String(utf8, "UTF8");
     }
 
-    public static String encryptString(Config testConfig, String str) {
+    public String encryptString(Config testConfig, String str) {
         String value = null;
         try {
             value = AesEncryption.encrypt(testConfig, str);
         } catch (Exception e) {
-            testConfig.logComment("Fail to encrypt.....");
-            testConfig.logException(e);
+            loggerHelper.logComment("Fail to encrypt.....");
+            loggerHelper.logException(e);
         }
         return value;
     }
 
-    public static String decryptString(Config testConfig, String encrypted) {
+    public String decryptString(Config testConfig, String encrypted) {
         String str = null;
         try {
             str = AesEncryption.decrypt(testConfig, encrypted);
         } catch (Exception e) {
-            testConfig.logComment("Fail to decrypt.....");
-            testConfig.logException(e);
+            loggerHelper.logComment("Fail to decrypt.....");
+            loggerHelper.logException(e);
         }
         return str;
     }
