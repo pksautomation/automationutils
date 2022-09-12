@@ -13,7 +13,7 @@ import org.testng.asserts.SoftAssert;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.Log;
-import com.innovaccer.utils.v2.BrowserHelper;
+import com.innovaccer.utils.v2.BrowserUtils;
 import com.innovaccer.utils.v2.UtilityObjectManager;
 
 import cucumber.api.Scenario;
@@ -25,19 +25,16 @@ import cucumber.api.java.BeforeStep;
 public class TestContext {
 
 	public Config scenarioContext;
-	public BrowserHelper browserManager;
-	public UtilityObjectManager utilityObjectManager;
+	private UtilityObjectManager utilityObjectManager;
 	
 	public TestContext(){
 		String localConfigPath = System.getProperty("user.dir") + File.separator
 				+ "src/test/resources/Config/config.properties";
 		scenarioContext = new Config(localConfigPath);
-		//apply Condition{
 		if(Config.threadLocalConfig == null)
 			Config.threadLocalConfig= new ThreadLocal<Config[]>();
 			
 		Config.threadLocalConfig.set(new Config[] { scenarioContext });
-		browserManager=new BrowserHelper(scenarioContext);
 		utilityObjectManager=new UtilityObjectManager(scenarioContext);
 	}	
 	public UtilityObjectManager getUtilityObjectManager() {

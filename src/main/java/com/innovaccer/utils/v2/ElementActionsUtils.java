@@ -1,12 +1,16 @@
 package com.innovaccer.utils.v2;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Element.How;
@@ -16,29 +20,63 @@ import com.innovaccer.utils.Element.How;
  * @author i0465
  *
  */
-public class ElementActions extends WaitHelper {
+public class ElementActionsUtils  {
 
 	public Config scenarioContext;
-	public WaitHelper waitHelper=null;
+	public WaitHelper WaitUtils=null;
 	public UtilityObjectManager UtilityObjectManager=null;
+	public LoggerUtils LoggerUtils;
+	private WebDriver driver;
 
-	public ElementActions(Config scenariosInstance) {
-		super(scenariosInstance);
+	public ElementActionsUtils(Config scenariosInstance) {
 		this.scenarioContext=scenariosInstance;
 		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
+		WaitUtils = new WaitHelper(scenariosInstance);
+		LoggerUtils=new LoggerUtils(scenarioContext);
+		driver=scenarioContext.driver;
 		PageFactory.initElements(scenariosInstance.driver, this);
 		}
-
+	
+	/**
+	 * get WebElement of Input field like file, text, textarea using Label or Placeholder
+	 * @param Label
+	 * @return
+	 */
 	public WebElement getTextField(String Label) {
-		String xpath="//*[text()='"+Label+"']/..//*[(local-name()='input' and @type='text') or local-name()='textarea' or (local-name()='input' and @type!='file')]";
-		return Element.getPageElement(scenarioContext, How.xPath, xpath);
+		WebElement element=null;
+		String xpath;
+		int lebel =1;
+		List<WebElement> elements=new ArrayList<WebElement>();
+		By by1=By.xpath("//body//*[text()='"+Label+"']");
+		WaitUtils.waitForVisibility(scenarioContext, by1, "Label " + Label, 10l);
+		scenarioContext.driver.manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
+		while(true && lebel<4) {
+			By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div["+lebel+"]//input[@type!='file' and @type!='checkbox' ] ");
+			elements =this.scenarioContext.driver.findElements(by2);
+			if(elements.size() !=0) {
+				break;
+			}
+			lebel++;
+		}
+		//List<WebElement> elements =this.scenarioContext.driver.findElements(by2);
+		for(int i=0;i<elements.size(); i++) {
+			if(elements.get(i).isDisplayed() || elements.get(i).isEnabled())
+				return elements.get(i);
+		}
+		Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
+		driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+		return elements.isEmpty()?null:elements.get(0);
 	}
 
-
-	public WebElement getButtonEle(String buttonLabel) {
+	/**
+	 * Get WebElement of Button using Label
+	 * @param buttonLabel
+	 * @return
+	 */
+	public WebElement getEnabledButtonEle(String buttonLabel) {
 		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
 		By by = By.xpath(buttonXpath);
-		Element.waitForVisibility(scenarioContext, by,buttonLabel, 20l);
+		Element.waitForVisibility(scenarioContext, by,buttonLabel, 40l);
 		List<WebElement> elements = Element.getListOfElements(scenarioContext, How.xPath, buttonXpath);
 		for(WebElement ele : elements) {
 			if(ele.isDisplayed() && ele.isEnabled()) {
@@ -47,35 +85,94 @@ public class ElementActions extends WaitHelper {
 		}
 		return null;		
 	}
+	/**
+	 * get element of Button
+	 * @param buttonLabel
+	 * @return
+	 */
+	public WebElement getButtonEle(String buttonLabel) {
+		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
+		By by = By.xpath(buttonXpath);
+		Element.waitForVisibility(scenarioContext, by,buttonLabel, 40l);
+		List<WebElement> elements = Element.getListOfElements(scenarioContext, How.xPath, buttonXpath);
+		for(WebElement ele : elements) {
+			if(ele.isDisplayed()) {
+				return Element.getPageElement(this.scenarioContext, Element.How.xPath, buttonXpath);
+			}
+		}
+		return null;		
+	}
 
-
-	public WebElement getSelectField(String Label) {
-		By by=By.xpath("//*[text()='"+Label+"']/../..//button");
-		return Element.getPageElement(this.scenarioContext, Element.How.xPath, Label);
+	/**
+	 * Click on Dropdown button
+	 * @param Label
+	 * @return
+	 * @author pramod.singh
+	 */
+	public WebElement getDropDownButton(String Label) {
+		By by1=By.xpath("//*[text()='"+Label+"']");
+		int lebel=1;
+		List<WebElement> elements=new ArrayList<WebElement>();
+		WaitUtils.waitForVisibility(scenarioContext, by1, "Label " + Label, 2l);
+		scenarioContext.driver.manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
+		while(true && lebel<4) {
+			By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div["+lebel+"]//button ");
+			elements =this.scenarioContext.driver.findElements(by2);
+			if(elements.size() !=0) {
+				break;
+			}
+			lebel++;
+		}
+		//List<WebElement> elements =this.scenarioContext.driver.findElements(by2);
+		for(int i=0;i<elements.size(); i++) {
+			if(elements.get(i).isDisplayed() || elements.get(i).isEnabled())
+				return elements.get(i);
+		}
+		Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
+		driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+		return elements.isEmpty()?null:elements.get(0);
 	}
 
 
 	public void clickOnButton(String buttonName)
 	{
-		Element.click(this.scenarioContext, getButtonEle(buttonName), buttonName);
+		Element.click(this.scenarioContext, getEnabledButtonEle(buttonName), buttonName);
+	}
+	
+	/**
+	 * Check Button enable or not
+	 * @param buttonName
+	 * @return
+	 */
+	public boolean isButtonEnable(String buttonName) {
+		WebElement element = getButtonEle(buttonName);
+		if(element!=null && element.isEnabled())
+			return true;
+		else 
+			return false;
 	}
 
 
 	public void setTextField(String Label)
 	{
 		String data=getData(Label);;
-		if(!data.equals(""))
+		if(data!= null && !data.equals(""))
 			Element.enterData(this.scenarioContext, getTextField(Label), data, Label);
 	}
 
-
+	/**
+	 * Select DropDown Value
+	 * @param Label --> it is either lable or place holder of dropdown
+	 */
 	public void selectDropDown(String Label)
 	{
 		String data=getData(Label);
-		if(!data.equals(""))
+		if( data!= null && !data.equals(""))
 		{
-		getSelectField(Label).click();
-		this.scenarioContext.driver.findElement(By.xpath("//div[contains(@class,'Popover')]//span[text()='"+data+"']")).click();
+			click(getDropDownButton(Label),Label);
+			By by = By.xpath("//*[contains(@class,'Option')]//*[text()='"+data+"']");
+			WebElement element = scenarioContext.driver.findElement(by);
+			click(element, Label + " Dropdown option " + data);	
 		}
 
 	}
@@ -90,11 +187,17 @@ public class ElementActions extends WaitHelper {
 	}
 
 	public String getData(String lable) {
-		return this.scenarioContext.getRunTimeProperty(lable);
+		String testDataName = scenarioContext.getRunTimeProperty("TestDataName");
+		String data=null;
+		if(scenarioContext.testData.containsKey(testDataName) && scenarioContext.testData.get(testDataName).containsKey(lable))
+			return scenarioContext.testData.get(testDataName).get(lable);
+		else 
+			return null;		
+		//return this.scenarioContext.getRunTimeProperty(lable);
 	}
 
 	public WaitHelper getWait() {
-		return (waitHelper == null) ? waitHelper = new WaitHelper(scenarioContext) : waitHelper;
+		return (WaitUtils == null) ? WaitUtils = new WaitHelper(scenarioContext) : WaitUtils;
 	}
 
 	public void check(WebElement element, String description) {
@@ -249,6 +352,42 @@ public class ElementActions extends WaitHelper {
 
 	public void enterDataThroughActions(String Value, WebElement element) {
 		 Element.enterDataThroughActions(scenarioContext, Value, element);
+	}
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getClickableElement(String text) {
+		String xpath = "//body//*[text()='"+text+"']";
+		WaitUtils.wait(2);
+		WebElement ele = WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
+		List<WebElement> elemens = driver.findElements(By.xpath(xpath));
+		for(int i=0; i<elemens.size(); i++) {
+			ele=elemens.get(i);
+			if(ele.isEnabled())
+			return ele;
+		}
+		return null;
+				
+	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getDisplayElement(String text) {
+		String xpath = "//body//*[text()='"+text+"']";
+		WebElement ele = WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
+		List<WebElement> elemens = driver.findElements(By.xpath(xpath));
+		for(int i=0; i<elemens.size(); i++) {
+			ele=elemens.get(i);
+			if(ele.isDisplayed() || ele.isEnabled())
+			return ele;
+		}
+		return null;
+		
 	}
 
 }

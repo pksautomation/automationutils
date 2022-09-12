@@ -1,7 +1,7 @@
 package com.innovaccer.utils.fileutils;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.LoggerHelper;
+import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.xml.utils.XMLChar;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -17,11 +17,11 @@ import java.io.*;
 public class XMLUtils {
 
     private Config config;
-    private LoggerHelper loggerHelper;
+    private LoggerUtils loggerHelper;
 
     public XMLUtils(Config testConfig) {
         config = testConfig;
-        loggerHelper = new LoggerHelper(config);
+        loggerHelper = new LoggerUtils(config);
     }
 
     /**

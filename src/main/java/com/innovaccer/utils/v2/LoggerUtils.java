@@ -3,11 +3,11 @@ package com.innovaccer.utils.v2;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Log;
 
-public class LoggerHelper {
+public class LoggerUtils {
 
     public Config testConfig;
 
-    public LoggerHelper(Config testConfig) {
+    public LoggerUtils(Config testConfig) {
         this.testConfig = testConfig;
     }
 

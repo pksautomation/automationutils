@@ -1,52 +1,96 @@
 package com.innovaccer.utils.v2;
 
 import com.innovaccer.utils.Config;
+import com.innovaccer.utils.fileutils.*;
 
 public class UtilityObjectManager {
 
 
-    private AssertionHelper assertHelper;
-    private BrowserHelper browserHelper;
-    private LoggerHelper loggerHelper;
-    private YamlHelper yamlHelper;
+    public AssertionUtils AssertionUtils;
+    public BrowserUtils BrowserUtils;
+    public LoggerUtils LoggerUtils;
+    public YamlUtils YamlUtils;
+    public CSVUtils CSVUtils;
+	public ExcelUtils ExcelUtils;
+    public XMLUtils XMLUtils;
+    public TextUtils TextUtils;
 
     public UtilityObjectManager(Config config) {
-        this.assertHelper = new AssertionHelper(config);
-        this.browserHelper = new BrowserHelper(config);
-        this.loggerHelper = new LoggerHelper(config);
-        this.yamlHelper = new YamlHelper(config);
+        this.AssertionUtils = new AssertionUtils(config);
+        this.BrowserUtils = new BrowserUtils(config);
+        this.LoggerUtils = new LoggerUtils(config);
+        this.YamlUtils = new YamlUtils(config);
+        this.CSVUtils = new CSVUtils(config);
+        this.ExcelUtils = new ExcelUtils(config);
+        this.XMLUtils = new XMLUtils(config);
+        this.TextUtils = new TextUtils(config);
     }
 
-    public AssertionHelper getAssertion() {
-        return this.assertHelper;
-    }
+	public AssertionUtils getAssertionUtils() {
+		return AssertionUtils;
+	}
 
-    public void setAssertionHelper(AssertionHelper assertionManager) {
-        this.assertHelper = assertionManager;
-    }
+	public void setAssertionUtils(AssertionUtils assertionUtils) {
+		AssertionUtils = assertionUtils;
+	}
 
-    public BrowserHelper getBrowser() {
-        return this.browserHelper;
-    }
+	public BrowserUtils getBrowserUtils() {
+		return BrowserUtils;
+	}
 
-    public void setBrowser(BrowserHelper browserManager) {
-        this.browserHelper = browserManager;
-    }
+	public void setBrowserUtils(BrowserUtils browserUtils) {
+		BrowserUtils = browserUtils;
+	}
 
-    public LoggerHelper getLogger() {
-        return this.loggerHelper;
-    }
+	public LoggerUtils getLoggerUtils() {
+		return LoggerUtils;
+	}
 
-    public void setLoggerHelper(LoggerHelper loggerManager) {
-        this.loggerHelper = loggerManager;
-    }
+	public void setLoggerUtils(LoggerUtils loggerUtils) {
+		LoggerUtils = loggerUtils;
+	}
 
-    public YamlHelper getYamlHelper() {
-        return this.yamlHelper;
-    }
+	public YamlUtils getYamlUtils() {
+		return YamlUtils;
+	}
 
-    public void setYamlHelper(YamlHelper yamlHelper) {
-        this.yamlHelper = yamlHelper;
-    }
+	public void setYamlUtils(YamlUtils yamlUtils) {
+		YamlUtils = yamlUtils;
+	}
+
+	public CSVUtils getCSVUtils() {
+		return CSVUtils;
+	}
+
+	public void setCSVUtils(CSVUtils cSVUtils) {
+		CSVUtils = cSVUtils;
+	}
+
+	public ExcelUtils getExcelUtils() {
+		return ExcelUtils;
+	}
+
+	public void setExcelUtils(ExcelUtils excelUtils) {
+		ExcelUtils = excelUtils;
+	}
+
+	public XMLUtils getXMLUtils() {
+		return XMLUtils;
+	}
+
+	public void setXMLUtils(XMLUtils xMLUtils) {
+		XMLUtils = xMLUtils;
+	}
+
+	public TextUtils getTextUtils() {
+		return TextUtils;
+	}
+
+	public void setTextUtils(TextUtils textUtils) {
+		TextUtils = textUtils;
+	}
+    
+    
+
 
 }

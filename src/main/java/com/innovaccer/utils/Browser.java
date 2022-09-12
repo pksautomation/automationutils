@@ -1005,27 +1005,6 @@ public class Browser
 	}
 
 	/**
-	 * Pause the execution for given seconds
-	 * 
-	 * @param seconds
-	 * @author pramod.singh
-	 */
-	public static void wait(Config testConfig, int seconds)
-	{
-		int milliseconds = seconds * 1000;
-		try
-		{
-			Thread.sleep(milliseconds);
-			testConfig.logComment("Wait for '" + seconds + "' seconds");
-
-		}
-		catch (InterruptedException e)
-		{
-
-		}
-	}
-
-	/**
 	 * Method use to wait until given url visible
 	 * @param url
 	 * @param maxTimeToWaitInSec

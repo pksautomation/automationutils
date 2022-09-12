@@ -1,16 +1,17 @@
 package com.innovaccer.utils.v2.cucumber;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.LoggerHelper;
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.UtilityObjectManager;
 
-public class CommonTestBase extends LoggerHelper {
+public class CommonTestBase  {
 
-	public UtilityObjectManager utilityObjectManager;
+	public UtilityObjectManager UtilityObjectManager;
 	public Config scenarioContext;
+	public LoggerUtils LoggerUtils;
 	public CommonTestBase(TestContext testContext) {
-		super(testContext.scenarioContext);
 		scenarioContext=testContext.scenarioContext;
-		utilityObjectManager= testContext.getUtilityObjectManager();	
+		UtilityObjectManager= testContext.getUtilityObjectManager();
+		LoggerUtils = new LoggerUtils(scenarioContext);
 	}		
 }
