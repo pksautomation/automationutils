@@ -10,14 +10,14 @@ import com.innovaccer.utils.Log;
 
 import java.io.File;
 
-public class BrowserHelper {
+public class BrowserUtils {
 	public Config configInstance;
-	public BrowserHelper(Config testConfig) {
+	public BrowserUtils(Config testConfig) {
 		configInstance=testConfig;
 	}
 	
 	public void navigateToLoginPage() {
-		String url = configInstance.getRunTimeProperty("EnvURL");
+		String url = configInstance.getRunTimeProperty("Environment");
 		Browser.navigateToURL(configInstance, url);
 	}
 	
@@ -114,7 +114,7 @@ public class BrowserHelper {
 		return Browser.lastFileModifiedWithDesiredName(configInstance, directoryPath, name);
 	}
 
-	public void gotoUrl(String url) {
+	public void navigateToURL(String url) {
 		Browser.navigateToURL(configInstance, url);
 	}
 
@@ -142,7 +142,7 @@ public class BrowserHelper {
 		Browser.wait(configInstance, timeInSeconds);
 	}
 
-	public void waitForUrlToMatch(String expectedUrl, int timeInSeconds) {
+	public void waitForUrlToDisplay(String expectedUrl, int timeInSeconds) {
 		Browser.waitForUrlToDisplay(configInstance, expectedUrl, timeInSeconds);
 	}
 
@@ -163,6 +163,10 @@ public class BrowserHelper {
 	}
 
 	public String getDataFromConsoleInChromeBrowser() {
+		return Browser.getConsoleDataOfChromeBrowser(configInstance);
+	}
+	
+	public String getConsoleDataOfChromeBrowser() {
 		return Browser.getConsoleDataOfChromeBrowser(configInstance);
 	}
 

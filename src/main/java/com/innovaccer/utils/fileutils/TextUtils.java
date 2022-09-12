@@ -1,7 +1,7 @@
 package com.innovaccer.utils.fileutils;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.LoggerHelper;
+import com.innovaccer.utils.v2.LoggerUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,11 +11,11 @@ import java.io.IOException;
 public class TextUtils {
 
     private Config config;
-    private LoggerHelper loggerHelper;
+    private LoggerUtils loggerHelper;
 
     public TextUtils(Config testConfig) {
         config = testConfig;
-        loggerHelper = new LoggerHelper(config);
+        loggerHelper = new LoggerUtils(config);
     }
 
     /**

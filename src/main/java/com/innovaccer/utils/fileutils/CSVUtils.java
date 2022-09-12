@@ -1,7 +1,7 @@
 package com.innovaccer.utils.fileutils;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.LoggerHelper;
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -13,11 +13,11 @@ import java.util.List;
 public class CSVUtils {
 
     private Config config;
-    private LoggerHelper loggerHelper;
+    private LoggerUtils loggerHelper;
 
     public CSVUtils(Config testConfig) {
         config = testConfig;
-        loggerHelper = new LoggerHelper(config);
+        loggerHelper = new LoggerUtils(config);
     }
 
     /**

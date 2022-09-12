@@ -5,11 +5,11 @@ import com.innovaccer.utils.YamlReaderWriter;
 
 import java.util.Map;
 
-public class YamlHelper extends YamlReaderWriter {
+public class YamlUtils extends YamlReaderWriter {
 
     public Config testConfig;
 
-    public YamlHelper(Config testConfig) {
+    public YamlUtils(Config testConfig) {
         this.testConfig = testConfig;
     }
 

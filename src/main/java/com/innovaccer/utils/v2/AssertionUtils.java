@@ -7,11 +7,11 @@ import com.innovaccer.utils.Helper;
 import java.util.List;
 import java.util.Map;
 
-public class AssertionHelper {
+public class AssertionUtils {
 
     public Config testConfig;
 
-    public AssertionHelper(Config testConfig) {
+    public AssertionUtils(Config testConfig) {
         this.testConfig = testConfig;
     }
 

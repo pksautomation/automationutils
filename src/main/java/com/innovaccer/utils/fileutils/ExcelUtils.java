@@ -3,7 +3,7 @@ package com.innovaccer.utils.fileutils;
 
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.v2.LoggerHelper;
+import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
@@ -25,11 +25,11 @@ import java.io.IOException;
 public class ExcelUtils {
 
     private Config config;
-    private LoggerHelper loggerHelper;
+    private LoggerUtils loggerHelper;
 
     public ExcelUtils(Config testConfig) {
         config = testConfig;
-        loggerHelper = new LoggerHelper(config);
+        loggerHelper = new LoggerUtils(config);
     }
 
     /**
