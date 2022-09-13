@@ -1102,4 +1102,11 @@ public class Config
 		return this.testData.get(testDataName);
 	}
 	
+	
+	/**
+	 */
+	public static Config getConfig() {
+		return threadLocalConfig.get()[0];
+	}
+	
 }

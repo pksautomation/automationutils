@@ -9,10 +9,18 @@ import java.util.Map;
 
 public class AssertionUtils {
 
-    public Config testConfig;
+    private Config testConfig;
 
     public AssertionUtils(Config testConfig) {
-        this.testConfig = testConfig;
+        init(testConfig);
+    }
+
+	private void init(Config testConfig) {
+		this.testConfig = testConfig;
+	}
+    
+    public AssertionUtils() {
+    	init(Config.getConfig());
     }
 
     public void assertContains(String what, String expected, String actual) {

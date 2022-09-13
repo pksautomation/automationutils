@@ -11,9 +11,18 @@ import com.innovaccer.utils.Log;
 import java.io.File;
 
 public class BrowserUtils {
-	public Config configInstance;
+	private Config configInstance;
+	
 	public BrowserUtils(Config testConfig) {
+		init(testConfig);
+	}
+
+	private void init(Config testConfig) {
 		configInstance=testConfig;
+	}
+	
+	public BrowserUtils() {
+		init(Config.getConfig());
 	}
 	
 	public void navigateToLoginPage() {
