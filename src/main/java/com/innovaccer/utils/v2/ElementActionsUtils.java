@@ -14,6 +14,7 @@ import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Element.How;
+import com.mysql.jdbc.log.LogUtils;
 
 /**
  *
@@ -22,20 +23,49 @@ import com.innovaccer.utils.Element.How;
  */
 public class ElementActionsUtils  {
 
-	public Config scenarioContext;
-	public WaitHelper WaitUtils=null;
-	public UtilityObjectManager UtilityObjectManager=null;
-	public LoggerUtils LoggerUtils;
+	private Config scenarioContext;
+	private WaitHelper WaitUtils=null;
+	private LoggerUtils LoggerUtils;
 	private WebDriver driver;
+	private TestDataHelper testDataHelper;
 
 	public ElementActionsUtils(Config scenariosInstance) {
+		init(scenariosInstance);
+		}
+	
+	public ElementActionsUtils() {
+		init(Config.getConfig());
+		}
+
+	private void init(Config scenariosInstance) {
 		this.scenarioContext=scenariosInstance;
-		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
 		WaitUtils = new WaitHelper(scenariosInstance);
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		driver=scenarioContext.driver;
+		testDataHelper=new TestDataHelper(scenarioContext);
 		PageFactory.initElements(scenariosInstance.driver, this);
-		}
+	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getVisibleElement(By by) {
+		return WaitUtils.fluentWaitForVisibility(scenarioContext, by, "");
+		
+	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getVisibleElement(By by,int maxwaitTime) {
+		return WaitUtils.fluentWaitForVisibility(scenarioContext, by, "",maxwaitTime);
+		
+	}
+	
 	
 	/**
 	 * get WebElement of Input field like file, text, textarea using Label or Placeholder
@@ -43,29 +73,32 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public WebElement getTextField(String Label) {
+		scenarioContext.driver.manage().timeouts().implicitlyWait(1, TimeUnit.MILLISECONDS);
 		WebElement element=null;
-		String xpath;
-		int lebel =1;
-		List<WebElement> elements=new ArrayList<WebElement>();
-		By by1=By.xpath("//body//*[text()='"+Label+"']");
-		WaitUtils.waitForVisibility(scenarioContext, by1, "Label " + Label, 10l);
-		scenarioContext.driver.manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
-		while(true && lebel<4) {
-			By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div["+lebel+"]//input[@type!='file' and @type!='checkbox' ] ");
-			elements =this.scenarioContext.driver.findElements(by2);
-			if(elements.size() !=0) {
-				break;
-			}
-			lebel++;
+		try {
+		//finding element at first parent level
+		By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[1]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
+		
+		//finding element at grand parent level
+		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[2]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
+		
+		//finding element at parent of grand parent level
+		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[3]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
 		}
-		//List<WebElement> elements =this.scenarioContext.driver.findElements(by2);
-		for(int i=0;i<elements.size(); i++) {
-			if(elements.get(i).isDisplayed() || elements.get(i).isEnabled())
-				return elements.get(i);
+		catch(Exception e) {
+			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
 		}
-		Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-		driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
-		return elements.isEmpty()?null:elements.get(0);
+		finally {
+			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
+			driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+		}
+		return element;
 	}
 
 	/**
@@ -76,31 +109,7 @@ public class ElementActionsUtils  {
 	public WebElement getEnabledButtonEle(String buttonLabel) {
 		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
 		By by = By.xpath(buttonXpath);
-		Element.waitForVisibility(scenarioContext, by,buttonLabel, 40l);
-		List<WebElement> elements = Element.getListOfElements(scenarioContext, How.xPath, buttonXpath);
-		for(WebElement ele : elements) {
-			if(ele.isDisplayed() && ele.isEnabled()) {
-				return Element.getPageElement(this.scenarioContext, Element.How.xPath, buttonXpath);
-			}
-		}
-		return null;		
-	}
-	/**
-	 * get element of Button
-	 * @param buttonLabel
-	 * @return
-	 */
-	public WebElement getButtonEle(String buttonLabel) {
-		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
-		By by = By.xpath(buttonXpath);
-		Element.waitForVisibility(scenarioContext, by,buttonLabel, 40l);
-		List<WebElement> elements = Element.getListOfElements(scenarioContext, How.xPath, buttonXpath);
-		for(WebElement ele : elements) {
-			if(ele.isDisplayed()) {
-				return Element.getPageElement(this.scenarioContext, Element.How.xPath, buttonXpath);
-			}
-		}
-		return null;		
+		return WaitUtils.waitForElementToBeClickable(by,buttonLabel,10);		
 	}
 
 	/**
@@ -110,29 +119,33 @@ public class ElementActionsUtils  {
 	 * @author pramod.singh
 	 */
 	public WebElement getDropDownButton(String Label) {
-		By by1=By.xpath("//*[text()='"+Label+"']");
-		int lebel=1;
-		List<WebElement> elements=new ArrayList<WebElement>();
-		WaitUtils.waitForVisibility(scenarioContext, by1, "Label " + Label, 2l);
-		scenarioContext.driver.manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
-		while(true && lebel<4) {
-			By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div["+lebel+"]//button ");
-			elements =this.scenarioContext.driver.findElements(by2);
-			if(elements.size() !=0) {
-				break;
-			}
-			lebel++;
+		scenarioContext.driver.manage().timeouts().implicitlyWait(1, TimeUnit.MILLISECONDS);
+		WebElement element=null;
+		try {
+		//finding element at first parent level
+		By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[1]//button ");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
+		
+		//finding element at grand parent level
+		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[2]//button ");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
+		
+		//finding element at parent of grand parent level
+		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[3]//button ");
+		if((element=getVisibleElement(by2,2)) != null)
+			return element;
 		}
-		//List<WebElement> elements =this.scenarioContext.driver.findElements(by2);
-		for(int i=0;i<elements.size(); i++) {
-			if(elements.get(i).isDisplayed() || elements.get(i).isEnabled())
-				return elements.get(i);
+		catch(Exception e) {
+			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
 		}
-		Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-		driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
-		return elements.isEmpty()?null:elements.get(0);
+		finally {
+			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
+			driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+		}
+		return element;
 	}
-
 
 	public void clickOnButton(String buttonName)
 	{
@@ -145,20 +158,48 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public boolean isButtonEnable(String buttonName) {
-		WebElement element = getButtonEle(buttonName);
-		if(element!=null && element.isEnabled())
-			return true;
-		else 
-			return false;
+		return getClickableButtonElement(buttonName)==null?false:true;
+		
 	}
 
 
 	public void setTextField(String Label)
 	{
-		String data=getData(Label);;
+		String data=testDataHelper.getTestData(Label);
 		if(data!= null && !data.equals(""))
 			Element.enterData(this.scenarioContext, getTextField(Label), data, Label);
 	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getClickableElement(String text) {
+		String xpath = "//body//*[text()='"+text+"']";
+		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getClickableButtonElement(String text) {
+		String xpath = "//body//button[text()='"+text+"']";
+		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+	}
+	
+	/**
+	 * get WebElement using Text
+	 * @param text
+	 * @return
+	 */
+	public WebElement getDisplayElement(String text) {
+		String xpath = "//body//*[text()='"+text+"']";
+		return WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);		
+	}
+	
 
 	/**
 	 * Select DropDown Value
@@ -166,7 +207,7 @@ public class ElementActionsUtils  {
 	 */
 	public void selectDropDown(String Label)
 	{
-		String data=getData(Label);
+		String data=testDataHelper.getTestData(Label);
 		if( data!= null && !data.equals(""))
 		{
 			click(getDropDownButton(Label),Label);
@@ -184,16 +225,6 @@ public class ElementActionsUtils  {
 
 	public void setData(String key, String value) {
 		this.scenarioContext.putRunTimeProperty(key, value);
-	}
-
-	public String getData(String lable) {
-		String testDataName = scenarioContext.getRunTimeProperty("TestDataName");
-		String data=null;
-		if(scenarioContext.testData.containsKey(testDataName) && scenarioContext.testData.get(testDataName).containsKey(lable))
-			return scenarioContext.testData.get(testDataName).get(lable);
-		else 
-			return null;		
-		//return this.scenarioContext.getRunTimeProperty(lable);
 	}
 
 	public WaitHelper getWait() {
@@ -352,42 +383,6 @@ public class ElementActionsUtils  {
 
 	public void enterDataThroughActions(String Value, WebElement element) {
 		 Element.enterDataThroughActions(scenarioContext, Value, element);
-	}
-	/**
-	 * get WebElement using Text
-	 * @param text
-	 * @return
-	 */
-	public WebElement getClickableElement(String text) {
-		String xpath = "//body//*[text()='"+text+"']";
-		WaitUtils.wait(2);
-		WebElement ele = WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
-		List<WebElement> elemens = driver.findElements(By.xpath(xpath));
-		for(int i=0; i<elemens.size(); i++) {
-			ele=elemens.get(i);
-			if(ele.isEnabled())
-			return ele;
-		}
-		return null;
-				
-	}
-	
-	/**
-	 * get WebElement using Text
-	 * @param text
-	 * @return
-	 */
-	public WebElement getDisplayElement(String text) {
-		String xpath = "//body//*[text()='"+text+"']";
-		WebElement ele = WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
-		List<WebElement> elemens = driver.findElements(By.xpath(xpath));
-		for(int i=0; i<elemens.size(); i++) {
-			ele=elemens.get(i);
-			if(ele.isDisplayed() || ele.isEnabled())
-			return ele;
-		}
-		return null;
-		
 	}
 
 }

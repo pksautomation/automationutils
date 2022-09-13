@@ -5,10 +5,13 @@ import com.innovaccer.utils.Log;
 
 public class LoggerUtils {
 
-    public Config testConfig;
+    private Config testConfig;
 
     public LoggerUtils(Config testConfig) {
         this.testConfig = testConfig;
+    }
+    public LoggerUtils() {
+        this.testConfig = Config.getConfig();
     }
 
     public void logComment(String message) {

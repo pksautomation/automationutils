@@ -1,11 +1,16 @@
 package com.innovaccer.utils.v2;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.innovaccer.utils.Config;
@@ -23,6 +28,14 @@ public class WaitHelper {
 	private LoggerUtils LoggerUtils;
 	
 	public WaitHelper(Config config) {
+		init(config);
+	}
+	
+	public WaitHelper() {
+		init(Config.getConfig());
+	}
+
+	private void init(Config config) {
 		this.configInstance=config;
 		LoggerUtils=new LoggerUtils(configInstance);
 	}
@@ -44,7 +57,7 @@ public class WaitHelper {
 	
 	
 	public WebElement waitForVisibility(Config configInstance, By by,String description, Long ...maxwaitTime) {
-		if(maxwaitTime.length>1)
+		if(maxwaitTime.length>0)
 			return Element.waitForVisibility(configInstance, by, description, maxwaitTime[0]);
 		else
 			return Element.waitForVisibility(configInstance, by, description);
@@ -101,10 +114,17 @@ public class WaitHelper {
 	 * @return --> WebElement
 	 * @author pramod.singh
 	 */
-		public WebElement waitForElementToBeClickable(By by, int maxWaitTimeInSecond,String description) {
+		public WebElement waitForElementToBeClickable(By by,String description,int ...maxWaitTimeInSecond) {
 			WebElement element = null;
+			int ObjectWaitTime;
+			if(maxWaitTimeInSecond.length ==0 ) {
+				ObjectWaitTime = Integer.parseInt(configInstance.getRunTimeProperty("ObjectWaitTime"));
+			}
+			else {
+				ObjectWaitTime=maxWaitTimeInSecond[0];
+			}
 			try {
-			    WebDriverWait wait = new WebDriverWait(configInstance.driver, maxWaitTimeInSecond);
+			    WebDriverWait wait = new WebDriverWait(configInstance.driver, ObjectWaitTime);
 			    element = wait.until(ExpectedConditions.elementToBeClickable(by));
 			}catch (Exception e) {
 				configInstance.logExceptionSkipFailure(description, e, true);
@@ -258,7 +278,40 @@ public class WaitHelper {
 		public WebElement waitForVisibility(By by,String description) {
 			return Element.waitForVisibility(configInstance, by, description);
 		}
-
+		
+		/**
+		 * 
+		 * @param testConfig
+		 * @param locator
+		 * @param description
+		 * @return
+		 */
+		public WebElement fluentWaitForVisibility(Config testConfig,By locator, String description,int ...timeinsecons)
+		{
+			WebElement returnElement=null;
+			int ObjectWaitTime;
+			if(timeinsecons.length ==0 ) {
+				ObjectWaitTime = Integer.parseInt(testConfig.getRunTimeProperty("ObjectWaitTime"));
+			}
+			else {
+				ObjectWaitTime=timeinsecons[0];
+			}
+			testConfig.logComment("Wait for element '" + description + "' to be visible on the page.");
+			Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(testConfig.driver)
+			        .withTimeout(Duration.ofSeconds(ObjectWaitTime))
+			        .pollingEvery(Duration.ofSeconds(2))
+			        .ignoring(Exception.class);
+			
+			try
+			{
+				returnElement=fluentWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+			}
+			catch (Exception tm)
+			{
+				returnElement = null;
+			}
+			return returnElement;
+		}
 
 	
 }

@@ -7,11 +7,15 @@ import java.util.Map;
 
 public class YamlUtils extends YamlReaderWriter {
 
-    public Config testConfig;
+    private Config testConfig;
 
     public YamlUtils(Config testConfig) {
         this.testConfig = testConfig;
     }
+    public YamlUtils() {
+        this.testConfig = Config.getConfig();
+    }
+    
 
     public void setYamlPath(String filePath) {
         setYamlPath(testConfig, filePath);
