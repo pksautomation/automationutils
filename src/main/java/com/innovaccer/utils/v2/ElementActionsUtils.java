@@ -52,7 +52,7 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public WebElement getVisibleElement(By by) {
-		return WaitUtils.fluentWaitForVisibility(scenarioContext, by, "");
+		return WaitUtils.fluentWaitForVisibility(by, "");
 		
 	}
 	
@@ -62,7 +62,7 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public WebElement getVisibleElement(By by,int maxwaitTime) {
-		return WaitUtils.fluentWaitForVisibility(scenarioContext, by, "",maxwaitTime);
+		return WaitUtils.fluentWaitForVisibility(by, "",maxwaitTime);
 		
 	}
 	
@@ -77,7 +77,7 @@ public class ElementActionsUtils  {
 		WebElement element=null;
 		try {
 		//finding element at first parent level
-		By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[1]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
+		By by2=By.xpath("//*[text()='"+Label+"']/../..//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
 		if((element=getVisibleElement(by2,2)) != null)
 			return element;
 		
@@ -158,7 +158,7 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public boolean isButtonEnable(String buttonName) {
-		return getClickableButtonElement(buttonName)==null?false:true;
+		return getDisplayElement(buttonName)==null?false:true;
 		
 	}
 
