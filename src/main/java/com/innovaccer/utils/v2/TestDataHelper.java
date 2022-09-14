@@ -27,6 +27,7 @@ public class TestDataHelper {
 		this.ExcelUtils = new ExcelUtils(config);
 		this.XMLUtils = new XMLUtils(config);
 		this.TextUtils = new TextUtils(config);
+		this.configInstant=config;
 	}
 
 	public TestDataHelper() {
