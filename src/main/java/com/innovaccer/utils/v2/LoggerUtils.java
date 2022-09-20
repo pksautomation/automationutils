@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Log;
 
 public class LoggerUtils {
@@ -45,5 +45,25 @@ public class LoggerUtils {
     public void embedStringAsHTMLInReport(String text) {
     	Log.embedMessageAsHTMLInReport(testConfig, text);
     }
+	public void logFail(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void Fail(String string, Config configInstance) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void logPass(String string, String actualURL) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void logFail(String string, String expectedURL, String actualURL) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void Warning(String string, Config configInstance) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
