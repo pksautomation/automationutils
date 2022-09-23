@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -13,7 +15,10 @@ import org.openqa.selenium.support.PageFactory;
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Element;
-import com.innovaccer.utils.Element.How;
+import com.innovaccer.utils.Helper;
+import com.innovaccer.utils.v2.dataHelper.*;
+import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
+import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.mysql.jdbc.log.LogUtils;
 
 /**
@@ -21,80 +26,86 @@ import com.mysql.jdbc.log.LogUtils;
  * @author i0465
  *
  */
-public class ElementActionsUtils  {
+public class ElementActionsUtils {
 
 	private Config scenarioContext;
-	private WaitHelper WaitUtils=null;
+	private WaitHelper WaitUtils = null;
 	private LoggerUtils LoggerUtils;
 	private WebDriver driver;
 	private TestDataHelper testDataHelper;
 
 	public ElementActionsUtils(Config scenariosInstance) {
 		init(scenariosInstance);
-		}
-	
+	}
+
 	public ElementActionsUtils() {
 		init(Config.getConfig());
-		}
+	}
 
 	private void init(Config scenariosInstance) {
-		this.scenarioContext=scenariosInstance;
+		this.scenarioContext = scenariosInstance;
 		WaitUtils = new WaitHelper(scenariosInstance);
-		LoggerUtils=new LoggerUtils(scenarioContext);
-		driver=scenarioContext.driver;
-		testDataHelper=new TestDataHelper(scenarioContext);
+		LoggerUtils = new LoggerUtils(scenarioContext);
+		driver = scenarioContext.driver;
+		testDataHelper = new TestDataHelper(scenarioContext);
 		PageFactory.initElements(scenariosInstance.driver, this);
 	}
-	
+
 	/**
 	 * get WebElement using Text
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public WebElement getVisibleElement(By by) {
 		return WaitUtils.fluentWaitForVisibility(by, "");
-		
+
 	}
-	
+
 	/**
 	 * get WebElement using Text
+	 * 
 	 * @param text
 	 * @return
 	 */
-	public WebElement getVisibleElement(By by,int maxwaitTime) {
-		return WaitUtils.fluentWaitForVisibility(by, "",maxwaitTime);
-		
+	public WebElement getVisibleElement(By by, int maxwaitTime) {
+		return WaitUtils.fluentWaitForVisibility(by, "", maxwaitTime);
+
 	}
-	
-	
+
 	/**
-	 * get WebElement of Input field like file, text, textarea using Label or Placeholder
+	 * get WebElement of Input field like file, text, textarea using Label or
+	 * Placeholder
+	 * 
 	 * @param Label
 	 * @return
 	 */
 	public WebElement getTextField(String Label) {
 		scenarioContext.driver.manage().timeouts().implicitlyWait(1, TimeUnit.MILLISECONDS);
-		WebElement element=null;
+		WebElement element = null;
 		try {
-		//finding element at first parent level
-		By by2=By.xpath("//*[text()='"+Label+"']/../..//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		
-		//finding element at grand parent level
-		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[2]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		
-		//finding element at parent of grand parent level
-		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[3]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"+Label+"']");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		}
-		catch(Exception e) {
+			// finding element at first parent level
+			By by2 = By.xpath("//*[text()='" + Label
+					+ "']/../input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='" + Label + "']");
+			if ((element = getVisibleElement(by2, 2)) != null)
+				return element;
+
+			// finding element at grand parent level
+			by2 = By.xpath("//*[text()='" + Label
+					+ "']/ancestor::div[2]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"
+					+ Label + "']");
+			if ((element = getVisibleElement(by2, 2)) != null)
+				return element;
+
+			// finding element at parent of grand parent level
+			by2 = By.xpath("//*[text()='" + Label
+					+ "']/ancestor::div[3]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"
+					+ Label + "']");
+			if ((element = getVisibleElement(by2, 2)) != null)
+				return element;
+		} catch (Exception e) {
 			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
-		}
-		finally {
+		} finally {
 			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
 			driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
 		}
@@ -103,121 +114,114 @@ public class ElementActionsUtils  {
 
 	/**
 	 * Get WebElement of Button using Label
+	 * 
 	 * @param buttonLabel
 	 * @return
 	 */
 	public WebElement getEnabledButtonEle(String buttonLabel) {
-		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
+		String buttonXpath = "//button[contains(text(),'" + buttonLabel + "')]";
 		By by = By.xpath(buttonXpath);
-		return WaitUtils.waitForElementToBeClickable(by,buttonLabel,10);		
+		return WaitUtils.waitForElementToBeClickable(by, buttonLabel, 10);
 	}
 
 	/**
 	 * Click on Dropdown button
+	 * 
 	 * @param Label
 	 * @return
 	 * @author pramod.singh
 	 */
-	public WebElement getDropDownButton(String Label) {
-		scenarioContext.driver.manage().timeouts().implicitlyWait(1, TimeUnit.MILLISECONDS);
-		WebElement element=null;
-		try {
-		//finding element at first parent level
-		By by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[1]//button ");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		
-		//finding element at grand parent level
-		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[2]//button ");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		
-		//finding element at parent of grand parent level
-		by2=By.xpath("//*[text()='"+Label+"']/ancestor::div[3]//button ");
-		if((element=getVisibleElement(by2,2)) != null)
-			return element;
-		}
-		catch(Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
-		}
-		finally {
-			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-			driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
-		}
+	public WebElement getDropDownButton(How how) {
+		WebElement element;
+		By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription(),false);
+		element = WaitUtils.fluentWaitForElementToBeClickable(by, how.getDescription());
 		return element;
 	}
 
-	public void clickOnButton(String buttonName)
-	{
+	public void clickOnButton(String buttonName) {
 		Element.click(this.scenarioContext, getEnabledButtonEle(buttonName), buttonName);
 	}
-	
+
 	/**
 	 * Check Button enable or not
+	 * 
 	 * @param buttonName
 	 * @return
 	 */
-	public boolean isButtonEnable(String buttonName) {
-		return getDisplayElement(buttonName)==null?false:true;
-		
+	public boolean isButtonClickable(String buttonName) {
+		By by= By.xpath("//body//button[text()='" + buttonName + "']");
+		return WaitUtils.fluentWaitForElementToBeClickable(by, buttonName) == null ? false : true;
+
 	}
 
-
-	public void setTextField(String Label)
-	{
-		String data=testDataHelper.getTestData(Label);
-		if(data!= null && !data.equals(""))
+	public void setTextField(String Label) {
+		String data = testDataHelper.getTestData(Label);
+		if (data != null && !data.equals(""))
 			Element.enterData(this.scenarioContext, getTextField(Label), data, Label);
 	}
-	
+
+	/**
+	 * 
+	 * @param how
+	 */
+	public void fillData(How how) {
+		WebElement element = null;
+		String data = testDataHelper.getTestData(how.getKey());
+		if (data != null && !data.equals("")) {
+			By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription(),false);
+			element = WaitUtils.waitForVisibility(by, how.getDescription());
+			Element.enterData(this.scenarioContext, element, data, how.getDescription());
+		}
+	}
+
 	/**
 	 * get WebElement using Text
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public WebElement getClickableElement(String text) {
-		String xpath = "//body//*[text()='"+text+"']";
-		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+		String xpath = "//body//*[text()='" + text + "']";
+		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath), "", 30);
 	}
-	
+
 	/**
 	 * get WebElement using Text
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public WebElement getClickableButtonElement(String text) {
-		String xpath = "//body//button[text()='"+text+"']";
-		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+		String xpath = "//body//button[text()='" + text + "']";
+		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath), "", 30);
 	}
-	
+
 	/**
 	 * get WebElement using Text
+	 * 
 	 * @param text
 	 * @return
 	 */
 	public WebElement getDisplayElement(String text) {
-		String xpath = "//body//*[text()='"+text+"']";
-		return WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);		
+		String xpath = "//body//*[text()='" + text + "']";
+		return WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath), "", 30l);
 	}
-	
 
 	/**
 	 * Select DropDown Value
+	 * 
 	 * @param Label --> it is either lable or place holder of dropdown
 	 */
-	public void selectDropDown(String Label)
-	{
-		String data=testDataHelper.getTestData(Label);
-		if( data!= null && !data.equals(""))
-		{
-			click(getDropDownButton(Label),Label);
-			By by = By.xpath("//*[contains(@class,'Option')]//*[text()='"+data+"']");
+	public void selectDropDown(How how) {
+		String data = testDataHelper.getTestData(how.getKey());
+		if (data != null && !data.equals("")) {
+			click(getDropDownButton(how), how.getDescription());
+			By by = By.xpath("//*[contains(@class,'Option')]//*[text()='" + data + "']");
 			WebElement element = scenarioContext.driver.findElement(by);
-			click(element, Label + " Dropdown option " + data);	
+			click(element, how.getDescription() + " Dropdown option " + data);
 		}
 
 	}
-
 
 	public boolean isElementDisplay(WebElement ele) {
 		return Element.IsElementDisplayed(this.scenarioContext, ele);
@@ -234,122 +238,112 @@ public class ElementActionsUtils  {
 	public void check(WebElement element, String description) {
 		Element.check(scenarioContext, element, description);
 	}
-	public void clear(WebElement element, String description)
-	{
+
+	public void clear(WebElement element, String description) {
 		Element.clear(scenarioContext, element, description);
 	}
 
-	public void click(WebElement element, String description)
-	{
+	public void click(WebElement element, String description) {
 		Element.click(scenarioContext, element, description);
 	}
-	public void clickThroughJS(WebElement elementToBeClicked, String description)
-	{
+
+	public void clickThroughJS(WebElement elementToBeClicked, String description) {
 		Element.clickThroughJS(scenarioContext, elementToBeClicked, description);
 	}
-	public void clearThroughJS(WebElement element, String description)
-	{
+
+	public void clearThroughJS(WebElement element, String description) {
 		Element.clearThroughJS(scenarioContext, element, description);
 	}
+
 	public void enterDataThroughJS(WebElement element, String value, String description) {
 		Element.enterDataThroughJS(scenarioContext, element, value, description);
 	}
-	public void doubleClick(WebElement element, String description)
-	{
+
+	public void doubleClick(WebElement element, String description) {
 		Element.doubleClick(scenarioContext, element, description);
 	}
 
-	public void enterData(WebElement element, String value, String description)
-	{
+	public void enterData(WebElement element, String value, String description) {
 		Element.enterData(scenarioContext, element, value, description);
 	}
-	public void enterDataAfterClick(WebElement element, String value, String description)
-	{
+
+	public void enterDataAfterClick(WebElement element, String value, String description) {
 		Element.enterDataAfterClick(scenarioContext, element, value, description);
 	}
-	public void enterDataWithoutClear(WebElement element, String value, String description)
-	{
+
+	public void enterDataWithoutClear(WebElement element, String value, String description) {
 		Element.enterDataWithoutClear(scenarioContext, element, value, description);
 	}
 
-	public void enterFileName(WebElement element, String value, String description)
-	{
+	public void enterFileName(WebElement element, String value, String description) {
 		Element.enterFileName(scenarioContext, element, value, description);
 	}
 
-	public List<String> getAllOptionsInSelect(WebElement element)
-	{
+	public List<String> getAllOptionsInSelect(WebElement element) {
 		return Element.getAllOptionsInSelect(scenarioContext, element);
 	}
 
-	public WebElement getiFrameElement(How how, String what)
-	{
-		return Element.getiFrameElement(scenarioContext, how, what);
-	}
-	public List<WebElement> getListOfElements(How how, String what){
-		return Element.getListOfElements(scenarioContext, how, what);
-	}
-
-	public void getOutOfFrame(Config scenariosInstance) {
-		Element.getOutOfFrame(scenariosInstance);
-	}
-
-	public WebElement getPageElement(How how, String what,Boolean isTestCaseFailedIfNoSuchExcetion)
-	{
-		return Element.getPageElement(scenarioContext, how, what,isTestCaseFailedIfNoSuchExcetion);
-	}
-	public String getText(WebElement element, String description)
-	{
+//	public WebElement getiFrameElement(How how, String what)
+//	{
+//		return Element.getiFrameElement(scenarioContext, how, what);
+//	}
+//	public List<WebElement> getListOfElements(How how, String what){
+//		return Element.getListOfElements(scenarioContext, how, what);
+//	}
+//
+//	public void getOutOfFrame(Config scenariosInstance) {
+//		Element.getOutOfFrame(scenariosInstance);
+//	}
+//
+//	public WebElement getPageElement(How how, String what,Boolean isTestCaseFailedIfNoSuchExcetion)
+//	{
+//		return Element.getPageElement(scenarioContext, how, what,isTestCaseFailedIfNoSuchExcetion);
+//	}
+	public String getText(WebElement element, String description) {
 		return Element.getText(scenarioContext, element, description);
 	}
+
 	public Boolean IsElementEnabled(WebElement element) {
 		return Element.IsElementEnabled(scenarioContext, element);
 	}
 
-	public void KeyPress(WebElement element, Keys key, String description)
-	{
+	public void KeyPress(WebElement element, Keys key, String description) {
 		Element.KeyPress(scenarioContext, element, key, description);
 	}
-	public void pageScroll(String from, String to)
-	{
+
+	public void pageScroll(String from, String to) {
 		Element.pageScroll(scenarioContext, from, to);
 	}
-	public void submit(WebElement element, String description)
-	{
+
+	public void submit(WebElement element, String description) {
 		Element.submit(scenarioContext, element, description);
 	}
 
-
-	public String getAttribute(WebElement element, String attributeName, String comment)
-	{
+	public String getAttribute(WebElement element, String attributeName, String comment) {
 		return Element.getAttribute(scenarioContext, element, attributeName, comment);
 	}
-	public String getCSSValue(WebElement element, String css, String comment)
-	{
+
+	public String getCSSValue(WebElement element, String css, String comment) {
 		return Element.getCSSValue(scenarioContext, element, css, comment);
 	}
 
-	public void verifyElementNotEnabled(WebElement element, String description)
-	{
+	public void verifyElementNotEnabled(WebElement element, String description) {
 		Element.verifyElementNotEnabled(scenarioContext, element, description);
 	}
 
-	public void verifyElementEnabled(WebElement element, String description)
-	{
+	public void verifyElementEnabled(WebElement element, String description) {
 		Element.verifyElementEnabled(scenarioContext, element, description);
 	}
 
-	public void scrollToView(WebElement element)
-	{
+	public void scrollToView(WebElement element) {
 		Element.scrollToView(scenarioContext, element);
 	}
-	public void moveCursorFromSourceToDestination(WebElement source,WebElement destination)
-	{
+
+	public void moveCursorFromSourceToDestination(WebElement source, WebElement destination) {
 		Element.moveCursorfromSourceToDestination(scenarioContext, source, destination);
 	}
 
-	public boolean uploadFileUsingRobot(WebElement element,String filePath,String description)
-	{
+	public boolean uploadFileUsingRobot(WebElement element, String filePath, String description) {
 		return Element.uploadFileUsingRobot(scenarioContext, element, filePath, description);
 	}
 
@@ -361,14 +355,11 @@ public class ElementActionsUtils  {
 		return Element.IsElementDisplayed(scenarioContext, element);
 	}
 
-
 	public void pressEnter() {
 		Element.pressEnter(scenarioContext);
 	}
 
-
-	public void scrollToViewUsingActionClass(WebElement element, boolean ...isBelowScroll)
-	{
+	public void scrollToViewUsingActionClass(WebElement element, boolean... isBelowScroll) {
 		Element.scrollToViewUsingActionClass(scenarioContext, element, isBelowScroll);
 	}
 
@@ -376,13 +367,66 @@ public class ElementActionsUtils  {
 		Element.mousehoverOnElementUsingJavaScript(scenarioContext, element);
 	}
 
-	public void enterPassword(WebElement element, String value, String description)
-	{
+	public void enterPassword(WebElement element, String value, String description) {
 		Element.enterPassword(scenarioContext, element, value, description);
 	}
 
 	public void enterDataThroughActions(String Value, WebElement element) {
-		 Element.enterDataThroughActions(scenarioContext, Value, element);
+		Element.enterDataThroughActions(scenarioContext, Value, element);
+	}
+
+	/**
+	 * 
+	 * @param how
+	 */
+	public void clickOnButton(How how)
+	{
+		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription(), false);
+		WebElement element = WaitUtils.fluentWaitForElementToBeClickable(byLocator, how.getDescription());
+		Element.click(this.scenarioContext, element, how.getDescription());
+	}
+
+	/**
+	 * 
+	 * @param testConfig
+	 * @param how
+	 * @param what
+	 * @param isTestCaseFailedIfNoSuchExcetion
+	 * @return
+	 */
+	public By getPageElementLocator(String stretegy, String what, String description,
+			Boolean isTestCaseFailedIfNoSuchExcetion) {
+		By byLocator = null;
+
+		what = Helper.replaceArgumentsWithRunTimeProperties(scenarioContext, what);
+		switch (stretegy.toLowerCase()) {
+		case "classname":
+			byLocator = By.className(what);
+			break;
+		case "css":
+			byLocator = By.cssSelector(what);
+			break;
+		case "id":
+			byLocator = By.id(what);
+			break;
+		case "linktext":
+			byLocator = By.linkText(what);
+			break;
+		case "name":
+			byLocator = By.name(what);
+			break;
+		case "partialLinkText":
+			byLocator = By.partialLinkText(what);
+			break;
+		case "tagname":
+			byLocator = By.tagName(what);
+			break;
+		case "xpath":
+			byLocator = By.xpath(what);
+
+		}
+		return byLocator;
+
 	}
 
 }

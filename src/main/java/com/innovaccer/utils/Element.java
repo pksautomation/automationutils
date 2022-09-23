@@ -49,7 +49,7 @@ public class Element
 	 */
 	public static enum How
 	{
-		className, css, id, linkText, name, partialLinkText, tagName, xPath, accessibility
+		className, css, id, linkText, name, partialLinkText, tagName, xPath
 	};
 
 	public static enum IFrameHow {
@@ -1944,5 +1944,4 @@ public class Element
 			throw new TimeoutException(description + " found after waiting for " + ObjectWaitTime + " seconds");
 		}
 	}
-	
 }

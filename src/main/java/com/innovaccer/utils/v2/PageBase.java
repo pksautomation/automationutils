@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.dataHelper.pageobject.How;
+import com.innovaccer.utils.v2.dataHelper.pageobject.PageObjectHelper;
 
 public class PageBase {
 	private Config scenarioContext;
@@ -11,7 +13,18 @@ public class PageBase {
 	private UtilityObjectManager UtilityObjectManager=null;
 	private LoggerUtils LoggerUtils;
 	private BrowserUtils browserUtils;
+	private WebDriver driver;
+	private ElementActionsUtils Actions;
+	private PageObjectHelper  PageObjectHelper;
 	
+	public PageObjectHelper getPageObjectHelper() {
+		return PageObjectHelper;
+	}
+
+	public void setPageObjectHelper(PageObjectHelper pageObjectHelper) {
+		this.PageObjectHelper = pageObjectHelper;
+	}
+
 	public PageBase(Config scenariosInstance) {
 		init(scenariosInstance);
 		}
@@ -24,7 +37,14 @@ public class PageBase {
 		driver=scenarioContext.driver;
 		Actions = new ElementActionsUtils(scenarioContext);	
 		browserUtils = new BrowserUtils(scenarioContext);
+		PageObjectHelper=new PageObjectHelper(scenarioContext);
+		PageObjectHelper.initPage(this.getInstantClassName());
 		PageFactory.initElements(scenariosInstance.driver, this);
+	}
+	
+	public String getInstantClassName() {
+		String className=this.getClass().getSimpleName();
+		return className;
 	}
 	
 	public PageBase() {
@@ -89,8 +109,20 @@ public class PageBase {
 	public void setActions(ElementActionsUtils actions) {
 		Actions = actions;
 	}
-
-	private WebDriver driver;
-	private ElementActionsUtils Actions;
+	/**
+	 * 
+	 * @param locatorkey
+	 * @return
+	 */
+	public How getHow(String locatorkey) {
+		String key = this.getInstantClassName();
+		if(Config.locatorsDataPageWise.containsKey(key))
+			return Config.locatorsDataPageWise.get(key).get(locatorkey);
+		else
+			return null;
+	}
+	
+	
+	
 	
 }
