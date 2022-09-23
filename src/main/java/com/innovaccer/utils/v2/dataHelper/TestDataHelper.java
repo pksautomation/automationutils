@@ -1,10 +1,12 @@
-package com.innovaccer.utils.v2;
+package com.innovaccer.utils.v2.dataHelper;
 
 import com.innovaccer.utils.Config;
-import com.innovaccer.utils.fileutils.CSVUtils;
-import com.innovaccer.utils.fileutils.ExcelUtils;
-import com.innovaccer.utils.fileutils.TextUtils;
-import com.innovaccer.utils.fileutils.XMLUtils;
+import com.innovaccer.utils.v2.LoggerUtils;
+import com.innovaccer.utils.v2.fileutils.CSVUtils;
+import com.innovaccer.utils.v2.fileutils.ExcelUtils;
+import com.innovaccer.utils.v2.fileutils.TextUtils;
+import com.innovaccer.utils.v2.fileutils.XMLUtils;
+import com.innovaccer.utils.v2.fileutils.YamlUtils;
 
 public class TestDataHelper {
 	private LoggerUtils LoggerUtils;
