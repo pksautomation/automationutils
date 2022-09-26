@@ -1,4 +1,4 @@
-package com.innovaccer.utils.fileutils;
+package com.innovaccer.utils.v2.fileutils;
 
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.v2.LoggerUtils;

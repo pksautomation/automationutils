@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.innovaccer.utils.v2.fileutils;
 
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.YamlReaderWriter;
