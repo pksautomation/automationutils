@@ -16,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Element;
+import com.innovaccer.utils.Popup;
 import com.innovaccer.utils.Element.How;
 
 /**
@@ -325,6 +326,33 @@ public class WaitHelper {
 		}
 		return element;
 
+	}
+	
+	public void waitForPopup(int pollTime) {
+		// Time to poll for every 5 seconds whether popup is present or not
+				int threshold = 5;
+
+				for (int i = 0; i < pollTime; i++)
+				{
+
+					// Time to poll for every 5 seconds whether popup is present or not
+					if (Popup.isAlertPresent(testConfig))
+					{
+						Popup.ok(testConfig);
+						LoggerUtils.logComment("Alert closed successfully");
+						break;
+					}
+					wait(threshold);
+				}
+		//Browser.waitForPopUp(configInstance, timeInSeconds);
+	}
+	
+	public void waitForUrlToDisplay(String expectedUrl, int timeInSeconds) {
+		int count = 0;
+		while(!configInstance.driver.getCurrentUrl().equals(expectedUrl) && count < timeInSeconds)
+		{
+			count +=1;
+		}
 	}
 
 }
