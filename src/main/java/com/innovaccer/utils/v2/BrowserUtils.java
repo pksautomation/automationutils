@@ -36,6 +36,7 @@ import com.innovaccer.utils.Browser;
 import com.innovaccer.utils.Log;
 import com.innovaccer.utils.Popup;
 import com.innovaccer.utils.v2.LoggerUtils;
+import com.innovaccer.utils.v2.AssertionUtils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -62,6 +63,7 @@ public class BrowserUtils {
 	private Config configInstance;
 	private LoggerUtils LoggerUtils;
 	private WebDriver driver;
+	private AssertionUtils AssertUtils;
 	
 	public BrowserUtils(Config testConfig) {
 		init(testConfig);
@@ -71,6 +73,7 @@ public class BrowserUtils {
 	private void init(Config testConfig) {
 		this.configInstance=testConfig;
 		LoggerUtils = new LoggerUtils(configInstance);
+		AssertUtils = new AssertionUtils(configInstance);
 		driver=configInstance.driver;
 	}
 	
@@ -88,10 +91,9 @@ public class BrowserUtils {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		Date startDate = new Date();
 		startDate = new Date();
-		LoggerUtils.logComment("Navigate to web page- '" + url + "' at:- "+dateFormat.format(startDate) + " for : " +configInstance.scenarioName);
+		LoggerUtils.logComment("Starting Navigation to web page- '" + url + "' at:- "+dateFormat.format(startDate) + " for : " +configInstance.scenarioName);
 		try
 		{
-			//testConfig.driver.get(url);
 			configInstance.driver.navigate().to(url);
 		}
 		catch(UnhandledAlertException ua)
@@ -107,10 +109,10 @@ public class BrowserUtils {
 		LoggerUtils.logComment("Navigated to web page- '" + url + "' for : " +configInstance.scenarioName);
 	}
 	
-	public void openBrowser() throws InterruptedException
+	public void openBrowser()
 	{
-		int retryCnt = 10;
-		while (configInstance.driver == null && retryCnt > 0)
+		int retryCnt = 5;
+		while (configInstance.getDriver() == null && retryCnt > 0)
 		{
 			try
 			{
@@ -120,51 +122,24 @@ public class BrowserUtils {
 			catch (Exception e)
 			{
 				LoggerUtils.Warning("Retrying the browser launch:-" + e.toString(), configInstance);
-				System.out.println(e.toString());
 			}
-			if (configInstance.driver == null)
+			if (configInstance.getDriver() == null)
 			{
 				retryCnt--;
 				if (retryCnt == 0)
 				{
 					LoggerUtils.logFail("Browser could not be opened for : "+configInstance.getScenarioName());
-					Assert.assertTrue(false);
+					AssertUtils.assertTrue(false);
 				}
-				wait(2);
 			}
 
 		}
-		configInstance.endExecutionOnfailure = false;
 	}
 	
-	/**
-	 * @author nikitagatagat
-	 * @param seconds
-	 */
-	public void wait(double seconds)
-	{
-		int milliseconds = (int) (seconds * 1000);
-		try
-		{
-			Thread.sleep(milliseconds);
-		}
-		catch (InterruptedException e)
-		{
-			LoggerUtils.logException(e);
-		}
-	}
 	
 	/* Close the browser
 	 * @author pramod.singh
 	 */
-	public void closeBrowser()
-	{
-		configInstance.logToStandardOut = true;
-		//Browser.quitBrowser(configInstance);
-		
-		configInstance.driver = null;
-	}
-
 	
 
 	public void setImplicitWait(int timeInSeconds) {
@@ -190,33 +165,6 @@ public class BrowserUtils {
 
 				if (screenshot != null)
 				{
-					/* try
-					{
-						FileUtils.writeByteArrayToFile(destination, screenshot);
-
-						float compressionQuality = (float) 0.5;
-						try
-						{
-							compressionQuality = Float.parseFloat(testConfig.getRunTimeProperty("ScreenshotCompressionQuality"));
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
-						compressJpegFile(destination, destination, compressionQuality);
-					}
-					catch (IOException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				BufferedImage bImage = ImageIO.read(destination);
-			    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			    ImageIO.write(bImage, "png", bos );
-			    byte [] data = bos.toByteArray();
-				String href = destination.getPath();
-				testConfig.logComment("<B>Screenshot</B>:- <a href=" + href + " target='_blank' >" + destination.getName() + "</a>");
-				 */
 					configInstance.testScenario.embed(screenshot, "image/png");
 					LoggerUtils.logComment("Refer Screenshot In Attachement");
 				}
@@ -228,7 +176,6 @@ public class BrowserUtils {
 			LoggerUtils.logWarning("Unable to take screenshot2:- " + ExceptionUtils.getStackTrace(e));
 			LoggerUtils.logException(e);
 		}
-		//Browser.takeScreenShoot(configInstance);
 	}
 	
 	private byte[] captureScreenshot()
@@ -297,11 +244,11 @@ public class BrowserUtils {
 		//Browser.waitForPageTitleToContain(configInstance, title);
 	}
 
-	public void downloadDesiredFile(String filePath, String fileName) throws InterruptedException {
+	public void downloadDesiredFile(String filePath, String fileName) {
 		DesiredFileDownload(filePath, fileName);
 	}
 	
-	public File DesiredFileDownload(String path, String name) throws InterruptedException
+	public File DesiredFileDownload(String path, String name)
 	{
 		File fl = new File(path);
 		File choise = null;
@@ -334,7 +281,11 @@ public class BrowserUtils {
 			}
 			else
 				if (choise == null)
-					wait(1);
+					try {
+						wait(1);
+						} catch (InterruptedException e) {
+							LoggerUtils.logWarning(ExceptionUtils.getFullStackTrace(e));
+					}
 				else
 					break;
 		}
@@ -365,9 +316,11 @@ public class BrowserUtils {
 		{
 			LoggerUtils.logWarning(ExceptionUtils.getFullStackTrace(e));
 		}
-		//Browser.closeBrowser(configInstance);
 	}
 
+	/**
+	 * Function for going back to the previous page
+	 */
 	public void navigateBack() {
 		goBack();
 	}
@@ -437,11 +390,11 @@ public class BrowserUtils {
 		return files[0];
 	}
 
-	public File getLastModifiedFileInDirectoryForAName(String directoryPath, String name) throws InterruptedException {
+	public File getLastModifiedFileInDirectoryForAName(String directoryPath, String name)  {
 		return lastFileModifiedWithDesiredName(directoryPath, name);
 	}
 	
-	public  File lastFileModifiedWithDesiredName(String path, String name) throws InterruptedException
+	public  File lastFileModifiedWithDesiredName(String path, String name)
 	{
 		File fl = new File(path);
 		File choise = null;
@@ -451,7 +404,6 @@ public class BrowserUtils {
 		{
 			// making a list of files in download folder
 			System.out.println("Wait for file to download");
-			wait(5);
 			File[] files = fl.listFiles(new FileFilter()
 			{
 				public boolean accept(File file)
@@ -551,45 +503,19 @@ public class BrowserUtils {
 			configInstance.driver.switchTo().window(windowHandleName);
 			LoggerUtils.logComment("Switched to window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
 		}
-		//Browser.switchToGivenWindow(configInstance, windowHandleName);
 	}
 
-	public String switchToNewWindow() {
-		if (driver != null)
-		{
-			LoggerUtils.logComment("Switching to the new window");
-			String oldWindow = driver.getWindowHandle();
-
-			if (driver.getWindowHandles().size() < 2)
-			{
-				LoggerUtils.logFail("No new window appeared, windows count available :-" + driver.getWindowHandles().size());
-			}
-
-			for (String winHandle : driver.getWindowHandles())
-			{
-				if (!winHandle.equals(oldWindow))
-				{
-					driver.switchTo().window(winHandle);
-					LoggerUtils.logComment("Switched to window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
-				}
-			}
-
-			return oldWindow;
-		}
-		return null;
-	}
+	
 
 	public void uploadFileUsingJavascript(String jsLocator, String filePath, WebElement element) {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript(jsLocator + ".style.display = \"block\";");
 		js.executeScript(jsLocator + ".style.visibility = 'visible';");
 		js.executeScript(jsLocator + ".style.opacity = 1;");
-		//js.executeScript(strJSLocater + ".style.width = '1px';");
-		//js.executeScript(strJSLocater + ".style.height = '1px';");
 		element.sendKeys(filePath);
 	}
 
-	public boolean verifyUrl(String expectedURL) throws InterruptedException {
+	/*public boolean verifyUrl(String expectedURL) {
 		try
 		{
 			int retries = 30;
@@ -601,10 +527,7 @@ public class BrowserUtils {
 				if (actualURL.contains(expectedURL))
 				{
 					LoggerUtils.logPass("Browser URL", actualURL);
-
-					// Verify that page stays on same page (no internal
-					// redirect)
-					wait(5);
+			
 					actualURL = driver.getCurrentUrl().toLowerCase();
 					if (!actualURL.contains(expectedURL))
 					{
@@ -622,40 +545,12 @@ public class BrowserUtils {
 		}
 		catch (UnreachableBrowserException e)
 		{
-			// testConfig.endExecutionOnfailure = true;
 			LoggerUtils.logException(e);
 			return false;
 		}
-	}
+	}*/
 
 
-	public void waitForUrlToDisplay(String expectedUrl, int timeInSeconds) throws InterruptedException {
-		int count = 0;
-		while(!driver.getCurrentUrl().equals(expectedUrl) && count < timeInSeconds)
-		{
-			count +=1;
-			wait(1);
-		}
-	}
-
-	public void waitForPopup(int pollTime) {
-		// Time to poll for every 5 seconds whether popup is present or not
-				int threshold = 5;
-
-				for (int i = 0; i < pollTime; i++)
-				{
-
-					// Time to poll for every 5 seconds whether popup is present or not
-					if (Popup.isAlertPresent(testConfig))
-					{
-						Popup.ok(testConfig);
-						LoggerUtils.logComment("Alert closed successfully");
-						break;
-					}
-					wait(threshold);
-				}
-		//Browser.waitForPopUp(configInstance, timeInSeconds);
-	}
 
 	public SelfHealingDriver launchWindowsApp() {
 		WebDriver delegate = null;

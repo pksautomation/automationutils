@@ -217,6 +217,31 @@ public class ElementActionsUtils  {
 		}
 
 	}
+	
+	public String switchToNewWindow() {
+		if (driver != null)
+		{
+			LoggerUtils.logComment("Switching to the new window");
+			String oldWindow = driver.getWindowHandle();
+
+			if (driver.getWindowHandles().size() < 2)
+			{
+				LoggerUtils.logFail("No new window appeared, windows count available :-" + driver.getWindowHandles().size());
+			}
+
+			for (String winHandle : driver.getWindowHandles())
+			{
+				if (!winHandle.equals(oldWindow))
+				{
+					driver.switchTo().window(winHandle);
+					LoggerUtils.logComment("Switched to window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
+				}
+			}
+
+			return oldWindow;
+		}
+		return null;
+	}
 
 
 	public boolean isElementDisplay(WebElement ele) {

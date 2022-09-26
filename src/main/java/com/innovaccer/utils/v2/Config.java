@@ -335,5 +335,13 @@ public class Config {
     public String getLogModeFromRunTimeProperty() {
         return System.getProperty("logsMode");
     }
+    
+    /**
+     * Return the instance of WebDriver
+     * @author nikitagatagat
+     */
+    public WebDriver getDriver(){
+    	return this.driver;
+    	}
 
 }

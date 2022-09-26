@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Helper;
 
