@@ -1,7 +1,6 @@
 package com.innovaccer.utils.v2;
 
 import org.openqa.selenium.*;
-import org.testng.Assert;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,28 +8,40 @@ import java.time.format.DateTimeFormatter;
 public class LoggerUtils {
 
     private Config testConfig;
+    private AssertionUtils assertionUtils;
     public String uniqueId = null;
     public String timeStamp = null;
 
     public LoggerUtils(Config testConfig) {
-        this.testConfig = testConfig;
-        uniqueId = this.testConfig.uniqueId;
+        init(testConfig);
     }
 
     public LoggerUtils() {
-        this.testConfig = Config.getConfig();
+        init(Config.getConfig());
     }
 
-    private static void logToStandard(String message) {
+    private void init(Config config) {
+        this.testConfig = config;
+        uniqueId = config.uniqueId;
+        assertionUtils = new AssertionUtils(config);
+    }
+
+    private void logToStandard(String message) {
         System.out.println(message);
     }
 
-    private static void writeMessageInReport(Config testConfig, String message) {
+    private void writeMessageInReport(Config testConfig, String message) {
         testConfig.testScenario.write(message);
         testConfig.testLog = testConfig.testLog.concat(message);
     }
 
-    public static void failure(String message, Config testConfig) {
+    /**
+     * This method logs Failure
+     *
+     * @param message    -> message to log with failure
+     * @param testConfig -> config instance
+     */
+    public void failure(String message, Config testConfig) {
         testConfig.isFailScenarioStatus = true;
         testConfig.softAssert.fail(message);
         if (testConfig.logToStandardOut)
@@ -39,13 +50,18 @@ public class LoggerUtils {
             writeMessageInReport(testConfig, message);
         if (testConfig.endExecutionOnfailure) {
             if (testConfig.logsMode) {
-                Assert.fail(message);
+                assertionUtils.assertFail(message);
             } else
-                Assert.fail(" --> [Fail] Something went wrong during Execution");
+                assertionUtils.assertFail(" --> [Fail] Something went wrong during Execution");
         }
     }
 
-    public static void getPageInfo(Config testConfig) {
+    /**
+     * This method is used to take screenshot
+     *
+     * @param testConfig -> config instance
+     */
+    private void getPageInfo(Config testConfig) {
         testConfig.enableScreenshot = true;
         if (testConfig.enableScreenshot && testConfig.logsMode) {
             if (testConfig.driver != null && testConfig.testScenario != null) {
@@ -54,12 +70,66 @@ public class LoggerUtils {
         }
     }
 
-    public static void embedMessageAsHTMLInReport(Config testConfig, String message) {
+    /**
+     * This method adds a message to HTML Report
+     *
+     * @param testConfig -> config instance
+     * @param message    -> message to be added on HTML Report
+     */
+    public void embedMessageAsHTMLInReport(Config testConfig, String message) {
         String msg = "<p style=\"color:red;\">" + message.replace("\n", "</br>") + "</span>";
         testConfig.testScenario.embed(msg.getBytes(), "text/html");
         testConfig.testLog = testConfig.testLog.concat(msg);
     }
 
+    /**
+     * @param what        -> Object to be verified
+     * @param actual      -> Actual Value of Object
+     * @param logPageInfo -> Boolean to enable/disable logging page info
+     * @param <T>
+     */
+    public <T> void logPass(String what, T actual, boolean logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        String message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  Verified '" + what + "' as :-'" + actual + "'";
+        logComment(message);
+        if (logPageInfo)
+            getPageInfo(this.testConfig);
+    }
+
+    /**
+     * @param what        -> Object to be verified
+     * @param expected    -> Expected Value of Object
+     * @param actual      -> Actual Value of Object
+     * @param logPageInfo -> Boolean to enable/disable logging page info
+     */
+    public <T> void logFail(String what, T expected, T actual, boolean logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        String message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        failure(message, this.testConfig);
+        if (logPageInfo)
+            getPageInfo(this.testConfig);
+    }
+
+    /**
+     * This method is used to log a failure message
+     *
+     * @param message     -> message to be logged
+     * @param logPageInfo -> boolean to enable/disable logging page info
+     */
+    public void logFail(String message, boolean logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        failure(message, this.testConfig);
+        if (logPageInfo)
+            getPageInfo(this.testConfig);
+    }
+
+    /**
+     * This method is used to log a message
+     *
+     * @param message -> message to be logged
+     */
     public void logComment(String message) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [INFO] -->  " + message;
@@ -76,6 +146,11 @@ public class LoggerUtils {
         }
     }
 
+    /**
+     * This method is used to log a warning message
+     *
+     * @param message -> warning message to be logged
+     */
     public void logWarning(String message) {
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [WARNING] --> " + message;
         if (testConfig.logToStandardOut)
@@ -84,6 +159,13 @@ public class LoggerUtils {
             writeMessageInReport(testConfig, message);
     }
 
+    /**
+     * This method is used to log a exception along with a message and take screenshot(if needed)
+     *
+     * @param message        -> message to be logged
+     * @param e              -> Exception
+     * @param takeScreenshot -> boolean to enable/disable screenshot
+     */
     public void logException(String message, Exception e, boolean... takeScreenshot) {
         String errorFilePath = "";
         testConfig.logsModeForException = true;
@@ -170,12 +252,21 @@ public class LoggerUtils {
         testConfig.logsModeForException = false;
     }
 
+    /**
+     * This method is used to log a failure exception
+     *
+     * @param exception -> Exception
+     */
     public void logFailureException(Exception exception) {
         logException("", exception, false);
     }
 
+    /**
+     * This method is used to embed text to HTML Report
+     *
+     * @param text -> text to be embedded
+     */
     public void embedStringAsHTMLInReport(String text) {
         embedMessageAsHTMLInReport(testConfig, text);
     }
-
 }
