@@ -92,7 +92,7 @@ public class ElementActionsUtils  {
 			return element;
 		}
 		catch(Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
+			LoggerUtils.logException("Not found drop down button " + Label, e, true);
 		}
 		finally {
 			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
@@ -138,7 +138,7 @@ public class ElementActionsUtils  {
 			return element;
 		}
 		catch(Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
+			LoggerUtils.logException("Not found drop down button " + Label, e, true);
 		}
 		finally {
 			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));

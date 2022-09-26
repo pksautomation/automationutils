@@ -117,11 +117,11 @@ public class LoggerUtils {
      * @param message     -> message to be logged
      * @param logPageInfo -> boolean to enable/disable logging page info
      */
-    public void logFail(String message, boolean logPageInfo) {
+    public void logFail(String message, boolean ...logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
         failure(message, this.testConfig);
-        if (logPageInfo)
+        if (logPageInfo[0])
             getPageInfo(this.testConfig);
     }
 
