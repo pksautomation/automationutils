@@ -1,7 +1,5 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.fileutils.*;
 import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
 
 public class UtilityObjectManager {

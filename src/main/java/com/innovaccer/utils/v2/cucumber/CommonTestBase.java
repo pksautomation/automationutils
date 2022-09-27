@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.cucumber;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.UtilityObjectManager;
 

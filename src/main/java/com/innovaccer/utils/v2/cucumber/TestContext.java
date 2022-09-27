@@ -1,26 +1,9 @@
 package com.innovaccer.utils.v2.cucumber;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.testng.asserts.SoftAssert;
-
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.Log;
-import com.innovaccer.utils.v2.BrowserUtils;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.UtilityObjectManager;
 
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
-import cucumber.api.java.AfterStep;
-import cucumber.api.java.Before;
-import cucumber.api.java.BeforeStep;
+import java.io.File;
 
 public class TestContext {
 

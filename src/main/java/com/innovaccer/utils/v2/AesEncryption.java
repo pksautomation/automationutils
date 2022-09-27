@@ -1,7 +1,5 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
@@ -10,11 +8,11 @@ import java.util.Base64;
 public class AesEncryption {
 
     private Config config;
-    private LoggerHelper loggerHelper;
+    private LoggerUtils loggerUtils;
 
     public AesEncryption(Config testConfig) {
         config = testConfig;
-        loggerHelper = new LoggerHelper(config);
+        loggerUtils = new LoggerUtils(config);
     }
 
     private static String encrypt(Config testConfig, String str) throws Exception {
@@ -38,8 +36,8 @@ public class AesEncryption {
         try {
             value = AesEncryption.encrypt(testConfig, str);
         } catch (Exception e) {
-            loggerHelper.logComment("Fail to encrypt.....");
-            loggerHelper.logException(e);
+            loggerUtils.logComment("Fail to encrypt.....");
+            loggerUtils.logFailureException(e);
         }
         return value;
     }
@@ -49,8 +47,8 @@ public class AesEncryption {
         try {
             str = AesEncryption.decrypt(testConfig, encrypted);
         } catch (Exception e) {
-            loggerHelper.logComment("Fail to decrypt.....");
-            loggerHelper.logException(e);
+            loggerUtils.logComment("Fail to decrypt.....");
+            loggerUtils.logFailureException(e);
         }
         return str;
     }

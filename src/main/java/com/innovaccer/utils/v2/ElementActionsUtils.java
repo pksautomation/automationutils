@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Element.How;
 import com.mysql.jdbc.log.LogUtils;
@@ -35,11 +36,11 @@ public class ElementActionsUtils  {
 	
 	public ElementActionsUtils() {
 		init(Config.getConfig());
-		}
+	}
 
 	private void init(Config scenariosInstance) {
 		this.scenarioContext=scenariosInstance;
-		WaitUtils = new WaitHelper(scenariosInstance);
+		WaitUtils = new WaitHelper(scenarioContext);
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		driver=scenarioContext.driver;
 		testDataHelper=new TestDataHelper(scenarioContext);

@@ -3,6 +3,7 @@ package com.innovaccer.utils.v2;
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.TestDataReader;
+import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -21,6 +22,7 @@ import java.util.*;
 
 public class Config {
 
+    private static LoggerUtils loggerUtils;
     public static ThreadLocal<Config[]> threadLocalConfig;
     public static String BrowserName;
     public static String Environment;
@@ -78,8 +80,7 @@ public class Config {
     String testEndTime;
     String testStartTime;
     private WaitHelper waitHelper;
-
-    com.innovaccer.utils.Config config;
+    public static Map<String,Map<String, How>> locatorPageWiseData = new HashMap<String,Map<String,How>>();
 
     /**
      * Load Config
@@ -89,7 +90,7 @@ public class Config {
      * @author pramod.singh
      */
     public Config(String configPath, Scenario scenario) {
-        config = new com.innovaccer.utils.Config();
+        loggerUtils = new LoggerUtils();
         this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
                 Helper.generateRandomAlphaNumericString(5) + "-" +
                 Helper.generateRandomAlphaNumericString(4);
@@ -116,7 +117,7 @@ public class Config {
         featureName = rawFeatureName.substring(0, 1).toUpperCase() + rawFeatureName.substring(1);
         String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
         if (debugMode)
-            config.logComment("Test data sheet is:-" + testDataSheet);
+            loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
         putRunTimeProperty("TestDataSheet", testDataSheet);
         remoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
         endExecutionOnfailure = false;
@@ -145,6 +146,7 @@ public class Config {
     }
 
     public Config(String... configPath) {
+        loggerUtils = new LoggerUtils();
         String defaultConfigPath = System.getProperty("user.dir") + File.separator
                 + "src/test/resources/Config/config.properties";
         this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
@@ -172,7 +174,7 @@ public class Config {
         remoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
         String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
         if (debugMode)
-            config.logComment("Test data sheet is:-" + testDataSheet);
+            loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
         putRunTimeProperty("TestDataSheet", testDataSheet);
 
         BrowserName = this.getBrowserNameFromRunTimeProperty();
@@ -204,11 +206,11 @@ public class Config {
         try {
             value = (ArrayList<JSONObject>) runtimeProperties.get(keyName);
             if (debugMode)
-                config.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
+                loggerUtils.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
         } catch (Exception e) {
             if (debugMode) {
-                config.logComment(e.toString());
-                config.logComment("'" + key + "' not found in Run Time Properties");
+                loggerUtils.logComment(e.toString());
+                loggerUtils.logComment("'" + key + "' not found in Run Time Properties");
             }
             return null;
         }
@@ -221,11 +223,11 @@ public class Config {
         try {
             value = runtimeProperties.get(keyName);
             if (debugMode)
-                config.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
+                loggerUtils.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
         } catch (Exception e) {
             if (debugMode) {
-                config.logComment(e.toString());
-                config.logComment("'" + key + "' not found in Run Time Properties");
+                loggerUtils.logFailureException(e);
+                loggerUtils.logComment("'" + key + "' not found in Run Time Properties");
             }
             return null;
         }
@@ -239,11 +241,11 @@ public class Config {
             value = runtimeProperties.get(keyName).toString();
 //            value = Helper.replaceArgumentsWithRunTimeProperties(this, value);
             if (debugMode)
-                config.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
+                loggerUtils.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
         } catch (Exception e) {
             if (debugMode && !keyName.equalsIgnoreCase("beforehook")) {
-                config.logComment(e.toString());
-                config.logComment("'" + key + "' not found in Run Time Properties");
+                loggerUtils.logFailureException(e);
+                loggerUtils.logComment("'" + key + "' not found in Run Time Properties");
             }
             return null;
         }
@@ -266,28 +268,28 @@ public class Config {
         String keyName = key.toLowerCase();
         runtimeProperties.put(keyName, table);
         if (debugMode)
-            config.logComment("Putting Run-Time key-" + keyName + " value:-'" + table.toString() + "'");
+            loggerUtils.logComment("Putting Run-Time key-" + keyName + " value:-'" + table.toString() + "'");
     }
 
     public void putRunTimeProperty(String key, Object value) {
         String keyName = key.toLowerCase();
         runtimeProperties.put(keyName, value);
         if (debugMode)
-            config.logComment("Putting Run-Time key-" + keyName + " value:-'" + value + "'");
+            loggerUtils.logComment("Putting Run-Time key-" + keyName + " value:-'" + value + "'");
     }
 
     public void putRunTimeProperty(String key, String value) {
         String keyName = key.toLowerCase();
         runtimeProperties.put(keyName, value);
         if (debugMode) {
-            config.logComment("Putting Run-Time key-" + keyName + " value:-'" + value + "'");
+            loggerUtils.logComment("Putting Run-Time key-" + keyName + " value:-'" + value + "'");
         }
     }
 
     public void removeRunTimeProperty(String key) {
         String keyName = key.toLowerCase();
         if (debugMode)
-            config.logComment("Removing Run-Time key-" + keyName);
+            loggerUtils.logComment("Removing Run-Time key-" + keyName);
         runtimeProperties.remove(keyName);
     }
 
@@ -308,7 +310,7 @@ public class Config {
                 putRunTimeProperty(str, (String) property.get(str));
             }
         } catch (Exception e) {
-            config.logFail(e.getMessage(), true);
+            loggerUtils.logException(e.getMessage(), e);
         }
     }
 
@@ -320,7 +322,7 @@ public class Config {
                 putRunTimeProperty(key, value);
             }
         } catch (Exception e) {
-            config.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 

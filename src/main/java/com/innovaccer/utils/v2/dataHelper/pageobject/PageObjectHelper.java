@@ -1,7 +1,6 @@
 package com.innovaccer.utils.v2.dataHelper.pageobject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.fileutils.JSONUtils;
 import com.innovaccer.utils.v2.LoggerUtils;
 
@@ -42,7 +41,7 @@ public class PageObjectHelper {
 	 */
 	synchronized public void loadPageLocators(String fileName) {
 		Map<String,How> locators = new HashMap<String,How>();
-		if(configInstance.locatorsDataPageWise.containsKey(fileName))
+		if(configInstance.locatorPageWiseData.containsKey(fileName))
 			return;
 		else {
 			
@@ -68,7 +67,7 @@ public class PageObjectHelper {
 					locators.put(name,how);
 				
 				}
-				configInstance.locatorsDataPageWise.put(fileName, locators);
+				configInstance.locatorPageWiseData.put(fileName, locators);
 			}catch(Exception e) {
 				LoggerUtils.logExceptionAndSkipFailure(fileName + " file not found ", e, false);
 			}

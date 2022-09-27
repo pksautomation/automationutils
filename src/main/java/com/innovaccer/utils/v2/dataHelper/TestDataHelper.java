@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.dataHelper;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.fileutils.CSVUtils;
 import com.innovaccer.utils.v2.fileutils.ExcelUtils;

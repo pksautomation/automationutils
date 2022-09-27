@@ -31,7 +31,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-//import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Popup;
 
 import io.github.bonigarcia.wdm.WebDriverManager;

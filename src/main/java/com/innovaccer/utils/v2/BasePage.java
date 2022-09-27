@@ -3,11 +3,10 @@ package com.innovaccer.utils.v2;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import com.innovaccer.utils.Config;
 import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.innovaccer.utils.v2.dataHelper.pageobject.PageObjectHelper;
 
-public class PageBase {
+public class BasePage {
 	private Config scenarioContext;
 	private WaitHelper WaitUtils=null;
 	private UtilityObjectManager UtilityObjectManager=null;
@@ -25,21 +24,21 @@ public class PageBase {
 		this.PageObjectHelper = pageObjectHelper;
 	}
 
-	public PageBase(Config scenariosInstance) {
+	public BasePage(Config scenariosInstance) {
 		init(scenariosInstance);
-		}
+	}
 
-	private void init(Config scenariosInstance) {
-		this.scenarioContext=scenariosInstance;
-		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
-		WaitUtils = new WaitHelper(scenariosInstance);
+	private void init(Config scenarioInstance) {
+		this.scenarioContext=scenarioInstance;
+		this.UtilityObjectManager = new UtilityObjectManager(scenarioInstance);
+		WaitUtils = new WaitHelper(scenarioContext);
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		driver=scenarioContext.driver;
 		Actions = new ElementActionsUtils(scenarioContext);	
 		browserUtils = new BrowserUtils(scenarioContext);
 		PageObjectHelper=new PageObjectHelper(scenarioContext);
 		PageObjectHelper.initPage(this.getInstantClassName());
-		PageFactory.initElements(scenariosInstance.driver, this);
+		PageFactory.initElements(scenarioInstance.driver, this);
 	}
 	
 	public String getInstantClassName() {
@@ -47,7 +46,7 @@ public class PageBase {
 		return className;
 	}
 	
-	public PageBase() {
+	public BasePage() {
 		init(Config.getConfig());
 		}
 	
@@ -109,15 +108,16 @@ public class PageBase {
 	public void setActions(ElementActionsUtils actions) {
 		Actions = actions;
 	}
+
 	/**
 	 * 
-	 * @param locatorkey
+	 * @param locatorKey
 	 * @return
 	 */
-	public How getHow(String locatorkey) {
+	public How getHow(String locatorKey) {
 		String key = this.getInstantClassName();
-		if(Config.locatorsDataPageWise.containsKey(key))
-			return Config.locatorsDataPageWise.get(key).get(locatorkey);
+		if(Config.locatorPageWiseData.containsKey(key))
+			return Config.locatorPageWiseData.get(key).get(locatorKey);
 		else
 			return null;
 	}
