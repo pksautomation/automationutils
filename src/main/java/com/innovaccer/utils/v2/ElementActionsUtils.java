@@ -1,6 +1,5 @@
 package com.innovaccer.utils.v2;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -11,11 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Element.How;
-import com.mysql.jdbc.log.LogUtils;
 
 /**
  *
@@ -25,7 +21,7 @@ import com.mysql.jdbc.log.LogUtils;
 public class ElementActionsUtils  {
 
 	private Config scenarioContext;
-	private WaitHelper WaitUtils=null;
+	private WaitHelper waitHelper =null;
 	private LoggerUtils LoggerUtils;
 	private WebDriver driver;
 	private TestDataHelper testDataHelper;
@@ -40,7 +36,7 @@ public class ElementActionsUtils  {
 
 	private void init(Config scenariosInstance) {
 		this.scenarioContext=scenariosInstance;
-		WaitUtils = new WaitHelper(scenarioContext);
+		waitHelper = new WaitHelper(scenarioContext);
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		driver=scenarioContext.driver;
 		testDataHelper=new TestDataHelper(scenarioContext);
@@ -53,7 +49,7 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public WebElement getVisibleElement(By by) {
-		return WaitUtils.fluentWaitForVisibility(by, "");
+		return waitHelper.fluentWaitForVisibility(by, "");
 		
 	}
 	
@@ -63,7 +59,7 @@ public class ElementActionsUtils  {
 	 * @return
 	 */
 	public WebElement getVisibleElement(By by,int maxwaitTime) {
-		return WaitUtils.fluentWaitForVisibility(by, "",maxwaitTime);
+		return waitHelper.fluentWaitForVisibility(by, "",maxwaitTime);
 		
 	}
 	
@@ -110,7 +106,7 @@ public class ElementActionsUtils  {
 	public WebElement getEnabledButtonEle(String buttonLabel) {
 		String buttonXpath = "//button[contains(text(),'"+buttonLabel+"')]";
 		By by = By.xpath(buttonXpath);
-		return WaitUtils.waitForElementToBeClickable(by,buttonLabel,10);		
+		return waitHelper.waitForElementToBeClickable(by,buttonLabel,10);
 	}
 
 	/**
@@ -178,7 +174,7 @@ public class ElementActionsUtils  {
 	 */
 	public WebElement getClickableElement(String text) {
 		String xpath = "//body//*[text()='"+text+"']";
-		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+		return waitHelper.waitForElementToBeClickable(By.xpath(xpath),"",30);
 	}
 	
 	/**
@@ -188,7 +184,7 @@ public class ElementActionsUtils  {
 	 */
 	public WebElement getClickableButtonElement(String text) {
 		String xpath = "//body//button[text()='"+text+"']";
-		return WaitUtils.waitForElementToBeClickable(By.xpath(xpath),"",30);				
+		return waitHelper.waitForElementToBeClickable(By.xpath(xpath),"",30);
 	}
 	
 	/**
@@ -198,7 +194,7 @@ public class ElementActionsUtils  {
 	 */
 	public WebElement getDisplayElement(String text) {
 		String xpath = "//body//*[text()='"+text+"']";
-		return WaitUtils.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);		
+		return waitHelper.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
 	}
 	
 
@@ -254,7 +250,7 @@ public class ElementActionsUtils  {
 	}
 
 	public WaitHelper getWait() {
-		return (WaitUtils == null) ? WaitUtils = new WaitHelper(scenarioContext) : WaitUtils;
+		return (waitHelper == null) ? waitHelper = new WaitHelper(scenarioContext) : waitHelper;
 	}
 
 	public void check(WebElement element, String description) {

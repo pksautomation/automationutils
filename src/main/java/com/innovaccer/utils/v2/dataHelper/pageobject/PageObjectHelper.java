@@ -69,7 +69,7 @@ public class PageObjectHelper {
 				}
 				configInstance.locatorPageWiseData.put(fileName, locators);
 			}catch(Exception e) {
-				LoggerUtils.logExceptionAndSkipFailure(fileName + " file not found ", e, false);
+				LoggerUtils.logException(fileName + " file not found ", e, false);
 			}
 		}
 	}
