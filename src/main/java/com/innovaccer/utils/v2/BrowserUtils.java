@@ -31,7 +31,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import com.innovaccer.utils.Popup;
+import com.innovaccer.utils.v2.PopupUtils;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -57,6 +57,7 @@ public class BrowserUtils {
 	private LoggerUtils loggerUtils;
 	private WebDriver driver;
 	private AssertionUtils assertionUtils;
+	private PopupUtils popupUtils;
 
 	public BrowserUtils(Config testConfig) {
 		init(testConfig);
@@ -67,6 +68,7 @@ public class BrowserUtils {
 		loggerUtils = new LoggerUtils(configInstance);
 		assertionUtils = new AssertionUtils(configInstance);
 		driver=configInstance.driver;
+		popupUtils = new PopupUtils(this.configInstance);
 	}
 
 	public BrowserUtils() {
@@ -91,11 +93,11 @@ public class BrowserUtils {
 		catch(UnhandledAlertException ua)
 		{
 			loggerUtils.logWarning("Alert appeared during navigation");
-			if(Popup.isAlertPresent(configInstance))
-				Popup.ok(configInstance);
+			if(popupUtils.isAlertPresent())
+				popupUtils.ok();
 		}
 		catch(Exception e) {
-			loggerUtils.logException(e);
+			loggerUtils.logFailureException(e);
 		}
 
 		loggerUtils.logComment("Navigated to web page- '" + url + "' for : " +configInstance.scenarioName);
@@ -176,9 +178,9 @@ public class BrowserUtils {
 
 		try
 		{
-			if(Popup.isAlertPresent(configInstance, false))
+			if(popupUtils.isAlertPresent(false))
 			{
-				Popup.ok(configInstance);
+				popupUtils.ok();
 			}
 
 			if (driver.getClass().isAnnotationPresent(Augmentable.class) || driver.getClass().getName().startsWith("org.openqa.selenium.remote.RemoteWebDriver$$EnhancerByCGLIB"))
@@ -194,7 +196,7 @@ public class BrowserUtils {
 		}
 		catch (UnhandledAlertException alert)
 		{
-			Popup.ok(configInstance);
+			popupUtils.ok();
 			loggerUtils.logWarning(ExceptionUtils.getFullStackTrace(alert));
 		}
 		catch (NoSuchWindowException NoSuchWindowExp)

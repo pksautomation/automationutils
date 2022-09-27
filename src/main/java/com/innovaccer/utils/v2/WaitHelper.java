@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -14,7 +13,6 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Popup;
 import com.innovaccer.utils.Element.How;
@@ -27,7 +25,8 @@ import com.innovaccer.utils.Element.How;
 public class WaitHelper {
 
 	private Config configInstance;
-	private LoggerUtils LoggerUtils;
+	private LoggerUtils loggerUtils;
+	private PopupUtils popupUtils;
 
 	public WaitHelper(Config config) {
 		init(config);
@@ -39,7 +38,8 @@ public class WaitHelper {
 
 	private void init(Config config) {
 		this.configInstance = config;
-		LoggerUtils = new LoggerUtils(configInstance);
+		loggerUtils = new LoggerUtils(configInstance);
+		popupUtils = new PopupUtils(this.configInstance);
 	}
 
 	public void waitForVisibility(WebElement element, int timeInSeconds, String description) {
@@ -288,7 +288,7 @@ public class WaitHelper {
 		try {
 			returnElement = fluentWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
 		} catch (Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure(description, e, true);
+			loggerUtils.logExceptionAndSkipFailure(description, e, true);
 			returnElement = null;
 		}
 		return returnElement;
@@ -321,7 +321,7 @@ public class WaitHelper {
 		try {
 			element = fluentWait.until(ExpectedConditions.elementToBeClickable(by));
 		} catch (Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure(description, e, true);
+			loggerUtils.logExceptionAndSkipFailure(description, e, true);
 			element = null;
 		}
 		return element;
@@ -336,10 +336,10 @@ public class WaitHelper {
 				{
 
 					// Time to poll for every 5 seconds whether popup is present or not
-					if (Popup.isAlertPresent(testConfig))
+					if (popupUtils.isAlertPresent())
 					{
-						Popup.ok(testConfig);
-						LoggerUtils.logComment("Alert closed successfully");
+						popupUtils.ok();
+						loggerUtils.logComment("Alert closed successfully");
 						break;
 					}
 					wait(threshold);
