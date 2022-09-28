@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.fileutils;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ public class TextUtils {
     private LoggerUtils loggerHelper;
 
     public TextUtils(Config testConfig) {
-        config = testConfig;
+        this.config = testConfig;
         loggerHelper = new LoggerUtils(config);
     }
 
@@ -33,7 +33,7 @@ public class TextUtils {
                 loggerHelper.logComment("Written Value " + text + " in " + filename);
             fileWriter.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -59,7 +59,7 @@ public class TextUtils {
             String[] arraylist = rowData.split("\\|");
             return arraylist[column];
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         return null;
     }

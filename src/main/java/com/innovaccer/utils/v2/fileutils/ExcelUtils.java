@@ -1,7 +1,7 @@
 package com.innovaccer.utils.v2.fileutils;
 
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.poi.hssf.usermodel.*;
@@ -70,7 +70,7 @@ public class ExcelUtils {
             HSSFRow row = worksheet.getRow(rowIndex);
             numberOfColumns = row.getPhysicalNumberOfCells();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         return numberOfColumns;
     }
@@ -98,7 +98,7 @@ public class ExcelUtils {
                 cellValue = "";
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         return cellValue;
     }
@@ -133,7 +133,7 @@ public class ExcelUtils {
                 }
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         return sheetData;
     }
@@ -217,7 +217,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -247,7 +247,7 @@ public class ExcelUtils {
                 fileOut.close();
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -278,7 +278,7 @@ public class ExcelUtils {
             fileout.flush();
             fileout.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -309,7 +309,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -363,7 +363,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
@@ -407,7 +407,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
     }
 
