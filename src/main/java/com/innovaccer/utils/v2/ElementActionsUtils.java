@@ -1,8 +1,6 @@
 package com.innovaccer.utils.v2;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
+import com.innovaccer.utils.Element;
 import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -10,8 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import com.innovaccer.utils.Element;
-import com.innovaccer.utils.Element.How;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -25,6 +23,14 @@ public class ElementActionsUtils  {
 	private LoggerUtils LoggerUtils;
 	private WebDriver driver;
 	private TestDataHelper testDataHelper;
+
+	/**
+	 * Locator technique
+	 */
+	public enum How
+	{
+		className, css, id, linkText, name, partialLinkText, tagName, xPath
+	};
 
 	public ElementActionsUtils(Config scenariosInstance) {
 		init(scenariosInstance);
@@ -212,7 +218,6 @@ public class ElementActionsUtils  {
 			WebElement element = scenarioContext.driver.findElement(by);
 			click(element, Label + " Dropdown option " + data);	
 		}
-
 	}
 	
 	public String switchToNewWindow() {
