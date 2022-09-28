@@ -43,6 +43,14 @@ public class ElementActionsUtils  {
 	private WebDriver driver;
 	private TestDataHelper testDataHelper;
 
+	/**
+	 * Locator technique
+	 */
+	public enum How
+	{
+		className, css, id, linkText, name, partialLinkText, tagName, xPath
+	};
+
 	public ElementActionsUtils(Config scenariosInstance) {
 		init(scenariosInstance);
 		}
@@ -229,7 +237,6 @@ public class ElementActionsUtils  {
 			WebElement element = scenarioContext.driver.findElement(by);
 			click(element, Label + " Dropdown option " + data);	
 		}
-
 	}
 	
 	public String switchToNewWindow() {
@@ -284,10 +291,10 @@ public class ElementActionsUtils  {
 				LoggerUtils.logComment("Stale element reference exception. Trying again...");
 				clickWithoutLog(element);
 			}
-			
+
 		}
 	}
-	
+
 	/**
 	 * @param element
 	 *            WebElement to be cleared
@@ -310,14 +317,14 @@ public class ElementActionsUtils  {
 	 * @author i0465
 	 */
 	public void click(WebElement element, String description)
-	{	
+	{
 		Actions builder = new Actions(driver);
 		builder.moveToElement(element).click().build().perform();
 		waitHelper.wait(1);
 		waitHelper.waitForJStoLoad();
 		LoggerUtils.logComment("Clicked on " + description);
 	}
-	
+
 	/**
 	 * Clicks on element using JavaScript
 	 * @param elementToBeClicked
@@ -330,7 +337,7 @@ public class ElementActionsUtils  {
 		js.executeScript("arguments[0].click();", elementToBeClicked);
 		LoggerUtils.logComment("Clicked on " + description);
 	}
-	
+
 	/**
 	 * Clear on element using JavaScript
 	 * @param elementToBeClicked
@@ -340,9 +347,9 @@ public class ElementActionsUtils  {
 	{
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("arguments[0].value ='';", element);
-		LoggerUtils.logComment("Cleared on " + description);	
+		LoggerUtils.logComment("Cleared on " + description);
 	}
-	
+
 	/**
 	 * Enter Data on element using JavaScript
 	 * @param element
@@ -355,7 +362,7 @@ public class ElementActionsUtils  {
 		js.executeScript("arguments[0].value='"+value+"';", element);
 		LoggerUtils.logComment("Enter the " + description + " as '" + message + "'");
 	}
-	
+
 	/**
 	* @param element
 	 *            WebElement to be double clicked
@@ -390,7 +397,7 @@ public class ElementActionsUtils  {
 		element.sendKeys(value);
 		LoggerUtils.logComment("Enter the " + description + " as '" + message + "'");
 	}
-	
+
 	/**
 	 * Enters the given 'value'in the specified WebElement after clicking on it
 	 * @param element
@@ -412,14 +419,14 @@ public class ElementActionsUtils  {
 			element.clear();
 			waitHelper.wait(1);
 			element.sendKeys(value);
-			
+
 		}
 		else
 		{
 			LoggerUtils.logComment("Skipped data entry for " + description);
 		}
 	}
-	
+
 	/**
 	 * Click without logging
 	 * @param element
@@ -437,7 +444,7 @@ public class ElementActionsUtils  {
 			element.click();
 		}
 	}
-	
+
 	/**
 	 * Enters the given 'value'in the specified WebElement without clear
 	 * @param element
@@ -456,7 +463,7 @@ public class ElementActionsUtils  {
 			String message = StringUtils.replaceEach(value, new String[] { "&", "\"", "<", ">" }, new String[] { "&amp;", "&quot;", "&lt;", "&gt;" });
 			LoggerUtils.logComment("Enter the " + description + " as '" + message + "'");
 			element.sendKeys(value);
-			
+
 		}
 		else
 		{
@@ -466,7 +473,7 @@ public class ElementActionsUtils  {
 
 	/**
 	 * Enters the given 'value'in the specified File name WebElement
-	 
+
 	 * @param element
 	 *            Filename WebElement where data needs to be entered
 	 * @param value
@@ -479,10 +486,10 @@ public class ElementActionsUtils  {
 	{
 		if (!value.equalsIgnoreCase("{skip}"))
 		{
-			
+
 			LoggerUtils.logComment("Enter the " + description + " as '" + value + "'");
 			element.sendKeys(value);
-			
+
 		}
 		else
 		{
@@ -502,7 +509,7 @@ public class ElementActionsUtils  {
 		Select sel = new Select(element);
 		List<WebElement> elements = sel.getOptions();
 		List<String> options = new ArrayList<String>(elements.size());
-		
+
 		for (WebElement e : elements)
 		{
 			options.add(e.getText());
@@ -526,9 +533,9 @@ public class ElementActionsUtils  {
 		getOutOfFrame(testConfig);
 		return findiFrameElement(how, what);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param how
 	 * @param what
 	 * @return WebElement
@@ -539,14 +546,14 @@ public class ElementActionsUtils  {
 		if (frames.isEmpty())
 			return null;
 		WebElement element = null;
-		
+
 		for (WebElement fr : frames)
 		{
 			if (element != null)
 			{
 				return element;
 			}
-			
+
 			try
 			{
 				driver.switchTo().frame(fr);
@@ -564,24 +571,24 @@ public class ElementActionsUtils  {
 					LoggerUtils.logWarning(ex.toString());
 				}
 			}
-			
+
 			element = getPageElement(how, what);
-			
+
 			if (element == null)
 			{
 				element = findiFrameElement(how, what);
 			}
 		}
-		
+
 		return element;
 	}
-	
+
 	private List<WebElement> getiFramesOnPage(WebDriver driver)
 	{
 		List<WebElement> iframes = driver.findElements(By.tagName("iframe"));
 		return iframes;
 	}
-	
+
 	/**
 	 * Gets the list of WebElements using the specified locator technique on the
 	 * passed driver page
@@ -644,7 +651,7 @@ public class ElementActionsUtils  {
 	 *            element to be found with given technique (any arguments in
 	 *            this string will be replaced with run time properties)
 	 * @param isTestCaseFailedIfNoSuchExcetion
-	 *             ---> true : If NoSuchElement exception is thrown then test case will be failed immediately 
+	 *             ---> true : If NoSuchElement exception is thrown then test case will be failed immediately
 	 *             ---> false : If NoSuchElement exception is thrown then test case will never failed
 	 * @return found WebElement
 	 */
@@ -654,9 +661,9 @@ public class ElementActionsUtils  {
 		{
 			LoggerUtils.logComment("Get the WebElement with " + how + ":" + what);
 		}
-		
+
 		what = Helper.replaceArgumentsWithRunTimeProperties(scenarioContext,what);
-		
+
 		try
 		{
 			switch (how)
@@ -697,9 +704,9 @@ public class ElementActionsUtils  {
 				LoggerUtils.logWarning("Could not find the element on page");
 			return null;
 		}
-		
+
 	}
-	
+
 	public  WebElement getPageElement(How how, String what){
 		return getPageElement(how, what,true);
 	}
@@ -723,14 +730,14 @@ public class ElementActionsUtils  {
 		catch (StaleElementReferenceException e)
 		{
 			LoggerUtils.logComment("Stale element reference exception. Trying again...");
-			
+
 			text = element.getText();
-			
+
 		}
-		
+
 		return text;
 	}
-	
+
 	/**
 	 * Verify is webelement is enable or not
 	 * @param element
@@ -751,7 +758,7 @@ public class ElementActionsUtils  {
 			LoggerUtils.logComment("Stale element reference exception. Trying again...");
 			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 			visible = element.isDisplayed();
-			
+
 		}
 		catch (NoSuchElementException e)
 		{
@@ -761,7 +768,7 @@ public class ElementActionsUtils  {
 		{
 			visible = false;
 		}
-		
+
 		finally
 		{
 			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
@@ -785,8 +792,8 @@ public class ElementActionsUtils  {
 		LoggerUtils.logComment("Press the key '" + key.toString() + "' on " + description + "");
 		element.sendKeys(key);
 		}
-	
-	
+
+
 	/**
 	 * Method used to scroll up and down horizontally in browser
 	 * @param from
@@ -797,9 +804,9 @@ public class ElementActionsUtils  {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("window.scrollBy(" + from + "," + to + ")");
 	}
-	
+
 	/**
-	
+
 	 * @param element
 	 *            WebElement to be submitted
 	 * @param description
@@ -832,10 +839,10 @@ public class ElementActionsUtils  {
 		{
 			LoggerUtils.logComment("Exception occurred in fetching value of attribute '" + attributeName + "' for :" + comment + " : " + wde.getMessage());
 		}
-		
+
 		return value;
 	}
-	
+
 	/**
 	 * Get css value
 	 * @param element
@@ -856,10 +863,10 @@ public class ElementActionsUtils  {
 		{
 			LoggerUtils.logComment("Exception occurred in fetching value of css '" + css + "' for :" + comment + " : " + wde.getMessage());
 		}
-		
+
 		return value;
 	}
-	
+
 
 	/**
 	 * Verify Element is Not Enabled
@@ -874,7 +881,7 @@ public class ElementActionsUtils  {
 			{
 				LoggerUtils.logPass("Verified the disable of element '" + description + "' on the page",element,true);
 			}
-			
+
 			else
 			{
 				LoggerUtils.logFail("Element '" + description + "' is enabled on the page");
@@ -887,14 +894,14 @@ public class ElementActionsUtils  {
 			{
 				LoggerUtils.logPass("Verified the disable of element '" + description + "' on the page",element,true);
 			}
-			
+
 			else
 			{
 				LoggerUtils.logFail("Element '" + description + "' is enabled on the page");
 			}
 		}
 	}
-	
+
 	/**
 	 * Verify Element is Enabled
 	 * @param element
@@ -908,7 +915,7 @@ public class ElementActionsUtils  {
 			{
 				LoggerUtils.logPass("Verified the enable of element '" + description + "' on the page",element, true);
 			}
-			
+
 			else
 			{
 				LoggerUtils.logFail("Element '" + description + "' is disabled on the page");
@@ -921,14 +928,13 @@ public class ElementActionsUtils  {
 			{
 				LoggerUtils.logPass("Verified the enable of element '" + description + "' on the page",element, true);
 			}
-			
+
 			else
 			{
 				LoggerUtils.logFail("Element '" + description + "' is disabled on the page");
 			}
 		}
 	}
-	
 
 	/**
 	 * This function is used to scroll an element into view
@@ -938,9 +944,9 @@ public class ElementActionsUtils  {
 	{
 		JavascriptExecutor jse = (JavascriptExecutor)testConfig.driver;
 		jse.executeScript("arguments[0].scrollIntoView(false)", element);
-		
+
 	}
-	
+
 	/**
 	 * This method is used to move cursor from one web element to another element
 	 * @param source
@@ -991,7 +997,7 @@ public class ElementActionsUtils  {
 		Actions builder = new Actions(driver);
 		builder.moveToElement(element).perform();
 	}
-	
+
 	/**
 	 * Returns true if the element is displayed on the WebPage
 	 * @param element
@@ -1014,7 +1020,7 @@ public class ElementActionsUtils  {
 				LoggerUtils.logComment("Stale element reference exception. Trying again...");
 				driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 				visible = element.isDisplayed();
-				
+
 			}
 			catch (NoSuchElementException e)
 			{
@@ -1058,7 +1064,7 @@ public class ElementActionsUtils  {
 		else {
 			actions.sendKeys(Keys.ARROW_UP);
 			actions.perform();
-		}		
+		}
 	}
 
 	/**
@@ -1091,7 +1097,7 @@ public class ElementActionsUtils  {
 
 	/**
 	 * Enter Data on element using Selenium Actions
-	 * 
+	 *
 	 * @param element
 	 * @param value
 	 * @param description
