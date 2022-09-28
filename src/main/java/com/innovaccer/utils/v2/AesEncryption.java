@@ -2,13 +2,14 @@ package com.innovaccer.utils.v2;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 
 public class AesEncryption {
 
-    private Config config;
-    private LoggerUtils loggerUtils;
+    private final Config config;
+    private final LoggerUtils loggerUtils;
 
     public AesEncryption(Config testConfig) {
         config = testConfig;
@@ -18,7 +19,7 @@ public class AesEncryption {
     private static String encrypt(Config testConfig, String str) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, AesEncryption.getKey(testConfig));
-        byte[] utf8 = str.getBytes("UTF8");
+        byte[] utf8 = str.getBytes(StandardCharsets.UTF_8);
         byte[] enc = cipher.doFinal(utf8);
         return Base64.getEncoder().encodeToString(enc);
     }
@@ -28,29 +29,7 @@ public class AesEncryption {
         cipher.init(Cipher.DECRYPT_MODE, AesEncryption.getKey(testConfig));
         byte[] dec = Base64.getDecoder().decode(str.getBytes());
         byte[] utf8 = cipher.doFinal(dec);
-        return new String(utf8, "UTF8");
-    }
-
-    public String encryptString(Config testConfig, String str) {
-        String value = null;
-        try {
-            value = AesEncryption.encrypt(testConfig, str);
-        } catch (Exception e) {
-            loggerUtils.logComment("Fail to encrypt.....");
-            loggerUtils.logFailureException(e);
-        }
-        return value;
-    }
-
-    public String decryptString(Config testConfig, String encrypted) {
-        String str = null;
-        try {
-            str = AesEncryption.decrypt(testConfig, encrypted);
-        } catch (Exception e) {
-            loggerUtils.logComment("Fail to decrypt.....");
-            loggerUtils.logFailureException(e);
-        }
-        return str;
+        return new String(utf8, StandardCharsets.UTF_8);
     }
 
     private static SecretKeySpec getKey(Config testConfig) {
@@ -82,5 +61,27 @@ public class AesEncryption {
 
     private static String base64Encode(byte[] bytes) {
         return Arrays.toString(Base64.getEncoder().encode(bytes));
+    }
+
+    public String encryptString(Config testConfig, String str) {
+        String value = null;
+        try {
+            value = AesEncryption.encrypt(testConfig, str);
+        } catch (Exception e) {
+            loggerUtils.logComment("Fail to encrypt.....");
+            loggerUtils.logFailureException(e);
+        }
+        return value;
+    }
+
+    public String decryptString(Config testConfig, String encrypted) {
+        String str = null;
+        try {
+            str = AesEncryption.decrypt(testConfig, encrypted);
+        } catch (Exception e) {
+            loggerUtils.logComment("Fail to decrypt.....");
+            loggerUtils.logFailureException(e);
+        }
+        return str;
     }
 }

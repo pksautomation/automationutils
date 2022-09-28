@@ -64,8 +64,8 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertEquals(String what, String expected, String actual, boolean... logPageInfo) {
-        if ((expected == null & actual == null) || (expected == null && actual.toString().isEmpty())
-                || (actual == null && expected.toString().isEmpty())) {
+        if ((expected == null & actual == null) || (expected == null && actual.isEmpty())
+                || (actual == null && expected.isEmpty())) {
             loggerUtils.logPass(what, actual, logPageInfo[0]);
             return;
         }

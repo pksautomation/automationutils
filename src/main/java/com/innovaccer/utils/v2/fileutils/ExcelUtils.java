@@ -1,8 +1,8 @@
 package com.innovaccer.utils.v2.fileutils;
 
 
-import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Helper;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -24,8 +24,8 @@ import java.io.IOException;
 
 public class ExcelUtils {
 
-    private Config config;
-    private LoggerUtils loggerHelper;
+    private final Config config;
+    private final LoggerUtils loggerHelper;
 
     public ExcelUtils(Config testConfig) {
         config = testConfig;

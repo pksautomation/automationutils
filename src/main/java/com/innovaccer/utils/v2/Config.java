@@ -22,7 +22,6 @@ import java.util.*;
 
 public class Config {
 
-    private static LoggerUtils loggerUtils;
     public static ThreadLocal<Config[]> threadLocalConfig;
     public static String BrowserName;
     public static String Environment;
@@ -43,6 +42,8 @@ public class Config {
     public static boolean logsMode = true;
     public static boolean logsModeForException = false;
     public static boolean takeScreenShotOfPage = false;
+    public static Map<String, Map<String, How>> locatorPageWiseData = new HashMap<String, Map<String, How>>();
+    private static LoggerUtils loggerUtils;
     public boolean endExecutionOnfailure = false;
     public boolean debugMode = false;
     public boolean recordPageHTMLOnFailure = false;
@@ -80,7 +81,6 @@ public class Config {
     String testEndTime;
     String testStartTime;
     private WaitHelper waitHelper;
-    public static Map<String,Map<String, How>> locatorPageWiseData = new HashMap<String,Map<String,How>>();
 
     /**
      * Load Config
@@ -199,6 +199,28 @@ public class Config {
         return threadLocalConfig.get()[0];
     }
 
+    /**
+     * Replaces the arguments like {$someArg} present in input string with its value
+     * from RuntimeProperties
+     *
+     * @param input string in which some Arguments are present
+     * @return replaced string
+     */
+    public static String replaceArgumentsWithRunTimeProperties(String input) {
+        String value = null;
+        if (input.contains("{$set:"))
+            return input;
+        if (input.contains("{$")) {
+            int index = input.indexOf("{$");
+            String key = input.substring(index + 2, input.indexOf("}", index + 2));
+            value = getConfig().getRunTimeProperty(key);
+            input = input.replace("{$" + key + "}", value);
+            return replaceArgumentsWithRunTimeProperties(input);
+        } else {
+            return input;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public ArrayList<JSONObject> getJSONArrayListFromRunTimeProperty(String key) {
         String keyName = key.toLowerCase();
@@ -263,7 +285,6 @@ public class Config {
         return testResult;
     }
 
-
     public void putJSONArrayListInRunTimeProperty(String key, ArrayList<JSONObject> table) {
         String keyName = key.toLowerCase();
         runtimeProperties.put(keyName, table);
@@ -314,7 +335,6 @@ public class Config {
         }
     }
 
-
     public void loadPropertiesFromMap(Map<String, String> data) {
         try {
             for (String key : data.keySet()) {
@@ -337,13 +357,14 @@ public class Config {
     public String getLogModeFromRunTimeProperty() {
         return System.getProperty("logsMode");
     }
-    
+
     /**
      * Return the instance of WebDriver
+     *
      * @author nikitagatagat
      */
-    public WebDriver getDriver(){
-    	return this.driver;
-    	}
+    public WebDriver getDriver() {
+        return this.driver;
+    }
 
 }

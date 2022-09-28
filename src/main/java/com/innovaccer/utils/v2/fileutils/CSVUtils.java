@@ -12,8 +12,8 @@ import java.util.List;
 
 public class CSVUtils {
 
-    private Config config;
-    private LoggerUtils loggerHelper;
+    private final Config config;
+    private final LoggerUtils loggerHelper;
 
     public CSVUtils(Config testConfig) {
         this.config = testConfig;
@@ -30,7 +30,7 @@ public class CSVUtils {
             CSVReader csvReader = new CSVReader(new FileReader(csvFileName));
             return csvReader.readAll();
         } catch (IOException | CsvException e) {
-            loggerHelper.logFailureException(e);;
+            loggerHelper.logFailureException(e);
         }
         return null;
     }

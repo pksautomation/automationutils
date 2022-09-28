@@ -1,128 +1,123 @@
 package com.innovaccer.utils.v2;
 
+import com.innovaccer.utils.v2.dataHelper.pageobject.How;
+import com.innovaccer.utils.v2.dataHelper.pageobject.PageObjectHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import com.innovaccer.utils.v2.dataHelper.pageobject.How;
-import com.innovaccer.utils.v2.dataHelper.pageobject.PageObjectHelper;
-
 public class BasePage {
-	private Config scenarioContext;
-	private WaitHelper WaitUtils=null;
-	private UtilityObjectManager UtilityObjectManager=null;
-	private LoggerUtils LoggerUtils;
-	private BrowserUtils browserUtils;
-	private WebDriver driver;
-	private ElementActionsUtils Actions;
-	private PageObjectHelper  PageObjectHelper;
-	
-	public PageObjectHelper getPageObjectHelper() {
-		return PageObjectHelper;
-	}
+    private Config scenarioContext;
+    private WaitHelper WaitUtils = null;
+    private UtilityObjectManager UtilityObjectManager = null;
+    private LoggerUtils LoggerUtils;
+    private BrowserUtils browserUtils;
+    private WebDriver driver;
+    private ElementActionsUtils Actions;
+    private PageObjectHelper PageObjectHelper;
 
-	public void setPageObjectHelper(PageObjectHelper pageObjectHelper) {
-		this.PageObjectHelper = pageObjectHelper;
-	}
+    public BasePage(Config scenariosInstance) {
+        init(scenariosInstance);
+    }
 
-	public BasePage(Config scenariosInstance) {
-		init(scenariosInstance);
-	}
+    public BasePage() {
+        init(Config.getConfig());
+    }
 
-	private void init(Config scenarioInstance) {
-		this.scenarioContext=scenarioInstance;
-		this.UtilityObjectManager = new UtilityObjectManager(scenarioInstance);
-		WaitUtils = new WaitHelper(scenarioContext);
-		LoggerUtils=new LoggerUtils(scenarioContext);
-		driver=scenarioContext.driver;
-		Actions = new ElementActionsUtils(scenarioContext);	
-		browserUtils = new BrowserUtils(scenarioContext);
-		PageObjectHelper=new PageObjectHelper(scenarioContext);
-		PageObjectHelper.initPage(this.getInstantClassName());
-		PageFactory.initElements(scenarioInstance.driver, this);
-	}
-	
-	public String getInstantClassName() {
-		String className=this.getClass().getSimpleName();
-		return className;
-	}
-	
-	public BasePage() {
-		init(Config.getConfig());
-		}
-	
-	
-	public BrowserUtils getBrowserUtils() {
-		return browserUtils;
-	}
+    public PageObjectHelper getPageObjectHelper() {
+        return PageObjectHelper;
+    }
 
+    public void setPageObjectHelper(PageObjectHelper pageObjectHelper) {
+        this.PageObjectHelper = pageObjectHelper;
+    }
 
-	public void setBrowserUtils(BrowserUtils browserUtils) {
-		this.browserUtils = browserUtils;
-	}
+    private void init(Config scenarioInstance) {
+        this.scenarioContext = scenarioInstance;
+        this.UtilityObjectManager = new UtilityObjectManager(scenarioInstance);
+        WaitUtils = new WaitHelper(scenarioContext);
+        LoggerUtils = new LoggerUtils(scenarioContext);
+        driver = scenarioContext.driver;
+        Actions = new ElementActionsUtils(scenarioContext);
+        browserUtils = new BrowserUtils(scenarioContext);
+        PageObjectHelper = new PageObjectHelper(scenarioContext);
+        PageObjectHelper.initPage(this.getInstantClassName());
+        PageFactory.initElements(scenarioInstance.driver, this);
+    }
+
+    public String getInstantClassName() {
+        String className = this.getClass().getSimpleName();
+        return className;
+    }
+
+    public BrowserUtils getBrowserUtils() {
+        return browserUtils;
+    }
 
 
-	public Config getScenarioContext() {
-		return scenarioContext;
-	}
+    public void setBrowserUtils(BrowserUtils browserUtils) {
+        this.browserUtils = browserUtils;
+    }
 
-	public void setScenarioContext(Config scenarioContext) {
-		this.scenarioContext = scenarioContext;
-	}
 
-	public WaitHelper getWaitUtils() {
-		return WaitUtils;
-	}
+    public Config getScenarioContext() {
+        return scenarioContext;
+    }
 
-	public void setWaitUtils(WaitHelper waitUtils) {
-		WaitUtils = waitUtils;
-	}
+    public void setScenarioContext(Config scenarioContext) {
+        this.scenarioContext = scenarioContext;
+    }
 
-	public UtilityObjectManager getUtilityObjectManager() {
-		return UtilityObjectManager;
-	}
+    public WaitHelper getWaitUtils() {
+        return WaitUtils;
+    }
 
-	public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
-		UtilityObjectManager = utilityObjectManager;
-	}
+    public void setWaitUtils(WaitHelper waitUtils) {
+        WaitUtils = waitUtils;
+    }
 
-	public LoggerUtils getLoggerUtils() {
-		return LoggerUtils;
-	}
+    public UtilityObjectManager getUtilityObjectManager() {
+        return UtilityObjectManager;
+    }
 
-	public void setLoggerUtils(LoggerUtils loggerUtils) {
-		LoggerUtils = loggerUtils;
-	}
+    public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
+        UtilityObjectManager = utilityObjectManager;
+    }
 
-	public WebDriver getDriver() {
-		return driver;
-	}
+    public LoggerUtils getLoggerUtils() {
+        return LoggerUtils;
+    }
 
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
-	}
+    public void setLoggerUtils(LoggerUtils loggerUtils) {
+        LoggerUtils = loggerUtils;
+    }
 
-	public ElementActionsUtils getActions() {
-		return Actions;
-	}
+    public WebDriver getDriver() {
+        return driver;
+    }
 
-	public void setActions(ElementActionsUtils actions) {
-		Actions = actions;
-	}
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
+    }
 
-	/**
-	 * 
-	 * @param locatorKey
-	 * @return
-	 */
-	public How getHow(String locatorKey) {
-		String key = this.getInstantClassName();
-		if(Config.locatorPageWiseData.containsKey(key))
-			return Config.locatorPageWiseData.get(key).get(locatorKey);
-		else
-			return null;
-	}
-	
-	
-	
-	
+    public ElementActionsUtils getActions() {
+        return Actions;
+    }
+
+    public void setActions(ElementActionsUtils actions) {
+        Actions = actions;
+    }
+
+    /**
+     * @param locatorKey
+     * @return
+     */
+    public How getHow(String locatorKey) {
+        String key = this.getInstantClassName();
+        if (Config.locatorPageWiseData.containsKey(key))
+            return Config.locatorPageWiseData.get(key).get(locatorKey);
+        else
+            return null;
+    }
+
+
 }
