@@ -194,7 +194,7 @@ public class ElementActionsUtils  {
 	 */
 	public WebElement getDisplayElement(String text) {
 		String xpath = "//body//*[text()='"+text+"']";
-		return waitHelper.waitForVisibility(scenarioContext, By.xpath(xpath),"", 30l);
+		return waitHelper.waitForVisibility( By.xpath(xpath),30,"");
 	}
 	
 
