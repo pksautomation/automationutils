@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.fileutils;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.xml.utils.XMLChar;
 import org.w3c.dom.Document;
@@ -20,7 +20,7 @@ public class XMLUtils {
     private LoggerUtils loggerHelper;
 
     public XMLUtils(Config testConfig) {
-        config = testConfig;
+        this.config = testConfig;
         loggerHelper = new LoggerUtils(config);
     }
 
@@ -46,7 +46,7 @@ public class XMLUtils {
             StreamResult result = new StreamResult(new File(path));
             transformer.transform(source, result);
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         loggerHelper.logComment("String converted to XML file");
         return path;
@@ -67,7 +67,7 @@ public class XMLUtils {
             String trimmedXMLString = xmlString.trim();
             newPath = convertStringToXmlFile(trimmedXMLString, fileName);
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         return newPath;
     }
@@ -90,7 +90,7 @@ public class XMLUtils {
             }
             bufferedReader.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         loggerHelper.logComment("XML file converted to String");
         return sb.toString();
@@ -123,7 +123,7 @@ public class XMLUtils {
                 }
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerHelper.logFailureException(e);
         }
         String xmlStr = stringBuilder.toString();
         return convertStringToXmlFile(xmlStr, file.getName());

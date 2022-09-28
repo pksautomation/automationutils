@@ -3,8 +3,10 @@ package com.innovaccer.utils.v2.fileutils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +28,7 @@ import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 import com.innovaccer.utils.APIHelper;
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.ISO8601DateFormat;
 import com.innovaccer.utils.v2.LoggerUtils;
@@ -37,6 +40,7 @@ public class JSONUtils {
 		
 		private String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
 	    private Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);
+	    private boolean isCreatedEncryptedFile=false;
 	    boolean autoConvertISO8601 = true;
 	    private Config configInstance;
 	    private LoggerUtils loggerUtils;
@@ -138,7 +142,7 @@ public class JSONUtils {
 				return jObject;
 			} 
 			catch (JSONException e) {
-				loggerUtils.logException(e);
+				loggerUtils.logFailureException(e);
 			} 
 
 			return null;
@@ -174,7 +178,7 @@ public class JSONUtils {
 				return jarray;
 			} 
 			catch (JSONException e) {
-				loggerUtils.logException(e);
+				loggerUtils.logFailureException(e);
 			} 
 
 			return null;
@@ -196,7 +200,7 @@ public class JSONUtils {
 					 jsonPostParameters.put(key, value);
 					
 				} catch (JSONException e) {
-					loggerUtils.logException(e);
+					loggerUtils.logFailureException(e);
 				}
 			}
 	    		return jsonPostParameters.toString();
@@ -260,10 +264,10 @@ public class JSONUtils {
 		 * @param Jason body String
 		 * @return Encrypted json String
 		 */
-		public  String encryptJson( String toBeEncrupt) {
+		public String encryptJson( String toBeEncrupt) {
 			PyString result = null;
 			try {
-				APIHelper.createEncryptCredsFile(configInstance);
+				createEncryptCredsFile();
 				Properties properties = new Properties();
 				String pythonConfigPath = System.getProperty("user.dir")+"/src/test/resources/";
 				properties.setProperty("python.path", pythonConfigPath);
@@ -281,6 +285,22 @@ public class JSONUtils {
 
 		}
 		
+		public void createEncryptCredsFile() {
+			if(isCreatedEncryptedFile) 
+				return;
+			InputStream is = APIHelper.class.getClassLoader().getResourceAsStream("PythonFile/EncryptCreds.py");
+			String pythonfilePath = System.getProperty("user.dir")+"/src/test/resources/EncryptCreds.py";
+			File file =new File(pythonfilePath);	
+			OutputStream outputStream;
+			try {
+				outputStream = new FileOutputStream(file);
+				IOUtils.copy(is, outputStream);	
+				isCreatedEncryptedFile=true;
+			} catch (Exception e) {
+				loggerUtils.logFailureException(e);
+			}		
+		}
+		
 		/**
 		 *  Convert LinkedHashMap of parameters to JSONString, maintain insertion order of data in map.
 		 * @param testConfig the test config
@@ -288,7 +308,7 @@ public class JSONUtils {
 		 * @return paramaters in JSON format
 		 * @author i0465 (pramod.singh)
 		 */
-		public  String createJsonParameters( Map<String, String> parameters){
+		public String createJsonParameters( Map<String, String> parameters){
 			LinkedHashMap<String,String> hasMap = new LinkedHashMap<String,String>(parameters);
 			JSONObject jsonPostParameters = new JSONObject(hasMap);
 			try {
@@ -297,7 +317,7 @@ public class JSONUtils {
 			      changeMap.set(jsonPostParameters, new LinkedHashMap<>());
 			      changeMap.setAccessible(false);
 			    } catch (IllegalAccessException | NoSuchFieldException e) {
-			    	loggerUtils.logException(e);
+			    	loggerUtils.logFailureException(e);
 			    }
 			for (Entry<String, String> entry : parameters.entrySet())
 			{
@@ -307,7 +327,7 @@ public class JSONUtils {
 					 jsonPostParameters.put(key, value);
 					
 				} catch (JSONException e) {
-					loggerUtils.logException(e);
+					loggerUtils.logFailureException(e);
 				}
 			}
 	    		return jsonPostParameters.toString();
