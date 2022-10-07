@@ -10,12 +10,20 @@ import java.io.IOException;
 
 public class TextUtils {
 
-    private final Config config;
-    private final LoggerUtils loggerHelper;
+    private Config config;
+    private LoggerUtils loggerUtils;
 
     public TextUtils(Config testConfig) {
+        init(testConfig);
+    }
+
+    public TextUtils() {
+        init(Config.getConfig());
+    }
+
+    private void init(Config testConfig) {
         this.config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        loggerUtils = new LoggerUtils(config);
     }
 
     /**
@@ -28,12 +36,12 @@ public class TextUtils {
             FileWriter fileWriter = new FileWriter(filename);
             fileWriter.write(text);
             if (logDataToBeWritten != null && logDataToBeWritten.length > 0 && !logDataToBeWritten[0])
-                loggerHelper.logComment("Data written in " + filename);
+                loggerUtils.logComment("Data written in " + filename);
             else
-                loggerHelper.logComment("Written Value " + text + " in " + filename);
+                loggerUtils.logComment("Written Value " + text + " in " + filename);
             fileWriter.close();
         } catch (IOException e) {
-            loggerHelper.logFailureException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -59,7 +67,7 @@ public class TextUtils {
             String[] arraylist = rowData.split("\\|");
             return arraylist[column];
         } catch (Exception e) {
-            loggerHelper.logFailureException(e);
+            loggerUtils.logFailureException(e);
         }
         return null;
     }

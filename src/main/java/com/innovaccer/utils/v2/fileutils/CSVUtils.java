@@ -12,12 +12,20 @@ import java.util.List;
 
 public class CSVUtils {
 
-    private final Config config;
-    private final LoggerUtils loggerHelper;
+    private Config config;
+    private LoggerUtils loggerUtils;
+
+    public CSVUtils() {
+        init(Config.getConfig());
+    }
 
     public CSVUtils(Config testConfig) {
+        init(testConfig);
+    }
+
+    private void init(Config testConfig) {
         this.config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        loggerUtils = new LoggerUtils(config);
     }
 
     /**
@@ -26,11 +34,11 @@ public class CSVUtils {
      */
     public List<String[]> getCsvDataFromFile(String csvFileName) {
         try {
-            loggerHelper.logComment("Reading CSV Data from File: " + csvFileName);
+            loggerUtils.logComment("Reading CSV Data from File: " + csvFileName);
             CSVReader csvReader = new CSVReader(new FileReader(csvFileName));
             return csvReader.readAll();
         } catch (IOException | CsvException e) {
-            loggerHelper.logFailureException(e);
+            loggerUtils.logFailureException(e);
         }
         return null;
     }
@@ -74,17 +82,17 @@ public class CSVUtils {
                 }
             }
             fileWriter.append(NEW_LINE_SEPARATOR);
-            loggerHelper.logComment("CSV file was created successfully !!!");
+            loggerUtils.logComment("CSV file was created successfully !!!");
         } catch (Exception e) {
-            loggerHelper.logComment("Error in CsvFileWriter !!!");
-            loggerHelper.logFailureException(e);
+            loggerUtils.logComment("Error in CsvFileWriter !!!");
+            loggerUtils.logFailureException(e);
         } finally {
             try {
                 fileWriter.flush();
                 fileWriter.close();
             } catch (IOException e) {
-                loggerHelper.logComment("Error while flushing/closing fileWriter !!!");
-                loggerHelper.logFailureException(e);
+                loggerUtils.logComment("Error while flushing/closing fileWriter !!!");
+                loggerUtils.logFailureException(e);
             }
         }
     }
@@ -107,17 +115,17 @@ public class CSVUtils {
                     fileWriter.append(NEW_LINE_SEPARATOR);
                 }
             }
-            loggerHelper.logComment("CSV file was created successfully !!!");
+            loggerUtils.logComment("CSV file was created successfully !!!");
         } catch (Exception e) {
-            loggerHelper.logComment("Error in CsvFileWriter !!!");
-            loggerHelper.logFailureException(e);
+            loggerUtils.logComment("Error in CsvFileWriter !!!");
+            loggerUtils.logFailureException(e);
         } finally {
             try {
                 fileWriter.flush();
                 fileWriter.close();
             } catch (IOException e) {
-                loggerHelper.logComment("Error while flushing/closing fileWriter !!!");
-                loggerHelper.logFailureException(e);
+                loggerUtils.logComment("Error while flushing/closing fileWriter !!!");
+                loggerUtils.logFailureException(e);
             }
         }
     }
@@ -144,15 +152,15 @@ public class CSVUtils {
                 fileWriter.append(NEW_LINE_SEPARATOR);
             }
         } catch (Exception e) {
-            loggerHelper.logComment("Error Occurred.");
-            loggerHelper.logFailureException(e);
+            loggerUtils.logComment("Error Occurred.");
+            loggerUtils.logFailureException(e);
         } finally {
             try {
                 fileWriter.flush();
                 fileWriter.close();
             } catch (IOException e) {
-                loggerHelper.logComment("Error while flushing/closing File Writer.");
-                loggerHelper.logFailureException(e);
+                loggerUtils.logComment("Error while flushing/closing File Writer.");
+                loggerUtils.logFailureException(e);
             }
         }
     }

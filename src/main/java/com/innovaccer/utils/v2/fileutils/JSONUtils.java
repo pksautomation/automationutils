@@ -27,7 +27,6 @@ public class JSONUtils {
     boolean autoConvertISO8601 = true;
     private final String REGEXP_ISO8061 = "^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})(.([0-9]){3})?(Z|[\\+\\-]([0-9]{2}):([0-9]{2}))$";
     private final Pattern matcherISO8601 = Pattern.compile(REGEXP_ISO8061);
-    private boolean isCreatedEncryptedFile = false;
     private Config configInstance;
     private LoggerUtils loggerUtils;
     private WaitHelper waitUtils;
@@ -244,48 +243,6 @@ public class JSONUtils {
         return ja;
     }
 
-    /**
-     * Encrypts given Json Body
-     *
-     * @param Jason body String
-     * @return Encrypted json String
-     */
-    public String encryptJson(String toBeEncrupt) {
-        PyString result = null;
-        try {
-            createEncryptCredsFile();
-            Properties properties = new Properties();
-            String pythonConfigPath = System.getProperty("user.dir") + "/src/test/resources/";
-            properties.setProperty("python.path", pythonConfigPath);
-            PythonInterpreter.initialize(System.getProperties(), properties, new String[]{""});
-            PythonInterpreter pi = new PythonInterpreter();
-            pi.exec("from EncryptCreds import to_java_encode_json");
-            pi.set("string", new PyString(toBeEncrupt));
-            pi.exec("result = to_java_encode_json(string)");
-            pi.exec("print(result)");
-            result = (PyString) pi.get("result");
-        } catch (Exception e) {
-            loggerUtils.logException("Exception in JsonEncryption : ", e, false);
-        }
-        return result.toString();
-
-    }
-
-    public void createEncryptCredsFile() {
-        if (isCreatedEncryptedFile)
-            return;
-        InputStream is = APIHelper.class.getClassLoader().getResourceAsStream("PythonFile/EncryptCreds.py");
-        String pythonfilePath = System.getProperty("user.dir") + "/src/test/resources/EncryptCreds.py";
-        File file = new File(pythonfilePath);
-        OutputStream outputStream;
-        try {
-            outputStream = new FileOutputStream(file);
-            IOUtils.copy(is, outputStream);
-            isCreatedEncryptedFile = true;
-        } catch (Exception e) {
-            loggerUtils.logFailureException(e);
-        }
-    }
 
     /**
      * Convert LinkedHashMap of parameters to JSONString, maintain insertion order of data in map.

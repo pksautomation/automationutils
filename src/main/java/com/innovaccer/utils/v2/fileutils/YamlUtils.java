@@ -13,18 +13,22 @@ public class YamlUtils extends YamlReaderWriter {
 
     public FileReader yamlFileReader = null;
     public Map<String, Object> yamlMap = null;
-    private final Config testConfig;
+    private Config testConfig;
     private final Yaml yaml = new Yaml();
     private String yamlFilePath = null;
-    private LoggerUtils loggerHelper;
+    private LoggerUtils loggerUtils;
 
     public YamlUtils(Config testConfig) {
-        this.testConfig = testConfig;
-        loggerHelper = new LoggerUtils(testConfig);
+        init(testConfig);
     }
 
     public YamlUtils() {
-        this.testConfig = Config.getConfig();
+        init(Config.getConfig());
+    }
+
+    private void init(Config testConfig) {
+        this.testConfig = testConfig;
+        loggerUtils = new LoggerUtils(testConfig);
     }
 
     /**
@@ -34,7 +38,7 @@ public class YamlUtils extends YamlReaderWriter {
      */
     public void setYamlPath(String filePath) {
         yamlFilePath = filePath;
-        loggerHelper.logComment("Yaml File Path: " + filePath);
+        loggerUtils.logComment("Yaml File Path: " + filePath);
         readYamlFile();
     }
 
@@ -47,9 +51,9 @@ public class YamlUtils extends YamlReaderWriter {
     public Map<String, Object> getYamlValues(String yamlPath) {
         try {
             if (yamlMap == null)
-                loggerHelper.logFail("Yaml File is blank");
+                loggerUtils.logFail("Yaml File is blank");
             else if (yamlPath.equals("") || yamlPath.equals(" "))
-                loggerHelper.logFail("Provided yaml path is blank");
+                loggerUtils.logFail("Provided yaml path is blank");
             else
                 return parseYamlValuePath(yamlMap, yamlPath + ".");
 
@@ -87,7 +91,7 @@ public class YamlUtils extends YamlReaderWriter {
         try {
             yamlFileReader = new FileReader(yamlFilePath);
         } catch (FileNotFoundException e) {
-            loggerHelper.logException("File Not Found at :" + yamlFilePath, e);
+            loggerUtils.logException("File Not Found at :" + yamlFilePath, e);
             return null;
         }
         return yamlFileReader;
@@ -102,7 +106,7 @@ public class YamlUtils extends YamlReaderWriter {
         yamlMap = yaml.load(yamlFileReader);
         if (yamlMap != null)
             return yamlMap;
-        loggerHelper.logFail("Yaml file is blank");
+        loggerUtils.logFail("Yaml file is blank");
         return null;
     }
 
@@ -116,9 +120,9 @@ public class YamlUtils extends YamlReaderWriter {
     public String getYamlValue(String yamlValuePath) {
         try {
             if (yamlMap == null)
-                loggerHelper.logFail("Yaml File is blank");
+                loggerUtils.logFail("Yaml File is blank");
             else if (yamlValuePath.equals("") || yamlValuePath.equals(" "))
-                loggerHelper.logFail("Provided yaml path is blank");
+                loggerUtils.logFail("Provided yaml path is blank");
             else {
                 String[] pathValues = yamlValuePath.split("\\.");
                 return parseYamlValuePath(yamlMap, yamlValuePath).get(pathValues[pathValues.length - 1]).toString();
