@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.fileutils;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.xml.utils.XMLChar;
 import org.w3c.dom.Document;
@@ -17,11 +17,19 @@ import java.io.*;
 public class XMLUtils {
 
     private Config config;
-    private LoggerUtils loggerHelper;
+    private LoggerUtils loggerUtils;
+
+    public XMLUtils() {
+        init(Config.getConfig());
+    }
 
     public XMLUtils(Config testConfig) {
-        config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        init(testConfig);
+    }
+
+    private void init(Config testConfig) {
+        this.config = testConfig;
+        loggerUtils = new LoggerUtils(config);
     }
 
     /**
@@ -35,7 +43,7 @@ public class XMLUtils {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         String path = null;
-        loggerHelper.logComment("Converting String to XML File");
+        loggerUtils.logComment("Converting String to XML File");
         try {
             builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
@@ -46,9 +54,9 @@ public class XMLUtils {
             StreamResult result = new StreamResult(new File(path));
             transformer.transform(source, result);
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
-        loggerHelper.logComment("String converted to XML file");
+        loggerUtils.logComment("String converted to XML file");
         return path;
     }
 
@@ -63,11 +71,11 @@ public class XMLUtils {
         String newPath = null;
         try {
             String xmlString = convertXmlStringIntoString(path);
-            loggerHelper.logComment("trimming leading and trailing spaces in string");
+            loggerUtils.logComment("trimming leading and trailing spaces in string");
             String trimmedXMLString = xmlString.trim();
             newPath = convertStringToXmlFile(trimmedXMLString, fileName);
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         return newPath;
     }
@@ -80,7 +88,7 @@ public class XMLUtils {
      */
     private String convertXmlStringIntoString(String path) {
         StringBuilder sb = new StringBuilder();
-        loggerHelper.logComment("Converting XML File to String");
+        loggerUtils.logComment("Converting XML File to String");
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
@@ -90,9 +98,9 @@ public class XMLUtils {
             }
             bufferedReader.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
-        loggerHelper.logComment("XML file converted to String");
+        loggerUtils.logComment("XML file converted to String");
         return sb.toString();
     }
 
@@ -123,7 +131,7 @@ public class XMLUtils {
                 }
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         String xmlStr = stringBuilder.toString();
         return convertStringToXmlFile(xmlStr, file.getName());

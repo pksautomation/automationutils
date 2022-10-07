@@ -1,6 +1,6 @@
 package com.innovaccer.utils.v2.fileutils;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 
 import java.io.BufferedReader;
@@ -11,11 +11,19 @@ import java.io.IOException;
 public class TextUtils {
 
     private Config config;
-    private LoggerUtils loggerHelper;
+    private LoggerUtils loggerUtils;
 
     public TextUtils(Config testConfig) {
-        config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        init(testConfig);
+    }
+
+    public TextUtils() {
+        init(Config.getConfig());
+    }
+
+    private void init(Config testConfig) {
+        this.config = testConfig;
+        loggerUtils = new LoggerUtils(config);
     }
 
     /**
@@ -28,12 +36,12 @@ public class TextUtils {
             FileWriter fileWriter = new FileWriter(filename);
             fileWriter.write(text);
             if (logDataToBeWritten != null && logDataToBeWritten.length > 0 && !logDataToBeWritten[0])
-                loggerHelper.logComment("Data written in " + filename);
+                loggerUtils.logComment("Data written in " + filename);
             else
-                loggerHelper.logComment("Written Value " + text + " in " + filename);
+                loggerUtils.logComment("Written Value " + text + " in " + filename);
             fileWriter.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -59,7 +67,7 @@ public class TextUtils {
             String[] arraylist = rowData.split("\\|");
             return arraylist[column];
         } catch (Exception e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         return null;
     }

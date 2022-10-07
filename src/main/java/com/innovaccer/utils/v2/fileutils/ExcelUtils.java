@@ -1,8 +1,8 @@
 package com.innovaccer.utils.v2.fileutils;
 
 
-import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Helper;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -25,11 +25,20 @@ import java.io.IOException;
 public class ExcelUtils {
 
     private Config config;
-    private LoggerUtils loggerHelper;
+    private LoggerUtils loggerUtils;
 
     public ExcelUtils(Config testConfig) {
-        config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        init(testConfig);
+
+    }
+
+    public ExcelUtils() {
+        init(Config.getConfig());
+    }
+
+    private void init(Config testConfig) {
+        this.config = testConfig;
+        loggerUtils = new LoggerUtils(config);
     }
 
     /**
@@ -70,7 +79,7 @@ public class ExcelUtils {
             HSSFRow row = worksheet.getRow(rowIndex);
             numberOfColumns = row.getPhysicalNumberOfCells();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         return numberOfColumns;
     }
@@ -98,7 +107,7 @@ public class ExcelUtils {
                 cellValue = "";
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         return cellValue;
     }
@@ -133,7 +142,7 @@ public class ExcelUtils {
                 }
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
         return sheetData;
     }
@@ -172,23 +181,23 @@ public class ExcelUtils {
                     xlsCell = xlsRow.createCell(Column);
                     SettlementInputXLS.setColumnWidth(Column, 4200);
                     xlsCell.setCellValue(Inputdata);
-                    loggerHelper.logComment("Entered Value of " + Inputdata);
+                    loggerUtils.logComment("Entered Value of " + Inputdata);
                 }
             }
             FileOutputStream output = new FileOutputStream(new File(excelFileName));
             wb.write(output);
             output.flush();
             output.close();
-            loggerHelper.logComment("File: " + xmlFileName + " has been saved as Excel with name as: " + excelFileName);
+            loggerUtils.logComment("File: " + xmlFileName + " has been saved as Excel with name as: " + excelFileName);
             return excelFileName;
         } catch (IOException e) {
-            loggerHelper.logComment("IOException " + e.getMessage());
+            loggerUtils.logComment("IOException " + e.getMessage());
             return null;
         } catch (ParserConfigurationException e) {
-            loggerHelper.logComment("ParserConfigurationException " + e.getMessage());
+            loggerUtils.logComment("ParserConfigurationException " + e.getMessage());
             return null;
         } catch (SAXException e) {
-            loggerHelper.logComment("SAXException " + e.getMessage());
+            loggerUtils.logComment("SAXException " + e.getMessage());
             return excelFileName;
         }
     }
@@ -217,7 +226,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -247,7 +256,7 @@ public class ExcelUtils {
                 fileOut.close();
             }
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -278,7 +287,7 @@ public class ExcelUtils {
             fileout.flush();
             fileout.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -305,11 +314,11 @@ public class ExcelUtils {
             worksheet.setColumnWidth(columnIndex, 4200);
             cell.setCellValue(string);
             FileOutputStream fileOut = new FileOutputStream(workbookName);
-            loggerHelper.logComment("Entered Value of " + description + " as " + string);
+            loggerUtils.logComment("Entered Value of " + description + " as " + string);
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -363,7 +372,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
@@ -407,7 +416,7 @@ public class ExcelUtils {
             workbook.write(fileOut);
             fileOut.close();
         } catch (IOException e) {
-            loggerHelper.logException(e);
+            loggerUtils.logFailureException(e);
         }
     }
 
