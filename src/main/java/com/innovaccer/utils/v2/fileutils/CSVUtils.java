@@ -28,6 +28,7 @@ public class CSVUtils {
         loggerUtils = new LoggerUtils(config);
     }
 
+
     /**
      * @param csvFileName -> File Name for the CSV File
      * @return List of Arrays of String for the data from the CSV File
@@ -41,6 +42,7 @@ public class CSVUtils {
             loggerUtils.logFailureException(e);
         }
         return null;
+        
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.innovaccer.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
+import com.innovaccer.utils.v2.Config;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
@@ -103,29 +105,74 @@ public class BrowserUtils {
         driver.manage().timeouts().implicitlyWait(timeInSeconds, TimeUnit.SECONDS);
     }
 
-    public void takeScreenshot() {
-        try {
-            if (driver != null) {
-                byte[] screenshot = null;
+    /**
+	 * Takes the screenshot of the current active browser window
+	 * 
+	 * @param Config
+	 *            test config instance
+	 * @param destination
+	 *            file to which screenshot is to be saved
+	 * @author pramod.singh
+	 */
+	public void takeScreenShoot(File destination)
+	{
+		try
+		{
+			if (configInstance.driver != null)
+			{
+				byte[] screenshot = null;
 
-                try {
-                    screenshot = captureScreenshot();
-                } catch (NullPointerException ne) {
-                    loggerUtils.logWarning("NullPointerException:Screenshot can't be taken. Probably browser is not reachable");
-                    driver = null;
-                }
+				try
+				{
+					screenshot = captureScreenshot();
+				}
+				catch (NullPointerException ne)
+				{
+					loggerUtils.logWarning("NullPointerException:Screenshot can't be taken. Probably browser is not reachable");
+					configInstance.driver = null;
+				}
 
-                if (screenshot != null) {
-                    configInstance.testScenario.embed(screenshot, "image/png");
-                    loggerUtils.logComment("Refer Screenshot In Attachement");
-                }
-            }
-        } catch (Exception e) {
-            configInstance.enableScreenshot = false;
-            loggerUtils.logWarning("Unable to take screenshot2:- " + ExceptionUtils.getStackTrace(e));
-            loggerUtils.logFailureException(e);
-        }
-    }
+				if (screenshot != null)
+				{
+					/* try
+					{
+						FileUtils.writeByteArrayToFile(destination, screenshot);
+
+						float compressionQuality = (float) 0.5;
+						try
+						{
+							compressionQuality = Float.parseFloat(testConfig.getRunTimeProperty("ScreenshotCompressionQuality"));
+						}
+						catch (Exception e)
+						{
+							e.printStackTrace();
+						}
+						compressJpegFile(destination, destination, compressionQuality);
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				BufferedImage bImage = ImageIO.read(destination);
+			    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			    ImageIO.write(bImage, "png", bos );
+			    byte [] data = bos.toByteArray();
+				String href = destination.getPath();
+				testConfig.logComment("<B>Screenshot</B>:- <a href=" + href + " target='_blank' >" + destination.getName() + "</a>");
+				 */
+					configInstance.testScenario.embed(screenshot, "image/png");
+					loggerUtils.logComment("Refer Screenshot In Attachement");
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			configInstance.enableScreenshot = false;
+			loggerUtils.logWarning("Unable to take screenshot2:- " + ExceptionUtils.getStackTrace(e));
+			loggerUtils.logFailureException(e);
+		}
+	}
 
     private byte[] captureScreenshot() {
         byte[] screenshot = null;
@@ -445,7 +492,8 @@ public class BrowserUtils {
 			LoggerUtils.logException(e);
 			return false;
 		}
-	}*/
+	}
+	*/
 
 
     public SelfHealingDriver launchWindowsApp() {

@@ -1,10 +1,9 @@
-package com.innovaccer.utils.v2.dataHelper.pageobject;
+package pojo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import javax.annotation.Generated;
-
 
 @Generated("jsonschema2pojo")
 public class How {

@@ -22,7 +22,7 @@ public class AssertionUtils {
 
     private void init(Config testConfig) {
         this.testConfig = testConfig;
-        loggerUtils = new LoggerUtils(this.testConfig);
+        loggerUtils = new LoggerUtils();
     }
 
     /**

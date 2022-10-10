@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import cucumber.api.Scenario;
+import pojo.How;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.*;
@@ -37,7 +38,6 @@ import org.testng.asserts.SoftAssert;
 
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.v2.WaitHelper;
-import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;

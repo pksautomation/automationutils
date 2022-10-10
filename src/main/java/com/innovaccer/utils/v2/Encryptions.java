@@ -18,13 +18,11 @@ import java.util.Properties;
 
 public class Encryptions {
 
-    private Config config;
     private LoggerUtils loggerUtils;
     private boolean isCreatedEncryptedFile = false;
 
     public Encryptions(Config testConfig) {
-        config = testConfig;
-        loggerUtils = new LoggerUtils(config);
+        loggerUtils = new LoggerUtils(testConfig);
     }
 
     private static String encrypt(Config testConfig, String str) throws Exception {

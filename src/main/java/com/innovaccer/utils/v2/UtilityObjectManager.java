@@ -6,12 +6,29 @@ public class UtilityObjectManager {
 
 
     Config configInstant;
-    private AssertionUtils AssertionUtils;
+    public Config getConfigInstant() {
+		return configInstant;
+	}
+
+	public void setConfigInstant(Config configInstant) {
+		this.configInstant = configInstant;
+	}
+
+	private AssertionUtils AssertionUtils;
     private BrowserUtils BrowserUtils;
     private LoggerUtils LoggerUtils;
     private TestDataHelper testDataHelper;
+    private WaitHelper WaitUtils;
 
-    public UtilityObjectManager(Config config) {
+    public WaitHelper getWaitUtils() {
+		return WaitUtils;
+	}
+
+	public void setWaitUtils(WaitHelper waitUtils) {
+		WaitUtils = waitUtils;
+	}
+
+	public UtilityObjectManager(Config config) {
         init(config);
     }
 
@@ -24,6 +41,7 @@ public class UtilityObjectManager {
         this.BrowserUtils = new BrowserUtils(config);
         this.LoggerUtils = new LoggerUtils(config);
         this.testDataHelper = new TestDataHelper();
+        this.WaitUtils = new WaitHelper(config);
     }
 
     public TestDataHelper getTestDataHelper() {

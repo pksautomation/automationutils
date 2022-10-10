@@ -3,11 +3,12 @@ package com.innovaccer.utils.v2;
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.TestDataReader;
-import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import cucumber.api.Scenario;
+import pojo.How;
+
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.SessionId;
@@ -42,7 +43,7 @@ public class Config {
     public static boolean logsMode = true;
     public static boolean logsModeForException = false;
     public static boolean takeScreenShotOfPage = false;
-    public static Map<String, Map<String, How>> locatorPageWiseData = new HashMap<String, Map<String, How>>();
+    public static Map<String, Map<String, How>> pagesLocatorData = new HashMap<String, Map<String, How>>();
     private static LoggerUtils loggerUtils;
     public boolean endExecutionOnfailure = false;
     public boolean debugMode = false;

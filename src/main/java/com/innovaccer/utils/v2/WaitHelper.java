@@ -1,11 +1,11 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.v2.ElementActionsUtils.How;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
 import java.util.NoSuchElementException;
+import com.innovaccer.utils.v2.Config;
 
 public class WaitHelper {
 
@@ -26,7 +26,7 @@ public class WaitHelper {
         this.configInstance = config;
         loggerUtils = new LoggerUtils(this.configInstance);
         popupUtils = new PopupUtils(this.configInstance);
-        elementActionsUtils = new ElementActionsUtils(this.configInstance);
+        elementActionsUtils = new ElementActionsUtils(configInstance);
     }
 
     /**
@@ -287,71 +287,6 @@ public class WaitHelper {
         while (!configInstance.getDriver().getCurrentUrl().equals(expectedUrl) && count < timeInSeconds) {
             count += 1;
         }
-    }
-
-    /**
-     * Wait For Element To Load
-     *
-     * @param how            -> locator type
-     * @param what           -> value to match for
-     * @param description    -> description
-     * @param objectWaitTime -> wait time in seconds
-     * @return Boolean to check whether WebElement is Loaded or Not
-     */
-    public boolean waitForElementToLoad(How how, String what, String description, int objectWaitTime) {
-        {
-            loggerUtils.logComment("Wait for element '" + description + "' to be visible on the page.");
-            By by = null;
-            boolean visibilityStatus = true;
-            WebElement returnElement = null;
-            switch (how) {
-                case className:
-                    by = By.className(what);
-                    break;
-                case css:
-                    by = By.cssSelector(what);
-                    break;
-                case id:
-                    by = By.id(what);
-                    break;
-                case linkText:
-                    by = By.linkText(what);
-                    break;
-                case name:
-                    by = By.name(what);
-                    break;
-                case partialLinkText:
-                    by = By.partialLinkText(what);
-                    break;
-                case tagName:
-                    by = By.tagName(what);
-                    break;
-                case xPath:
-                    by = By.xpath(what);
-                    break;
-                default:
-                    loggerUtils.logFail("Invalid identification method is passed");
-            }
-            try {
-                waitForJStoLoad();
-                WebDriverWait wait = new WebDriverWait(configInstance.getDriver(), objectWaitTime);
-                wait.until(ExpectedConditions.visibilityOfElementLocated(by));
-                returnElement = configInstance.getDriver().findElement(by);
-                if (returnElement != null)
-                    loggerUtils.logComment("Element is visible now.");
-                else
-                    visibilityStatus = false;
-            } catch (Exception e) {
-                visibilityStatus = false;
-                loggerUtils.logWarning("Element is not visible");
-            }
-            return visibilityStatus;
-        }
-    }
-
-    public boolean waitForElementToLoad(How how, String what, String description) {
-        int ObjectWaitTime = Integer.parseInt(configInstance.getRunTimeProperty("ObjectWaitTime"));
-        return waitForElementToLoad(how, what, description, ObjectWaitTime);
     }
 
     /**
