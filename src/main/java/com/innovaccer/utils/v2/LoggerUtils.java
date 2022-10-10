@@ -1,50 +1,310 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
+import org.openqa.selenium.*;
+
+import com.innovaccer.utils.Browser;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Log;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LoggerUtils {
 
-    private Config testConfig;
+    public String uniqueId = null;
+    public String timeStamp = null;
+    Config configInstance=null;
+    UtilityObjectManager UtilityObjectManager=null;
 
     public LoggerUtils(Config testConfig) {
-        this.testConfig = testConfig;
+        init(testConfig);
     }
+
     public LoggerUtils() {
-        this.testConfig = Config.getConfig();
+        init(Config.getConfig());
     }
 
+    private void init(Config config) {
+        uniqueId = config.uniqueId;
+        UtilityObjectManager= new UtilityObjectManager(config);
+        this.configInstance=config;
+    }
+
+    private void logToStandard(String message) {
+        System.out.println(message);
+    }
+
+    private void writeMessageInReport(Config testConfig, String message) {
+        testConfig.testScenario.write(message);
+        testConfig.testLog = testConfig.testLog.concat(message);
+    }
+
+    /**
+     * This method logs Failure
+     *
+     * @param message    -> message to log with failure
+     * @param testConfig -> config instance
+     */
+    private void failure(String message, Config testConfig) {
+        testConfig.isFailScenarioStatus = true;
+        testConfig.softAssert.fail(message);
+        if (testConfig.logToStandardOut)
+            logToStandard(message);
+        if (Config.logsMode || Config.logsModeForException)
+            writeMessageInReport(testConfig, message);
+        if (testConfig.endExecutionOnfailure) {
+            if (Config.logsMode) {
+            	UtilityObjectManager.getAssertionUtils().assertFail(message);
+            } else
+            	UtilityObjectManager.getAssertionUtils().assertFail(" --> [Fail] Something went wrong during Execution");
+        }
+    }
+
+    /**
+     * This method is used to take screenshot
+     *
+     * @param testConfig -> config instance
+     */
+    private void getPageInfo(Config testConfig) {
+        testConfig.enableScreenshot = true;
+        if (testConfig.enableScreenshot && Config.logsMode) {
+            if (testConfig.driver != null && testConfig.testScenario != null) {
+//           TODO: To be resoled -> BrowserUtils.takeScreenshot();
+            }
+        }
+    }
+
+    /**
+     * This method adds a message to HTML Report
+     *
+     * @param testConfig -> config instance
+     * @param message    -> message to be added on HTML Report
+     */
+    public void embedMessageAsHTMLInReport(Config testConfig, String message) {
+        String msg = "<p style=\"color:red;\">" + message.replace("\n", "</br>") + "</span>";
+        testConfig.testScenario.embed(msg.getBytes(), "text/html");
+        testConfig.testLog = testConfig.testLog.concat(msg);
+    }
+
+    /**
+     * @param what        -> Object to be verified
+     * @param actual      -> Actual Value of Object
+     * @param logPageInfo -> Boolean to enable/disable logging page info
+     * @param <T>
+     */
+    public <T> void logPass(String what, T actual, boolean logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        String message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  Verified '" + what + "' as :-'" + actual + "'";
+        logComment(message);
+        if (logPageInfo)
+            getPageInfo(UtilityObjectManager.getConfigInstant());
+    }
+
+    /**
+     * @param message     -> message to be logged
+     * @param logPageInfo -> Boolean to enable/disable logging page info
+     */
+    public void logPass(String message, boolean... logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        logComment(message);
+        if (logPageInfo[0])
+            getPageInfo(UtilityObjectManager.getConfigInstant());
+    }
+
+    /**
+     * @param what        -> Object to be verified
+     * @param expected    -> Expected Value of Object
+     * @param actual      -> Actual Value of Object
+     * @param logPageInfo -> Boolean to enable/disable logging page info
+     */
+    public <T> void logFail(String what, T expected, T actual, boolean logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        String message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        failure(message,UtilityObjectManager.getConfigInstant());
+        if (logPageInfo)
+            getPageInfo(UtilityObjectManager.getConfigInstant());
+    }
+
+    /**
+     * This method is used to log a failure message
+     *
+     * @param message     -> message to be logged
+     * @param logPageInfo -> boolean to enable/disable logging page info
+     */
+    public void logFail(String message, boolean... logPageInfo) {
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        failure(message, UtilityObjectManager.getConfigInstant());
+        if (logPageInfo[0])
+            getPageInfo(UtilityObjectManager.getConfigInstant());
+    }
+
+    /**
+     * This method is used to log a message
+     *
+     * @param message -> message to be logged
+     */
     public void logComment(String message) {
-        testConfig.logComment(message);
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [INFO] -->  " + message;
+        try {
+            boolean test = UtilityObjectManager.getConfigInstant().logToStandardOut;
+            if (test && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                logToStandard(message);
+            if ((Config.logsMode) && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                writeMessageInReport(configInstance, message);
+        } catch (Exception e) {
+            logFailureException(e);
+        }
     }
 
+    /**
+     * This method is used to log a warning message
+     *
+     * @param message -> warning message to be logged
+     */
     public void logWarning(String message) {
-        testConfig.logWarning(message);
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [WARNING] --> " + message;
+        if (configInstance.logToStandardOut)
+            logToStandard(message);
+        if (Config.logsMode)
+            writeMessageInReport(configInstance, message);
     }
 
-    public void logHighlight(String message) {
-        testConfig.logHighLight(message);
-    }
+    /**
+     * This method is used to log a exception along with a message and take screenshot(if needed)
+     *
+     * @param message        -> message to be logged
+     * @param e              -> Exception
+     * @param takeScreenshot -> boolean to enable/disable screenshot
+     */
+    public void logException(String message, Throwable e, boolean... takeScreenshot) {
+        String errorFilePath = "";
+        Config.logsModeForException = true;
+        StringBuffer stbr = new StringBuffer();
+        stbr.append("Error location:- ");
+        StackTraceElement[] s = e.getStackTrace();
+        for (StackTraceElement ss : s) {
+            if (ss.getClassName().startsWith("com.innovaccer")) {
+                errorFilePath = ss.getClassName() + ":" + ss.getLineNumber();
+                stbr.append(errorFilePath).append("\n");
+            }
+        }
+        switch (e.getClass().getSimpleName()) {
+            case "IllegalArgumentException":
+                message = message.concat("\n Illegal Argument Exception : ").concat(e.getMessage().split("\n")[0].concat("\n" + stbr));
+                break;
+            case "ElementClickInterceptedException":
+                message = message.concat("\nElement Click Not Intercepted On Page : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "NoSuchElementException":
+                message = message.concat("\nElement Not Available On Page : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "NoSuchWindowException":
+                message = message.concat("\nNo Such Window Available : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "NoSuchFrameException":
+                message = message.concat("\nNo Such Frame Available : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "NoAlertPresentException":
+                message = message.concat("\nNo Alert Present On This Page : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "InvalidSelectorException":
+                message = message.concat("\nInvalid Selector By Using Locator : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "ElementNotVisibleException":
+                message = message.concat("\nElement Not Selectable By Using Locator : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "ElementNotSelectableException":
+                message = message.concat("\nElement Not Selectable By Using Locator : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "TimeoutException":
+                message = message.concat("\nTimeout Occur By Using Locator : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "NoSuchSessionException":
+                message = message.concat("\nNo Such Session Exception Occur : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "StaleElementReferenceException":
+                message = message.concat("\nStale Element Reference Occur By Using Locator : ").concat(e.getMessage().split("\n")[0]).concat("\n" + stbr);
+                break;
+            case "AssertionError":
+                message = message.concat("\n Assertion Error : ").concat(e.getMessage()).concat("\n" + stbr);
+                break;
+            default:
+                message = message.concat("\n Java Exception : " + e.getMessage()).concat("\n" + stbr);
+                break;
+        }
+        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Exception] --> " + message;
 
-    public void logException(Exception exception) {
-        testConfig.logException(exception);
-    }
-
-    public void logExceptionAndSkipFailure(String message, Throwable e, boolean... isTakeScreenShot) {
-        testConfig.logExceptionSkipFailure(message, e, isTakeScreenShot);
-    }
-
-    public void logException(String message, Throwable e, boolean... isTakeScreenShot) {
-        testConfig.logException(message, e, isTakeScreenShot);
-    }
-
-    public void logFailureException(Exception exception) {
-        testConfig.logFailureException(exception);
+        if (!configInstance.islogExceptionSkip) {
+            if (takeScreenshot.length == 0) {
+                failure(message, configInstance);
+            } else if (takeScreenshot[0]) {
+                failure(message, configInstance);
+                embedMessageAsHTMLInReport(configInstance, message);
+            } else if (!takeScreenshot[0]) {
+                failure(message, configInstance);
+                embedMessageAsHTMLInReport(configInstance, message);
+            }
+        } else {
+            if (takeScreenshot.length == 0) {
+                logComment(message);
+            } else if (takeScreenshot[0]) {
+                logComment(message);
+                if (configInstance.getRunTimeProperty("LogPageInfo") != null && (configInstance.getRunTimeProperty("LogPageInfo").equalsIgnoreCase("true")))
+                    getPageInfo(configInstance);
+                embedMessageAsHTMLInReport(configInstance, message);
+            } else if (!takeScreenshot[0]) {
+                logComment(message);
+                embedMessageAsHTMLInReport(configInstance, message);
+            }
+        }
+        stbr.delete(0, stbr.length());
+        Config.logsModeForException = false;
     }
     
-    public void embedStringAsHTMLInReport(String text) {
-    	Log.embedMessageAsHTMLInReport(testConfig, text);
+    public void logException(Throwable e) {
+		this.logException("", e);
     }
+
+    /**
+     * This method is used to log a failure exception
+     *
+     * @param exception -> Exception
+     */
+    public void logFailureException(Throwable exception) {
+        logException("", exception, false);
+    }
+
+    /**
+     * This method is used to embed text to HTML Report
+     *
+     * @param text -> text to be embedded
+     */
+    public void embedStringAsHTMLInReport(String text) {
+        embedMessageAsHTMLInReport(configInstance, text);
+    }
+    
+    /**
+	 * Function for Embed Screen shot
+	 * @param testConfig
+	 * @author i0465
+	 */
+	public  void PageInfo(Config testConfig) {
+		testConfig.enableScreenshot = true;
+		if (testConfig.enableScreenshot && testConfig.logsMode) {
+			if (testConfig.driver != null && testConfig.testScenario != null) {
+				File dest = UtilityObjectManager.getBrowserUtils().getScreenshotFile();
+				UtilityObjectManager.getBrowserUtils().takeScreenShoot(dest);
+			}
+		}
+	}
     
     /**
 	 * This method fail test scenarios just after calling it
@@ -52,15 +312,27 @@ public class LoggerUtils {
 	 * @author pramod.singh
 	 */
 	public void failFinalTestScenarios(String msg) {
-		testConfig.endExecutionOnfailure=true;
-		Log.Failfinal(msg, testConfig);
+		configInstance.endExecutionOnfailure=true;
+		try {
+			if (configInstance.getRunTimeProperty("LogPageInfo") != null
+					&& (configInstance.getRunTimeProperty("LogPageInfo").equalsIgnoreCase("true")))
+				PageInfo(configInstance);
+			configInstance.endExecutionOnfailure=true;
+			failure(msg, configInstance);
+
+		} catch (Exception e) {
+			logException("Unable to log page info:- " ,e, false);
+		}
 	}
 	
-	 public void logFail(String message) {
-	        Log.Fail(message, testConfig);
-	    }
-	 public void logPass(String message) {
-	        Log.Pass(message, testConfig);
-	    }
+	public void logExceptionAndSkipFailure(String message, Throwable e, boolean... isTakeScreenShot) {
+		configInstance.islogExceptionSkip = true;
+		 if(isTakeScreenShot.length != 0 && isTakeScreenShot[0])
+				 logException(message, e, true);
+		else
+			 logException(message, e, false);
+		 
+		 configInstance.islogExceptionSkip = false;
+    }
 
 }

@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.fileutils.JSONUtils;
 
 import pojo.How;
@@ -50,7 +50,7 @@ public class PageLocatorHelper {
 	 * @param fileName
 	 */
 	 private void loadPageLocators(String fileName) {
-		if(configInstance.locatorsDataPageWise.containsKey(fileName))
+		if(Config.pagesLocatorData.containsKey(fileName))
 		{
 			LoggerUtils.logComment(fileName + ".json Locator file already loaded");
 			return;
@@ -85,7 +85,7 @@ public class PageLocatorHelper {
 	 * @param fileName
 	 */
 	synchronized private void storeLocatorMap(Map<String,How> mapOfLocators, String fileName) {
-		configInstance.locatorsDataPageWise.put(fileName, mapOfLocators);
+		Config.pagesLocatorData.put(fileName, mapOfLocators);
 	}
 	
 	/**
@@ -99,34 +99,12 @@ public class PageLocatorHelper {
 			LoggerUtils.logFail(" PageObjectName value not found in scenarios context");
 			return null;
 		}
-		else if(Config.locatorsDataPageWise.containsKey(pageName))
-			return Config.locatorsDataPageWise.get(pageName).get(id);
+		else if(Config.pagesLocatorData.containsKey(pageName))
+			return Config.pagesLocatorData.get(pageName).get(id);
 		else {
 			LoggerUtils.logFail(" Locator : " + id + " not found in " + pageName + ".json file");
 			return null;
 		}
 	}
-	
-//	/**
-//	 * 
-//	 * @param Object
-//	 * @return
-//	 */
-//	public List<String> getDuplicateKeys(JSONObject Object){
-//		List<String> duplicateKeys = new ArrayList<String>();
-//		Set<String> keysset = new HashSet<String>();
-//		Iterator<String> iterator = Object.keys();
-//		while(iterator.hasNext()) {
-//			String key = iterator.next().toString();
-//			if(keysset.contains(key)) {
-//				duplicateKeys.add(key);
-//			}
-//			else {
-//				keysset.add(key);
-//			}
-//		}
-//		
-//		return duplicateKeys;
-//	}
 	
 }

@@ -3,7 +3,7 @@ package com.innovaccer.utils.v2;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import com.innovaccer.utils.Config;
+import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.dataHelper.PageLocatorHelper;
 
 import pojo.How;
@@ -24,11 +24,8 @@ public class BasePage extends PageLocatorHelper{
 	private void init(Config scenariosInstance) {
 		this.scenarioContext=scenariosInstance;
 		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
-		WaitUtils = new WaitHelper(scenariosInstance);
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		driver=scenarioContext.driver;
-		Actions = new ElementActionsUtils(scenarioContext);	
-		browserUtils = new BrowserUtils(scenarioContext);
 		PageFactory.initElements(scenariosInstance.driver, this);
 		scenarioContext.putRunTimeProperty("PageObjectName", this.getClass().getSimpleName());
 		
@@ -40,7 +37,7 @@ public class BasePage extends PageLocatorHelper{
 	
 	
 	public BrowserUtils getBrowserUtils() {
-		return browserUtils;
+		return UtilityObjectManager.getBrowserUtils();
 	}
 
 
@@ -50,7 +47,7 @@ public class BasePage extends PageLocatorHelper{
 
 
 	public Config getScenarioContext() {
-		return scenarioContext;
+		return UtilityObjectManager.getConfigInstant();
 	}
 
 	public void setScenarioContext(Config scenarioContext) {
@@ -58,7 +55,7 @@ public class BasePage extends PageLocatorHelper{
 	}
 
 	public WaitHelper getWaitUtils() {
-		return WaitUtils;
+		return UtilityObjectManager.getWaitUtils();
 	}
 
 	public void setWaitUtils(WaitHelper waitUtils) {
@@ -74,7 +71,7 @@ public class BasePage extends PageLocatorHelper{
 	}
 
 	public LoggerUtils getLoggerUtils() {
-		return LoggerUtils;
+		return UtilityObjectManager.getLoggerUtils();
 	}
 
 	public void setLoggerUtils(LoggerUtils loggerUtils) {
@@ -82,7 +79,7 @@ public class BasePage extends PageLocatorHelper{
 	}
 
 	public WebDriver getDriver() {
-		return driver;
+		return UtilityObjectManager.getConfigInstant().getDriver();
 	}
 
 	public void setDriver(WebDriver driver) {

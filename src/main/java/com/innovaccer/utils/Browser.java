@@ -407,6 +407,8 @@ public class Browser
 		File dest = getScreenShotDirectory(testConfig);
 		return new File(dest.getPath() + File.separator + getPageHTMLFileName(testConfig));
 	}
+	
+	
 
 	private static String getPageHTMLFileName(Config testConfig)
 	{

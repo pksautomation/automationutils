@@ -1,64 +1,79 @@
 package com.innovaccer.utils.v2;
 
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.v2.fileutils.*;
 import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
 
 public class UtilityObjectManager {
 
 
-    private AssertionUtils AssertionUtils;
+    Config configInstant;
+    public Config getConfigInstant() {
+		return configInstant;
+	}
+
+	public void setConfigInstant(Config configInstant) {
+		this.configInstant = configInstant;
+	}
+
+	private AssertionUtils AssertionUtils;
     private BrowserUtils BrowserUtils;
     private LoggerUtils LoggerUtils;
     private TestDataHelper testDataHelper;
-    
-	Config configInstant;
+    private WaitHelper WaitUtils;
 
-    public UtilityObjectManager(Config config) {
+    public WaitHelper getWaitUtils() {
+		return WaitUtils;
+	}
+
+	public void setWaitUtils(WaitHelper waitUtils) {
+		WaitUtils = waitUtils;
+	}
+
+	public UtilityObjectManager(Config config) {
         init(config);
     }
 
-	private void init(Config config) {
-		this.AssertionUtils = new AssertionUtils(config);
-        this.BrowserUtils = new BrowserUtils(config);
-        this.LoggerUtils = new LoggerUtils(config);
-        this.testDataHelper=new TestDataHelper();
-	}
-	
-    public TestDataHelper getTestDataHelper() {
-		return testDataHelper;
-	}
-
-	public void setTestDataHelper(TestDataHelper testDataHelper) {
-		this.testDataHelper = testDataHelper;
-	}
-    
     public UtilityObjectManager() {
-    	init(Config.getConfig());
+        init(Config.getConfig());
     }
 
-	public AssertionUtils getAssertionUtils() {
-		return AssertionUtils;
-	}
+    private void init(Config config) {
+        this.AssertionUtils = new AssertionUtils(config);
+        this.BrowserUtils = new BrowserUtils(config);
+        this.LoggerUtils = new LoggerUtils(config);
+        this.testDataHelper = new TestDataHelper();
+        this.WaitUtils = new WaitHelper(config);
+    }
 
-	public void setAssertionUtils(AssertionUtils assertionUtils) {
-		AssertionUtils = assertionUtils;
-	}
+    public TestDataHelper getTestDataHelper() {
+        return testDataHelper;
+    }
 
-	public BrowserUtils getBrowserUtils() {
-		return BrowserUtils;
-	}
+    public void setTestDataHelper(TestDataHelper testDataHelper) {
+        this.testDataHelper = testDataHelper;
+    }
 
-	public void setBrowserUtils(BrowserUtils browserUtils) {
-		BrowserUtils = browserUtils;
-	}
+    public AssertionUtils getAssertionUtils() {
+        return AssertionUtils;
+    }
 
-	public LoggerUtils getLoggerUtils() {
-		return LoggerUtils;
-	}
+    public void setAssertionUtils(AssertionUtils assertionUtils) {
+        AssertionUtils = assertionUtils;
+    }
 
-	public void setLoggerUtils(LoggerUtils loggerUtils) {
-		LoggerUtils = loggerUtils;
-	}
+    public BrowserUtils getBrowserUtils() {
+        return BrowserUtils;
+    }
+
+    public void setBrowserUtils(BrowserUtils browserUtils) {
+        BrowserUtils = browserUtils;
+    }
+
+    public LoggerUtils getLoggerUtils() {
+        return LoggerUtils;
+    }
+
+    public void setLoggerUtils(LoggerUtils loggerUtils) {
+        LoggerUtils = loggerUtils;
+    }
 
 }
