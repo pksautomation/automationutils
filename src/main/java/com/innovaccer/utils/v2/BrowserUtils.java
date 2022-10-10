@@ -26,7 +26,7 @@ public class BrowserUtils {
 	}
 	
 	public void navigateToLoginPage() {
-		String url = configInstance.getRunTimeProperty("Environment");
+		String url = configInstance.getRunTimeProperty("Environment")+"/login";
 		Browser.navigateToURL(configInstance, url);
 	}
 	

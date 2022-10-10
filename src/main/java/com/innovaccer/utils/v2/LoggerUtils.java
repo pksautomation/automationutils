@@ -45,5 +45,22 @@ public class LoggerUtils {
     public void embedStringAsHTMLInReport(String text) {
     	Log.embedMessageAsHTMLInReport(testConfig, text);
     }
+    
+    /**
+	 * This method fail test scenarios just after calling it
+	 * @param msg
+	 * @author pramod.singh
+	 */
+	public void failFinalTestScenarios(String msg) {
+		testConfig.endExecutionOnfailure=true;
+		Log.Failfinal(msg, testConfig);
+	}
+	
+	 public void logFail(String message) {
+	        Log.Fail(message, testConfig);
+	    }
+	 public void logPass(String message) {
+	        Log.Pass(message, testConfig);
+	    }
 
 }

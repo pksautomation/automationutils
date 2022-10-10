@@ -1,13 +1,15 @@
-package com.innovaccer.utils.v2.dataHelper.pageobject;
+package pojo;
 
 import javax.annotation.Generated;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 @Generated("jsonschema2pojo")
 public class How {
+	@SerializedName("LocatorId")
+	@Expose
+	private String locatorId;
 	@SerializedName("Strategy")
 	@Expose
 	private String strategy;
@@ -20,47 +22,44 @@ public class How {
 	@SerializedName("type")
 	@Expose
 	private String type;
-	@SerializedName("key")
-	@Expose
-	private String key;
 
-	public String getKey() {
-		return key;
+	public String getLocatorId() {
+		return locatorId;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setLocatorId(String locatorId) {
+		this.locatorId = locatorId;
 	}
 
 	public String getStrategy() {
-	return strategy;
+		return strategy;
 	}
 
 	public void setStrategy(String strategy) {
-	this.strategy = strategy;
+		this.strategy = strategy;
 	}
 
 	public String getValue() {
-	return value;
+		return value;
 	}
 
 	public void setValue(String value) {
-	this.value = value;
+		this.value = value;
 	}
 
 	public String getDescription() {
-	return description;
+		return description;
 	}
 
 	public void setDescription(String description) {
-	this.description = description;
+		this.description = description;
 	}
 
 	public String getType() {
-	return type;
+		return type;
 	}
 
 	public void setType(String type) {
-	this.type = type;
+		this.type = type;
 	}
 }

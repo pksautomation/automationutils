@@ -24,6 +24,7 @@ import org.json.simple.parser.JSONParser;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
+import com.google.gson.JsonSyntaxException;
 import com.innovaccer.utils.APIHelper;
 import com.innovaccer.utils.Config;
 import com.innovaccer.utils.Helper;
@@ -207,7 +208,7 @@ public class JSONUtils {
 		 * @param fileLocationURL the file location URL
 		 * @return the JSON object
 		 */
-		public  JSONObject parseJSONFileInJSONObject(String fileLocationURL) {
+		public  JSONObject parseJSONFileInJSONObject(String fileLocationURL) throws Exception {
 			JSONObject jo = null;
 			InputStream  is;
 			try {
@@ -215,17 +216,12 @@ public class JSONUtils {
 		        JSONTokener tokener = new JSONTokener(is);
 		        jo = new JSONObject(tokener);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new FileNotFoundException(" JSON File not Found -> " + fileLocationURL);
 			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}        
-	        // typecasting obj to JSONObject
-			
+				throw new NullPointerException(" Null pointer Exception -> " + fileLocationURL);
+			} catch(JSONException js) {      
+				throw new JSONException(" Syntax Error in Json File ->" + fileLocationURL + js.getMessage());
+			}
 			return jo;
 		}
 		

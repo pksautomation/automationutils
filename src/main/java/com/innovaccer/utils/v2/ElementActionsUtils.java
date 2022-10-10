@@ -18,8 +18,9 @@ import com.innovaccer.utils.Element;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.v2.dataHelper.*;
 import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
-import com.innovaccer.utils.v2.dataHelper.pageobject.How;
 import com.mysql.jdbc.log.LogUtils;
+
+import pojo.How;
 
 /**
  *
@@ -121,7 +122,7 @@ public class ElementActionsUtils {
 	public WebElement getEnabledButtonEle(String buttonLabel) {
 		String buttonXpath = "//button[contains(text(),'" + buttonLabel + "')]";
 		By by = By.xpath(buttonXpath);
-		return WaitUtils.waitForElementToBeClickable(by, buttonLabel, 10);
+		return WaitUtils.waitForElementToBeClickable(by, buttonLabel);
 	}
 
 	/**
@@ -133,14 +134,14 @@ public class ElementActionsUtils {
 	 */
 	public WebElement getDropDownButton(How how) {
 		WebElement element;
-		By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription(),false);
+		By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription());
 		element = WaitUtils.fluentWaitForElementToBeClickable(by, how.getDescription());
 		return element;
 	}
 
-	public void clickOnButton(String buttonName) {
-		Element.click(this.scenarioContext, getEnabledButtonEle(buttonName), buttonName);
-	}
+//	public void clickOnButton(String buttonName) {
+//		Element.click(this.scenarioContext, getEnabledButtonEle(buttonName), buttonName);
+//	}
 
 	/**
 	 * Check Button enable or not
@@ -164,14 +165,23 @@ public class ElementActionsUtils {
 	 * 
 	 * @param how
 	 */
-	public void fillData(How how) {
+	public void fillData(String key) {
 		WebElement element = null;
-		String data = testDataHelper.getTestData(how.getKey());
-		if (data != null && !data.equals("")) {
-			By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription(),false);
-			element = WaitUtils.waitForVisibility(by, how.getDescription());
-			Element.enterData(this.scenarioContext, element, data, how.getDescription());
+		String data = testDataHelper.getTestData(key);
+		How how = getHow(key);
+		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
+		if(how == null) {
+			LoggerUtils.failFinalTestScenarios(" Locators info " + key + " not found in " + pageName + ".json file ");
 		}
+		else if (data != null && !data.equals("")) {
+			By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription());
+			element = WaitUtils.waitForVisibility(by, how.getDescription());
+			if(element != null)
+			Element.enterData(this.scenarioContext, element, data, how.getDescription());
+			else {
+					LoggerUtils.failFinalTestScenarios("Element not Found for " + how.getDescription());
+				}
+			}
 	}
 
 	/**
@@ -212,8 +222,13 @@ public class ElementActionsUtils {
 	 * 
 	 * @param Label --> it is either lable or place holder of dropdown
 	 */
-	public void selectDropDown(How how) {
-		String data = testDataHelper.getTestData(how.getKey());
+	public void selectDropDown(String id) {
+		String data = testDataHelper.getTestData(id);
+		How how = getHow(id);
+		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
+		if(how == null) {
+			LoggerUtils.failFinalTestScenarios(" Locators info " + id + " not found in " + pageName + ".json file ");
+		}
 		if (data != null && !data.equals("")) {
 			click(getDropDownButton(how), how.getDescription());
 			By by = By.xpath("//*[contains(@class,'Option')]//*[text()='" + data + "']");
@@ -379,11 +394,20 @@ public class ElementActionsUtils {
 	 * 
 	 * @param how
 	 */
-	public void clickOnButton(How how)
+	public void clickOnButton(String id)
 	{
-		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription(), false);
+		How how = getHow(id);
+		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
+		if(how == null) {
+			LoggerUtils.failFinalTestScenarios(" Locators info " + id + " not found in " + pageName + ".json file ");
+		}
+		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription());
 		WebElement element = WaitUtils.fluentWaitForElementToBeClickable(byLocator, how.getDescription());
-		Element.click(this.scenarioContext, element, how.getDescription());
+		if(element !=null)
+			Element.click(this.scenarioContext, element, how.getDescription());
+		else {
+			LoggerUtils.failFinalTestScenarios("Element not Found for " + how.getDescription());
+		}
 	}
 
 	/**
@@ -394,8 +418,7 @@ public class ElementActionsUtils {
 	 * @param isTestCaseFailedIfNoSuchExcetion
 	 * @return
 	 */
-	public By getPageElementLocator(String stretegy, String what, String description,
-			Boolean isTestCaseFailedIfNoSuchExcetion) {
+	public By getPageElementLocator(String stretegy, String what, String description) {
 		By byLocator = null;
 
 		what = Helper.replaceArgumentsWithRunTimeProperties(scenarioContext, what);
@@ -427,6 +450,25 @@ public class ElementActionsUtils {
 		}
 		return byLocator;
 
+	}
+	
+	/**
+	 * 
+	 * @param locatorkey
+	 * @return
+	 */
+	public How getHow(String id) {
+		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
+		if(pageName == null ) {
+			LoggerUtils.logFail(" PageObjectName value not found in scenarios context");
+			return null;
+		}
+		else if(Config.locatorsDataPageWise.containsKey(pageName))
+			return Config.locatorsDataPageWise.get(pageName).get(id);
+		else {
+			LoggerUtils.logFail(" Locator : " + id + " not found in " + pageName + ".json file");
+			return null;
+		}
 	}
 
 }

@@ -16,9 +16,13 @@ public class CSVUtils {
     private LoggerUtils loggerHelper;
 
     public CSVUtils(Config testConfig) {
-        config = testConfig;
-        loggerHelper = new LoggerUtils(config);
+        init(testConfig);
     }
+
+	private void init(Config testConfig) {
+		config = testConfig;
+        loggerHelper = new LoggerUtils(config);
+	}
 
     /**
      * @param csvFileName -> File Name for the CSV File
