@@ -1,0 +1,18 @@
+{
+  "TestCaseId": "10000",
+  "Description": "Executing to validate Reflections in Java",
+  "ZephyrScaleId": "JIRA-100",
+  "Priority": "High",
+  "Steps": [
+    {"ClassName": "LoginPage", "MethodName": "loginUsingCredentials", "TestData": "admin"},
+    {"ClassName": "LoginPage", "MethodName": "validateSuccessfulLoginUsingUsername", "TestData": "admin"},
+    {"ClassName": "HomePage", "MethodName": "clickOnHomePage", "TestData": ""},
+    {"ClassName": "HomePage", "MethodName": "validateHomePage", "TestData": ""},
+    {"ClassName": "UserPage", "MethodName": "clickOnUserInfoButton", "TestData": ""},
+    {"ClassName": "UserPage", "MethodName": "validateUserInfoPage", "TestData": "admin"},
+    {"ClassName": "SettingsPage", "MethodName": "clickOnSettingsTab", "TestData": ""},
+    {"ClassName": "SettingsPage", "MethodName": "validateSettingsTab", "TestData": ""},
+    {"ClassName": "LogoutPage", "MethodName": "clickOnLogoutButton", "TestData": ""},
+    {"ClassName": "LogoutPage", "MethodName": "validateLogoutPage", "TestData": ""}
+  ]
+}
