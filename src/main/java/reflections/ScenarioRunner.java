@@ -17,25 +17,6 @@ public class ScenarioRunner {
         reflections = new Reflections();
     }
 
-    private static void printTestScenarioStartingData(String scenario) {
-        System.out.println();
-        System.out.println("Starting Test Execution...");
-        System.out.println();
-        System.out.println("Id: " + getValueFromString(scenario, "TestCaseId"));
-        System.out.println("Description: " + getValueFromString(scenario, "Description"));
-        System.out.println("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
-        System.out.println("Priority: " + getValueFromString(scenario, "Priority"));
-        System.out.println();
-        System.out.println("Starting Steps Execution...");
-    }
-
-    private static void printTestScenarioEndingData(String scenario) {
-        System.out.println();
-        System.out.println("Steps Execution Completed.");
-        System.out.println();
-        System.out.println("Test Execution Completed.");
-    }
-
     private static String getValueFromString(String jsonString, String jsonPath) {
         return JsonPath.from(jsonString).getString(jsonPath);
     }
@@ -65,6 +46,10 @@ public class ScenarioRunner {
         String scenario, className, methodName, testData;
         try {
             scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
+            System.out.println("Id: " + getValueFromString(scenario, "TestCaseId"));
+            System.out.println("Description: " + getValueFromString(scenario, "Description"));
+            System.out.println("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
+            System.out.println("Priority: " + getValueFromString(scenario, "Priority"));
             JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
             for (int i = 0; i < listOfSteps.length(); i++) {
                 String step = listOfSteps.get(i).toString();
