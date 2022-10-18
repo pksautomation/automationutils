@@ -16,7 +16,7 @@ import java.io.*;
 
 public class XMLUtils {
 
-    private Config config;
+    private Config configInstance;
     private LoggerUtils loggerUtils;
 
     public XMLUtils() {
@@ -28,8 +28,8 @@ public class XMLUtils {
     }
 
     private void init(Config testConfig) {
-        this.config = testConfig;
-        loggerUtils = new LoggerUtils(config);
+        this.configInstance = testConfig;
+        loggerUtils = new LoggerUtils(configInstance);
     }
 
     /**
@@ -50,7 +50,7 @@ public class XMLUtils {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            path = config.downloadPath + fileName;
+            path = configInstance.getDownloadPath() + fileName;
             StreamResult result = new StreamResult(new File(path));
             transformer.transform(source, result);
         } catch (Exception e) {

@@ -12,7 +12,6 @@ public class WaitHelper {
     private Config configInstance;
     private LoggerUtils loggerUtils;
     private PopupUtils popupUtils;
-    private ElementActionsUtils elementActionsUtils;
 
     public WaitHelper(Config config) {
         init(config);
@@ -26,7 +25,6 @@ public class WaitHelper {
         this.configInstance = config;
         loggerUtils = new LoggerUtils(this.configInstance);
         popupUtils = new PopupUtils(this.configInstance);
-        elementActionsUtils = new ElementActionsUtils(configInstance);
     }
 
     /**
@@ -42,6 +40,7 @@ public class WaitHelper {
         waitForVisibility(webElement, timeInSeconds, description);
         return webElement;
     }
+    
 
     /**
      * Wait For Visibility using WebElement
@@ -124,6 +123,7 @@ public class WaitHelper {
      */
     public void waitForElementToDisappear(WebElement element) {
         try {
+        	ElementActionsUtils elementActionsUtils = new ElementActionsUtils(configInstance);
             for (int i = 1; i <= 50; i++) {
                 if (!(elementActionsUtils.IsElementDisplayed(element)))
                     break;
@@ -163,7 +163,7 @@ public class WaitHelper {
             ObjectWaitTime = maxWaitTimeInSecond[0];
         }
         try {
-            WebDriverWait wait = new WebDriverWait(configInstance.driver, ObjectWaitTime);
+            WebDriverWait wait = new WebDriverWait(configInstance.getDriver(), ObjectWaitTime);
             element = wait.until(ExpectedConditions.elementToBeClickable(by));
         } catch (Exception e) {
             loggerUtils.logException(description, e, true);
@@ -217,7 +217,7 @@ public class WaitHelper {
             ObjectWaitTime = maxWaitTimeInSecond[0];
         }
         loggerUtils.logComment("Wait for element '" + description + "' to be visible on the page.");
-        Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(configInstance.driver)
+        Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(configInstance.getDriver())
                 .withTimeout(Duration.ofSeconds(ObjectWaitTime)).pollingEvery(Duration.ofSeconds(2))
                 .ignoring(NoSuchElementException.class);
 
@@ -247,7 +247,7 @@ public class WaitHelper {
             ObjectWaitTime = maxWaitTimeInSecond[0];
         }
         loggerUtils.logComment("Wait for element '" + description + "' to be clickable on the page.");
-        Wait<WebDriver> fluentWait = new FluentWait<>(configInstance.getDriver())
+        Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(configInstance.getDriver())
                 .withTimeout(Duration.ofSeconds(ObjectWaitTime)).pollingEvery(Duration.ofSeconds(2))
                 .ignoring(NoSuchElementException.class);
         try {

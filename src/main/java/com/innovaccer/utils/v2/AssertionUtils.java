@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class AssertionUtils {
 
-    private Config testConfig;
+    private Config configInstance;
     private LoggerUtils loggerUtils;
 
     public AssertionUtils() {
@@ -21,8 +21,7 @@ public class AssertionUtils {
     }
 
     private void init(Config testConfig) {
-        this.testConfig = testConfig;
-        loggerUtils = new LoggerUtils();
+        this.configInstance = testConfig;
     }
 
     /**
@@ -44,6 +43,7 @@ public class AssertionUtils {
      */
     public void assertContains(String what, String expected, String actual, boolean... logPageInfo) {
         actual = actual.trim();
+        loggerUtils = new LoggerUtils(configInstance);
         if (actual != null) {
             if (!actual.contains(expected.trim())) {
                 loggerUtils.logFail(what, expected, actual, logPageInfo[0]);
@@ -64,6 +64,7 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertEquals(String what, String expected, String actual, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         if ((expected == null & actual == null) || (expected == null && actual.isEmpty())
                 || (actual == null && expected.isEmpty())) {
             loggerUtils.logPass(what, actual, logPageInfo[0]);
@@ -85,6 +86,7 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertEqualsAndLogWarning(String what, String expected, String actual, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         if (expected == null & actual == null) {
             loggerUtils.logPass(what, actual, logPageInfo[0]);
             return;
@@ -109,6 +111,7 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertTrue(String what, boolean actual, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         if (!actual) {
             loggerUtils.logFail(" Failed to verify " + what, logPageInfo[0]);
         } else {
@@ -124,6 +127,7 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertFalse(String what, boolean actual, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         if (actual) {
             loggerUtils.logFail(" Failed to verify " + what, logPageInfo[0]);
         } else {
@@ -140,6 +144,7 @@ public class AssertionUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void assertDoubleValues(String what, String expected, String actual, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         if (expected == null & actual == null) {
             loggerUtils.logPass(what, actual, logPageInfo[0]);
             return;
@@ -169,14 +174,21 @@ public class AssertionUtils {
      * @param string2     -> Second String
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
-    public void assertDifferentStrings(String what, String string1, String string2, boolean... logPageInfo) {
-        if (string1 != null && string2 != null) {
-            if (!string1.equalsIgnoreCase(string2)) {
-                loggerUtils.logPass(what, string1, logPageInfo[0]);
+    public void assertDifferentStrings(String what, String firstStr, String secondStr, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
+        if (firstStr != null && secondStr != null) {
+            if (!firstStr.equalsIgnoreCase(secondStr)) {
+            	String message = "[" + configInstance.getUniqueId() + "]" + what + " values are different" + " Expected is : "
+						+ firstStr + " and Actual is: " + secondStr;
+                loggerUtils.logPass(what, secondStr, logPageInfo[0]);
             } else {
+            	
                 loggerUtils.logFail(what, logPageInfo[0]);
             }
         } else {
+			// Adding logs to check which value is null
+        	loggerUtils.logComment("String 1 Value: " + firstStr);
+        	loggerUtils.logComment("String 2 Value: " + secondStr);
             loggerUtils.logFail(what + " values are null", logPageInfo[0]);
         }
     }
@@ -204,6 +216,7 @@ public class AssertionUtils {
      * @param logPageInfo  -> Boolean to enable/disable logging page info
      */
     public void assertLists(String what, List<String> expectedList, List<String> actualList, boolean... logPageInfo) {
+    	loggerUtils = new LoggerUtils(configInstance);
         expectedList = expectedList.stream().map(String::toLowerCase).collect(Collectors.toList());
         actualList = actualList.stream().map(String::toLowerCase).collect(Collectors.toList());
         if (expectedList.equals(actualList)) {
