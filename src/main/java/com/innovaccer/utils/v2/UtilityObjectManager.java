@@ -16,7 +16,6 @@ public class UtilityObjectManager {
 
 	private AssertionUtils AssertionUtils;
     private BrowserUtils BrowserUtils;
-    private LoggerUtils LoggerUtils;
     private TestDataHelper testDataHelper;
     private WaitHelper WaitUtils;
 
@@ -37,11 +36,11 @@ public class UtilityObjectManager {
     }
 
     private void init(Config config) {
-        this.AssertionUtils = new AssertionUtils(config);
         this.BrowserUtils = new BrowserUtils(config);
-        this.LoggerUtils = new LoggerUtils(config);
-        this.testDataHelper = new TestDataHelper();
+        this.testDataHelper = new TestDataHelper(config);
         this.WaitUtils = new WaitHelper(config);
+        //this.LoggerUtils = new LoggerUtils(config);
+        this.AssertionUtils = new AssertionUtils(config);
     }
 
     public TestDataHelper getTestDataHelper() {
@@ -68,12 +67,12 @@ public class UtilityObjectManager {
         BrowserUtils = browserUtils;
     }
 
-    public LoggerUtils getLoggerUtils() {
-        return LoggerUtils;
-    }
-
-    public void setLoggerUtils(LoggerUtils loggerUtils) {
-        LoggerUtils = loggerUtils;
-    }
+//    public LoggerUtils getLoggerUtils() {
+//        return LoggerUtils;
+//    }
+//
+//    public void setLoggerUtils(LoggerUtils loggerUtils) {
+//        LoggerUtils = loggerUtils;
+//    }
 
 }

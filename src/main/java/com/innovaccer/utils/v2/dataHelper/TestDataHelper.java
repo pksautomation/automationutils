@@ -5,13 +5,13 @@ import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.fileutils.*;
 
 public class TestDataHelper {
-    Config configInstant;
+    Config configInstance;
     private LoggerUtils LoggerUtils;
     private YamlUtils YamlUtils;
     private CSVUtils CSVUtils;
     private ExcelUtils ExcelUtils;
     private XMLUtils XMLUtils;
-    private TextUtils TextUtils;
+    private TextFileUtils TextUtils;
 
     public TestDataHelper(Config config) {
         init(config);
@@ -27,18 +27,18 @@ public class TestDataHelper {
         this.CSVUtils = new CSVUtils(config);
         this.ExcelUtils = new ExcelUtils(config);
         this.XMLUtils = new XMLUtils(config);
-        this.TextUtils = new TextUtils(config);
-        this.configInstant = config;
+        this.TextUtils = new TextFileUtils(config);
+        this.configInstance = config;
     }
 
     /*
      *
      */
     public String getTestData(String datakey) {
-        String testDataName = configInstant.getRunTimeProperty("TestDataName");
-        if (Config.testData.containsKey(testDataName)
-                && Config.testData.get(testDataName).containsKey(datakey))
-            return Config.testData.get(testDataName).get(datakey);
+        String testDataName = configInstance.getRunTimeProperty("TestDataName");
+        if (configInstance.getTestData().containsKey(testDataName)
+                && configInstance.getTestData().get(testDataName).containsKey(datakey))
+            return configInstance.getTestData().get(testDataName).get(datakey);
         else
             return null;
     }
@@ -83,11 +83,11 @@ public class TestDataHelper {
         XMLUtils = xMLUtils;
     }
 
-    public TextUtils getTextUtils() {
+    public TextFileUtils getTextUtils() {
         return TextUtils;
     }
 
-    public void setTextUtils(TextUtils textUtils) {
+    public void setTextUtils(TextFileUtils textUtils) {
         TextUtils = textUtils;
     }
 

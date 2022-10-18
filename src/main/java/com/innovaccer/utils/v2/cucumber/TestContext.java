@@ -8,7 +8,7 @@ import java.io.File;
 public class TestContext {
 
     public Config scenarioContext;
-    private final UtilityObjectManager utilityObjectManager;
+    private  UtilityObjectManager utilityObjectManager;
 
     public TestContext() {
         String localConfigPath = System.getProperty("user.dir") + File.separator
@@ -18,7 +18,7 @@ public class TestContext {
             Config.threadLocalConfig = new ThreadLocal<Config[]>();
 
         Config.threadLocalConfig.set(new Config[]{scenarioContext});
-        utilityObjectManager = new UtilityObjectManager(scenarioContext);
+        scenarioContext.setUtilityObjectManager(new UtilityObjectManager(scenarioContext));
     }
 
     public UtilityObjectManager getUtilityObjectManager() {

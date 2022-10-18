@@ -32,8 +32,7 @@ public class BrowserUtils {
 
     private Config configInstance;
     private LoggerUtils loggerUtils;
-    private WebDriver driver;
-    private AssertionUtils assertionUtils;
+    //private AssertionUtils assertionUtils;
     private PopupUtils popupUtils;
 
     public BrowserUtils(Config testConfig) {
@@ -47,13 +46,11 @@ public class BrowserUtils {
     private void init(Config testConfig) {
         this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(configInstance);
-        assertionUtils = new AssertionUtils(configInstance);
-        driver = configInstance.driver;
         popupUtils = new PopupUtils(this.configInstance);
     }
 
     public void navigateToLoginPage() {
-        String url = configInstance.getRunTimeProperty("Environment");
+        String url = configInstance.getRunTimeProperty("Environment")+"/login";
         navigateToURL(url);
     }
 
@@ -61,9 +58,9 @@ public class BrowserUtils {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date startDate = new Date();
         startDate = new Date();
-        loggerUtils.logComment("Starting Navigation to web page- '" + url + "' at:- " + dateFormat.format(startDate) + " for : " + Config.scenarioName);
+        loggerUtils.logComment("Starting Navigation to web page- '" + url + "' at:- " + dateFormat.format(startDate) + " for : " + configInstance.getScenarioName());
         try {
-            configInstance.driver.navigate().to(url);
+            configInstance.getDriver().navigate().to(url);
         } catch (UnhandledAlertException ua) {
             loggerUtils.logWarning("Alert appeared during navigation");
             if (popupUtils.isAlertPresent())
@@ -72,14 +69,15 @@ public class BrowserUtils {
             loggerUtils.logFailureException(e);
         }
 
-        loggerUtils.logComment("Navigated to web page- '" + url + "' for : " + Config.scenarioName);
+        loggerUtils.logComment("Navigated to web page- '" + url + "' for : " + configInstance.getScenarioName());
     }
 
     public void openBrowser() {
         int retryCnt = 5;
+        AssertionUtils assertionUtils = new AssertionUtils(configInstance);
         while (configInstance.getDriver() == null && retryCnt > 0) {
             try {
-                configInstance.driver = openBrowser(configInstance);
+                configInstance.setDriver(openBrowser(configInstance));
 
             } catch (Exception e) {
                 loggerUtils.logWarning("Retrying the browser launch:-" + e);
@@ -102,7 +100,7 @@ public class BrowserUtils {
 
 
     public void setImplicitWait(int timeInSeconds) {
-        driver.manage().timeouts().implicitlyWait(timeInSeconds, TimeUnit.SECONDS);
+    	configInstance.getDriver().manage().timeouts().implicitlyWait(timeInSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -118,7 +116,7 @@ public class BrowserUtils {
 	{
 		try
 		{
-			if (configInstance.driver != null)
+			if (configInstance.getDriver() != null)
 			{
 				byte[] screenshot = null;
 
@@ -129,7 +127,7 @@ public class BrowserUtils {
 				catch (NullPointerException ne)
 				{
 					loggerUtils.logWarning("NullPointerException:Screenshot can't be taken. Probably browser is not reachable");
-					configInstance.driver = null;
+					configInstance.setDriver(null);
 				}
 
 				if (screenshot != null)
@@ -161,14 +159,14 @@ public class BrowserUtils {
 				String href = destination.getPath();
 				testConfig.logComment("<B>Screenshot</B>:- <a href=" + href + " target='_blank' >" + destination.getName() + "</a>");
 				 */
-					configInstance.testScenario.embed(screenshot, "image/png");
+					configInstance.getScenario().embed(screenshot, "image/png");
 					loggerUtils.logComment("Refer Screenshot In Attachement");
 				}
 			}
 		}
 		catch (Exception e)
 		{
-			configInstance.enableScreenshot = false;
+			configInstance.setEnableScreenshot(false);;
 			loggerUtils.logWarning("Unable to take screenshot2:- " + ExceptionUtils.getStackTrace(e));
 			loggerUtils.logFailureException(e);
 		}
@@ -182,11 +180,11 @@ public class BrowserUtils {
                 popupUtils.ok();
             }
 
-            if (driver.getClass().isAnnotationPresent(Augmentable.class) || driver.getClass().getName().startsWith("org.openqa.selenium.remote.RemoteWebDriver$$EnhancerByCGLIB")) {
-                WebDriver augumentedDriver = new Augmenter().augment(driver);
+            if (configInstance.getDriver().getClass().isAnnotationPresent(Augmentable.class) || configInstance.getDriver().getClass().getName().startsWith("org.openqa.selenium.remote.RemoteWebDriver$$EnhancerByCGLIB")) {
+                WebDriver augumentedDriver = new Augmenter().augment(configInstance.getDriver());
                 screenshot = ((TakesScreenshot) augumentedDriver).getScreenshotAs(OutputType.BYTES);
             } else {
-                screenshot = ((TakesScreenshot) ((SelfHealingDriver) driver).getDelegate()).getScreenshotAs(OutputType.BYTES);
+                screenshot = ((TakesScreenshot) ((SelfHealingDriver) configInstance.getDriver()).getDelegate()).getScreenshotAs(OutputType.BYTES);
             }
 
         } catch (UnhandledAlertException alert) {
@@ -194,8 +192,6 @@ public class BrowserUtils {
             loggerUtils.logWarning(ExceptionUtils.getFullStackTrace(alert));
         } catch (NoSuchWindowException NoSuchWindowExp) {
             loggerUtils.logWarning("NoSuchWindowException:Screenshot can't be taken. Probably browser is not reachable");
-            //test case will end, setting this as null will prevent taking screenshot again in cleanup
-            driver = null;
         } catch (WebDriverException webdriverExp) {
             loggerUtils.logWarning("Unable to take screenshot1:- " + ExceptionUtils.getFullStackTrace(webdriverExp));
         } catch (Exception e) {
@@ -207,9 +203,9 @@ public class BrowserUtils {
 
 
     public void deleteCookies() {
-        if (driver != null) {
+        if (configInstance.getDriver() != null) {
             loggerUtils.logComment("Delete all cookies!!");
-            driver.manage().deleteAllCookies();
+            configInstance.getDriver().manage().deleteAllCookies();
         }
     }
 
@@ -220,7 +216,7 @@ public class BrowserUtils {
     public void waitForPageTitleToContain(String title) {
         loggerUtils.logComment("Wait for page title to contain '" + title + "'.");
         Long ObjectWaitTime = Long.parseLong(configInstance.getRunTimeProperty("ObjectWaitTime"));
-        WebDriverWait wait = new WebDriverWait(driver, ObjectWaitTime);
+        WebDriverWait wait = new WebDriverWait(configInstance.getDriver(), ObjectWaitTime);
         wait.until(ExpectedConditions.titleContains(title));
         //Browser.waitForPageTitleToContain(configInstance, title);
     }
@@ -267,7 +263,7 @@ public class BrowserUtils {
 
     public Object executeJavascript(String javascriptCode) {
         loggerUtils.logComment("Execute javascript:-" + javascriptCode);
-        JavascriptExecutor javaScript = (JavascriptExecutor) driver;
+        JavascriptExecutor javaScript = (JavascriptExecutor) configInstance.getDriver();
         return javaScript.executeScript(javascriptCode);
     }
 
@@ -277,9 +273,9 @@ public class BrowserUtils {
      */
     public void quitBrowser() {
         try {
-            if (driver != null) {
-                loggerUtils.logComment("Close the browser window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
-                driver.close();
+            if (configInstance.getDriver() != null) {
+                loggerUtils.logComment("Close the browser window with URL:- " + configInstance.getDriver().getCurrentUrl() + ". And title as :- " + configInstance.getDriver().getTitle());
+                configInstance.getDriver().close();
             }
         } catch (UnreachableBrowserException e) {
             loggerUtils.logWarning(ExceptionUtils.getFullStackTrace(e));
@@ -295,14 +291,14 @@ public class BrowserUtils {
 
     public void goBack() {
         loggerUtils.logComment("Clicking on back button on browser");
-        driver.navigate().back();
+        configInstance.getDriver().navigate().back();
     }
 
 
     public String getCookieValue(String cookieKey) {
         String value = null;
-        if (driver != null) {
-            Cookie cookie = driver.manage().getCookieNamed(cookieKey);
+        if (configInstance.getDriver() != null) {
+            Cookie cookie = configInstance.getDriver().manage().getCookieNamed(cookieKey);
             if (cookie == null) {
                 loggerUtils.logFail("Cookie " + cookieKey + " Not found");
                 return null;
@@ -324,7 +320,7 @@ public class BrowserUtils {
     }
 
     private String getPageHTMLFileName() {
-        String nameScreenshot = Config.featureName + "." + Config.scenarioName;
+        String nameScreenshot = configInstance.getFeatureName() + "." + configInstance.getScenarioName();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
         return dateFormat.format(date) + "_" + nameScreenshot + ".html";
@@ -395,7 +391,7 @@ public class BrowserUtils {
     }
 
     private String getScreenshotFileName() {
-        String nameScreenshot = ((List<String>) configInstance.testScenario.getSourceTagNames()).get(0);
+        String nameScreenshot = ((List<String>) configInstance.getScenario().getSourceTagNames()).get(0);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
         return dateFormat.format(date) + "_" + nameScreenshot + ".png";
@@ -408,15 +404,15 @@ public class BrowserUtils {
 
     public void recordHtmlPage(File destination) {
         try {
-            if (driver != null) {
+            if (configInstance.getDriver() != null) {
                 String pageHTML;
                 Boolean remoteExecution = configInstance.getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
 
                 if (remoteExecution) {
-                    WebDriver augumentedDriver = new Augmenter().augment(driver);
+                    WebDriver augumentedDriver = new Augmenter().augment(configInstance.getDriver());
                     pageHTML = (augumentedDriver).getPageSource();
                 } else {
-                    pageHTML = driver.getPageSource();
+                    pageHTML = configInstance.getDriver().getPageSource();
                 }
 
                 try {
@@ -433,7 +429,7 @@ public class BrowserUtils {
             }
         } catch (Exception e) {
             loggerUtils.logWarning("Unable to record Page HTML:- " + ExceptionUtils.getFullStackTrace(e));
-            configInstance.recordPageHTMLOnFailure = false;
+            configInstance.setRecordPageHTMLOnFailure(false);
             throw e;
         }
     }
@@ -443,16 +439,16 @@ public class BrowserUtils {
      * @author nikitagatagat
      */
     public void switchToGivenWindow(String windowHandleName) {
-        if (configInstance.driver != null) {
+        if (configInstance.getDriver() != null) {
             loggerUtils.logComment("Switching to the given window handle:- " + windowHandleName);
-            configInstance.driver.switchTo().window(windowHandleName);
-            loggerUtils.logComment("Switched to window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
+            configInstance.getDriver().switchTo().window(windowHandleName);
+            loggerUtils.logComment("Switched to window with URL:- " + configInstance.getDriver().getCurrentUrl() + ". And title as :- " + configInstance.getDriver().getTitle());
         }
     }
 
 
     public void uploadFileUsingJavascript(String jsLocator, String filePath, WebElement element) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) configInstance.getDriver();
         js.executeScript(jsLocator + ".style.display = \"block\";");
         js.executeScript(jsLocator + ".style.visibility = 'visible';");
         js.executeScript(jsLocator + ".style.opacity = 1;");
@@ -517,7 +513,7 @@ public class BrowserUtils {
                 driver.switchTo().window(mainWindow);
             }
 
-            loggerUtils.logComment("Windows application '" + winApp + "' launched successfully for testcase:- " + Config.scenarioName);
+            loggerUtils.logComment("Windows application '" + winApp + "' launched successfully for testcase:- " + configInstance.getScenarioName());
         } catch (Exception e) {
             loggerUtils.logComment(e.toString());
         }
@@ -531,9 +527,9 @@ public class BrowserUtils {
 
         Process process;
         try {
-            if (driver != null) {
+            if (configInstance.getDriver() != null) {
                 loggerUtils.logComment("Quit the application");
-                driver.quit();
+                configInstance.getDriver().quit();
             }
             process = Runtime.getRuntime().exec("taskkill /F /IM InNote.exe");
             process.waitFor();
@@ -550,7 +546,7 @@ public class BrowserUtils {
 
     public String getConsoleDataOfChromeBrowser() {
         String scriptToExecute = "var performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}; var network = performance.getEntries() || {}; return network;";
-        String netData = ((JavascriptExecutor) configInstance.driver).executeScript(scriptToExecute).toString();
+        String netData = ((JavascriptExecutor) configInstance.getDriver()).executeScript(scriptToExecute).toString();
         return netData;
     }
 
@@ -559,19 +555,19 @@ public class BrowserUtils {
      * @throws IOException
      * @author pramod.singh
      */
-    public SelfHealingDriver openBrowser(Config configInstance) {
+    private SelfHealingDriver openBrowser(Config configInstance) {
         SelfHealingDriver driver = null;
         WebDriver deligate_driver = null;
         String browser = configInstance.getRunTimeProperty("Browser");
         String browserVersion = configInstance.getRunTimeProperty("BrowserVersion");
 
-        if (Config.BrowserName != null && !Config.BrowserName.isEmpty()) {
-            browser = Config.BrowserName;
+        if (configInstance.getBrowserName() != null && !configInstance.getBrowserName().isEmpty()) {
+            browser = configInstance.getBrowserName();
             configInstance.putRunTimeProperty("Browser", browser);
         }
 
         try {
-            if (!Config.remoteExecution) {
+            if (!configInstance.isRemoteExecution()) {
                 loggerUtils.logComment("Launching '" + browser + "' browser in local machine");
                 System.out.println("Launching '" + browser + "' browser in local machine");
                 switch (browser.toLowerCase()) {
@@ -596,17 +592,17 @@ public class BrowserUtils {
                         ChromeOptions options = new ChromeOptions();
                         //To run same browser - will update
                         Map<String, Object> prefs = new HashMap<String, Object>();
-                        if (configInstance.scenario != null)
+                        if (configInstance.getScenario() != null)
                             prefs.put("download.default_directory", System.getProperty("user.dir") + File.separator);
                         else
-                            prefs.put("download.default_directory", configInstance.downloadPath);
+                            prefs.put("download.default_directory", configInstance.getDownloadPath());
 
                         options.setExperimentalOption("prefs", prefs);
                         options.addArguments("disable-infobars");
                         options.addArguments("--start-maximized");
                         options.addArguments("--disable-extensions");
                         options.addArguments("--disable-popup-blocking");
-                        if (Config.isBrowserInHeadlessMode) {
+                        if (configInstance.isBrowserInHeadlessMode()) {
                             System.out.println("In Headless");
                             options.addArguments("--headless");
                             options.addArguments("window-size=1366x768");
@@ -662,10 +658,10 @@ public class BrowserUtils {
 
                     case "chrome":
                         HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-                        if (configInstance.scenario != null)
+                        if (configInstance.getScenario() != null)
                             chromePrefs.put("download.default_directory", System.getProperty("user.dir") + File.separator);
                         else
-                            chromePrefs.put("download.default_directory", configInstance.downloadPath);
+                            chromePrefs.put("download.default_directory", configInstance.getDownloadPath());
                         if (browserVersion != null)
                             WebDriverManager.chromedriver().driverVersion(browserVersion).setup();
                         else
@@ -680,7 +676,7 @@ public class BrowserUtils {
                         cap.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
                         cap.setCapability(ChromeOptions.CAPABILITY, options);
                         cap.setBrowserName("chrome");
-                        if (Config.isBrowserInHeadlessMode) {
+                        if (configInstance.isBrowserInHeadlessMode()) {
                             options.addArguments("--headless");
                             options.addArguments("window-size=1364x768");
                         }
@@ -715,7 +711,7 @@ public class BrowserUtils {
                 driver.manage().window().maximize();
             }
             //System.out.println("Browser '" + browser + "' launched successfully for testcase:- "+testConfig.scenarioName);
-            loggerUtils.logComment("Browser '" + browser + "' launched successfully for testcase:- " + Config.scenarioName);
+            loggerUtils.logComment("Browser '" + browser + "' launched successfully for testcase:- " + configInstance.getScenarioName());
         } catch (Exception e) {
             loggerUtils.logComment(e.toString());
             loggerUtils.logFailureException(e);
