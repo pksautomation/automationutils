@@ -15,7 +15,6 @@ public class LoggerUtils {
     public String uniqueId = null;
     public String timeStamp = null;
     Config configInstance=null;
-    UtilityObjectManager UtilityObjectManager=null;
 
     public LoggerUtils(Config testConfig) {
         init(testConfig);
@@ -26,9 +25,9 @@ public class LoggerUtils {
     }
 
     private void init(Config config) {
-        uniqueId = config.uniqueId;
-        UtilityObjectManager= new UtilityObjectManager(config);
-        this.configInstance=config;
+    	configInstance=config;
+        uniqueId = configInstance.getUniqueId();
+
     }
 
     private void logToStandard(String message) {
@@ -36,8 +35,8 @@ public class LoggerUtils {
     }
 
     private void writeMessageInReport(Config testConfig, String message) {
-        testConfig.testScenario.write(message);
-        testConfig.testLog = testConfig.testLog.concat(message);
+        testConfig.getScenario().write(message);
+        testConfig.setTestLog(testConfig.getTestLog().concat(message));
     }
 
     /**
@@ -46,18 +45,18 @@ public class LoggerUtils {
      * @param message    -> message to log with failure
      * @param testConfig -> config instance
      */
-    private void failure(String message, Config testConfig) {
-        testConfig.isFailScenarioStatus = true;
-        testConfig.softAssert.fail(message);
-        if (testConfig.logToStandardOut)
+    private void failure(String message) {
+    	configInstance.setFailScenarioStatus(true);
+    	AssertionUtils assertUtils = new AssertionUtils(configInstance);
+        if (configInstance.isLogToStandardOut())
             logToStandard(message);
-        if (Config.logsMode || Config.logsModeForException)
-            writeMessageInReport(testConfig, message);
-        if (testConfig.endExecutionOnfailure) {
-            if (Config.logsMode) {
-            	UtilityObjectManager.getAssertionUtils().assertFail(message);
+        if (configInstance.isLogsMode())
+            writeMessageInReport(configInstance, message);
+        if (configInstance.isEndExecutionOnfailure()) {
+            if (configInstance.isLogsMode()) {
+            	assertUtils.assertFail(message);
             } else
-            	UtilityObjectManager.getAssertionUtils().assertFail(" --> [Fail] Something went wrong during Execution");
+            	assertUtils.assertFail(" --> [Fail] Something went wrong during Execution");
         }
     }
 
@@ -66,10 +65,10 @@ public class LoggerUtils {
      *
      * @param testConfig -> config instance
      */
-    private void getPageInfo(Config testConfig) {
-        testConfig.enableScreenshot = true;
-        if (testConfig.enableScreenshot && Config.logsMode) {
-            if (testConfig.driver != null && testConfig.testScenario != null) {
+    private void getPageInfo() {
+    	configInstance.setEnableScreenshot(true);
+        if (configInstance.isEnableScreenshot() && configInstance.isLogsMode()) {
+            if (configInstance.getDriver() != null && configInstance.getScenario()!= null) {
 //           TODO: To be resoled -> BrowserUtils.takeScreenshot();
             }
         }
@@ -83,8 +82,8 @@ public class LoggerUtils {
      */
     public void embedMessageAsHTMLInReport(Config testConfig, String message) {
         String msg = "<p style=\"color:red;\">" + message.replace("\n", "</br>") + "</span>";
-        testConfig.testScenario.embed(msg.getBytes(), "text/html");
-        testConfig.testLog = testConfig.testLog.concat(msg);
+        configInstance.getScenario().embed(msg.getBytes(), "text/html");
+        configInstance.setTestLog(configInstance.getTestLog().concat(msg));
     }
 
     /**
@@ -98,7 +97,7 @@ public class LoggerUtils {
         String message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  Verified '" + what + "' as :-'" + actual + "'";
         logComment(message);
         if (logPageInfo)
-            getPageInfo(UtilityObjectManager.getConfigInstant());
+            getPageInfo();
     }
 
     /**
@@ -110,7 +109,7 @@ public class LoggerUtils {
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
         logComment(message);
         if (logPageInfo[0])
-            getPageInfo(UtilityObjectManager.getConfigInstant());
+            getPageInfo();
     }
 
     /**
@@ -123,9 +122,9 @@ public class LoggerUtils {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         String message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
-        failure(message,UtilityObjectManager.getConfigInstant());
+        failure(message);
         if (logPageInfo)
-            getPageInfo(UtilityObjectManager.getConfigInstant());
+            getPageInfo();
     }
 
     /**
@@ -137,9 +136,9 @@ public class LoggerUtils {
     public void logFail(String message, boolean... logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
-        failure(message, UtilityObjectManager.getConfigInstant());
+        failure(message);
         if (logPageInfo[0])
-            getPageInfo(UtilityObjectManager.getConfigInstant());
+            getPageInfo();
     }
 
     /**
@@ -151,11 +150,11 @@ public class LoggerUtils {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [INFO] -->  " + message;
         try {
-            boolean test = UtilityObjectManager.getConfigInstant().logToStandardOut;
+            boolean test = configInstance.isLogToStandardOut();
             if (test && (configInstance.getRunTimeProperty("beforeHook") == null
                     || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
                 logToStandard(message);
-            if ((Config.logsMode) && (configInstance.getRunTimeProperty("beforeHook") == null
+            if ((configInstance.isLogsMode()) && (configInstance.getRunTimeProperty("beforeHook") == null
                     || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
                 writeMessageInReport(configInstance, message);
         } catch (Exception e) {
@@ -170,9 +169,9 @@ public class LoggerUtils {
      */
     public void logWarning(String message) {
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [WARNING] --> " + message;
-        if (configInstance.logToStandardOut)
+        if (configInstance.isLogToStandardOut())
             logToStandard(message);
-        if (Config.logsMode)
+        if (configInstance.isLogsMode())
             writeMessageInReport(configInstance, message);
     }
 
@@ -185,7 +184,7 @@ public class LoggerUtils {
      */
     public void logException(String message, Throwable e, boolean... takeScreenshot) {
         String errorFilePath = "";
-        Config.logsModeForException = true;
+        configInstance.setLogsModeForException(true);
         StringBuffer stbr = new StringBuffer();
         stbr.append("Error location:- ");
         StackTraceElement[] s = e.getStackTrace();
@@ -242,14 +241,14 @@ public class LoggerUtils {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Exception] --> " + message;
 
-        if (!configInstance.islogExceptionSkip) {
+        if (!configInstance.isIslogExceptionSkip()) {
             if (takeScreenshot.length == 0) {
-                failure(message, configInstance);
+                failure(message);
             } else if (takeScreenshot[0]) {
-                failure(message, configInstance);
+                failure(message);
                 embedMessageAsHTMLInReport(configInstance, message);
             } else if (!takeScreenshot[0]) {
-                failure(message, configInstance);
+                failure(message);
                 embedMessageAsHTMLInReport(configInstance, message);
             }
         } else {
@@ -258,7 +257,7 @@ public class LoggerUtils {
             } else if (takeScreenshot[0]) {
                 logComment(message);
                 if (configInstance.getRunTimeProperty("LogPageInfo") != null && (configInstance.getRunTimeProperty("LogPageInfo").equalsIgnoreCase("true")))
-                    getPageInfo(configInstance);
+                    getPageInfo();
                 embedMessageAsHTMLInReport(configInstance, message);
             } else if (!takeScreenshot[0]) {
                 logComment(message);
@@ -266,7 +265,7 @@ public class LoggerUtils {
             }
         }
         stbr.delete(0, stbr.length());
-        Config.logsModeForException = false;
+        configInstance.setLogsModeForException(false);
     }
     
     public void logException(Throwable e) {
@@ -296,12 +295,13 @@ public class LoggerUtils {
 	 * @param testConfig
 	 * @author i0465
 	 */
-	public  void PageInfo(Config testConfig) {
-		testConfig.enableScreenshot = true;
-		if (testConfig.enableScreenshot && testConfig.logsMode) {
-			if (testConfig.driver != null && testConfig.testScenario != null) {
-				File dest = UtilityObjectManager.getBrowserUtils().getScreenshotFile();
-				UtilityObjectManager.getBrowserUtils().takeScreenShoot(dest);
+	private void PageInfo(Config testConfig) {
+		testConfig.setEnableScreenshot(true);
+		BrowserUtils BrowserUtils = new BrowserUtils(testConfig);
+		if (testConfig.isEnableScreenshot() && testConfig.isLogsMode()) {
+			if (testConfig.getDriver() != null && testConfig.getScenario() != null) {
+				File dest = BrowserUtils.getScreenshotFile();
+				BrowserUtils.takeScreenShoot(dest);
 			}
 		}
 	}
@@ -312,13 +312,12 @@ public class LoggerUtils {
 	 * @author pramod.singh
 	 */
 	public void failFinalTestScenarios(String msg) {
-		configInstance.endExecutionOnfailure=true;
+		configInstance.setEndExecutionOnfailure(true);
 		try {
 			if (configInstance.getRunTimeProperty("LogPageInfo") != null
 					&& (configInstance.getRunTimeProperty("LogPageInfo").equalsIgnoreCase("true")))
 				PageInfo(configInstance);
-			configInstance.endExecutionOnfailure=true;
-			failure(msg, configInstance);
+			failure(msg);
 
 		} catch (Exception e) {
 			logException("Unable to log page info:- " ,e, false);
@@ -326,13 +325,12 @@ public class LoggerUtils {
 	}
 	
 	public void logExceptionAndSkipFailure(String message, Throwable e, boolean... isTakeScreenShot) {
-		configInstance.islogExceptionSkip = true;
+		configInstance.setIslogExceptionSkip(true);
 		 if(isTakeScreenShot.length != 0 && isTakeScreenShot[0])
 				 logException(message, e, true);
 		else
 			 logException(message, e, false);
-		 
-		 configInstance.islogExceptionSkip = false;
+		 configInstance.setIslogExceptionSkip(false);
     }
 
 }

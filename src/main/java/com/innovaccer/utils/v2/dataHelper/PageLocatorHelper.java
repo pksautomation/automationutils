@@ -50,7 +50,7 @@ public class PageLocatorHelper {
 	 * @param fileName
 	 */
 	 private void loadPageLocators(String fileName) {
-		if(Config.pagesLocatorData.containsKey(fileName))
+		if(configInstance.getPagesLocatorData().containsKey(fileName))
 		{
 			LoggerUtils.logComment(fileName + ".json Locator file already loaded");
 			return;
@@ -85,7 +85,7 @@ public class PageLocatorHelper {
 	 * @param fileName
 	 */
 	synchronized private void storeLocatorMap(Map<String,How> mapOfLocators, String fileName) {
-		Config.pagesLocatorData.put(fileName, mapOfLocators);
+		configInstance.getPagesLocatorData().put(fileName, mapOfLocators);
 	}
 	
 	/**
@@ -99,8 +99,8 @@ public class PageLocatorHelper {
 			LoggerUtils.logFail(" PageObjectName value not found in scenarios context");
 			return null;
 		}
-		else if(Config.pagesLocatorData.containsKey(pageName))
-			return Config.pagesLocatorData.get(pageName).get(id);
+		else if(configInstance.getPagesLocatorData().containsKey(pageName))
+			return configInstance.getPagesLocatorData().get(pageName).get(id);
 		else {
 			LoggerUtils.logFail(" Locator : " + id + " not found in " + pageName + ".json file");
 			return null;

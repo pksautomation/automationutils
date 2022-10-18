@@ -23,67 +23,51 @@ import java.util.*;
 
 public class Config {
 
-    public static ThreadLocal<Config[]> threadLocalConfig;
-    public static String BrowserName;
-    public static String Environment;
-    public static String ResultsDir;
-    public static String PlatformName;
-    public static String SharedDirectory;
-    public static String ProjectName;
-    public static String BrowserVersion;
-    public static String fileSeparator = File.separator;
-    public static HashMap<String, TestDataReader> testDataReaderHashMap = new HashMap<String, TestDataReader>();
-    public static HashMap<Integer, HashMap<String, String>> genericErrors = new HashMap<Integer, HashMap<String, String>>();
-    public static HashMap<String, HashMap<String, String>> testData = new HashMap<String, HashMap<String, String>>();
-    public static String scenarioName;
-    public static String featureName;
-    public static boolean remoteExecution = false;
-    public static String remoteURL;
-    public static boolean isBrowserInHeadlessMode = false;
-    public static boolean logsMode = true;
-    public static boolean logsModeForException = false;
-    public static boolean takeScreenShotOfPage = false;
-    public static Map<String, Map<String, How>> pagesLocatorData = new HashMap<String, Map<String, How>>();
-    private static LoggerUtils loggerUtils;
-    public boolean endExecutionOnfailure = false;
-    public boolean debugMode = false;
-    public boolean recordPageHTMLOnFailure = false;
-    public Connection DBConnection = null;
-    public SelfHealingDriver driver;
-    public SelfHealingDriver defaultBrowser;
-    public SelfHealingDriver tempDriver;
-    public WebDriver delegatedriver;
-    public String downloadPath = null;
-    public boolean enableScreenshot = true;
-    public boolean logToStandardOut = true;
-    public MongoDatabase mongoAdminDatabase = null;
-    public MongoClient mongoClientConnection = null;
-    public MongoDatabase mongoRiskDBConnection = null;
-    public List<String> listOfFailedStep;
-    public List<String> listOfLogsOfEachFailedStep;
-    public int stepNumber = 0;
-    public boolean isFailScenarioStatus = false;
-    public Scenario scenario = null;
-    public SoftAssert softAssert;
-    public String testLog;
-    public Scenario testScenario;
-    public boolean testResult;
-    public Response apiResponse = null;
-    public StringBuilder authorizationToken;
-    public String previousPage = "";
-    public SessionId session = null;
-    public String uniqueId = null;
-    public String timeStamp = null;
-    public String encryptionKey = "amVxSX10V0ppZHlJal1qXHx3Z1x+Vw0N";
-    public String privateKey = "010100000000000";
-    public boolean islogExceptionSkip = false;
+    public static  ThreadLocal<Config[]> threadLocalConfig;
+    public ConfigSingleton singleton_data_instance=null;
+    private static String fileSeparator = File.separator;
+    private  String scenarioName;
+    private  String featureName;
+    private  LoggerUtils loggerUtils;
+    private boolean endExecutionOnfailure = false;
+    private boolean debugMode = false;
+    private SelfHealingDriver driver;
+    private SelfHealingDriver defaultBrowser;
+    private SelfHealingDriver tempDriver;
+    private WebDriver delegatedriver;
+    private String downloadPath = null;
+    private boolean enableScreenshot = true;
+    private boolean isFailScenarioStatus = false;
+    private Scenario scenario = null;
+    private SoftAssert softAssert;
+	private  boolean recordPageHTMLOnFailure = false;
+	private boolean isLogsModeForException=false;
+	private  boolean logsMode = true;
+	private  boolean logsModeForException = false;
+	private  boolean islogExceptionSkip = false;     
+	private  boolean takeScreenShotOfPage = false;
+	private  boolean logToStandardOut = true;
+	private String testLog;
+    private Scenario testScenario;
+    private boolean testResult;
+    private Response apiResponse = null;
+    private StringBuilder authorizationToken;
+    private String previousPage = "";
+    private SessionId session = null;
+    private String uniqueId = null;
+	private String timeStamp = null;
     Properties runtimeProperties;
     TestDataReader testDataReaderObj;
     String testEndTime;
     String testStartTime;
-    private WaitHelper waitHelper;
+    private List<String> listOfFailedStep;
+    private List<String> listOfLogsOfEachFailedStep;
+    private int stepNumber = 0;
 
-    /**
+	private WaitHelper waitHelper;
+    private UtilityObjectManager UtilityObjectManager=null;
+
+	/**
      * Load Config
      *
      * @param configPath
@@ -91,37 +75,15 @@ public class Config {
      * @author pramod.singh
      */
     public Config(String configPath, Scenario scenario) {
-        loggerUtils = new LoggerUtils();
-        this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
-                Helper.generateRandomAlphaNumericString(5) + "-" +
-                Helper.generateRandomAlphaNumericString(4);
-        this.testResult = true;
-        this.DBConnection = null;
-        this.testLog = "";
-        this.softAssert = new SoftAssert();
-        this.testScenario = scenario;
+    	boolean isRemoteExecution=false;
         this.runtimeProperties = new Properties();
         try {
             loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/elasticConfig.properties"));
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/mongoConfig.properties"));
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/SQLDBConfig.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         loadPropertiesFile(configPath);
-        this.debugMode = getRunTimeProperty("DebugMode").equalsIgnoreCase("true");
-        this.logToStandardOut = getRunTimeProperty("LogToStandardOut").equalsIgnoreCase("true");
-        this.recordPageHTMLOnFailure = getRunTimeProperty("RecordPageHTMLOnFailure").equalsIgnoreCase("true");
-        scenarioName = scenario.getName();
-        String rawFeatureName = scenario.getId().split(";")[0].replace("-", "_");
-        featureName = rawFeatureName.substring(0, 1).toUpperCase() + rawFeatureName.substring(1);
-        String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
-        if (debugMode)
-            loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
-        putRunTimeProperty("TestDataSheet", testDataSheet);
-        remoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
-        endExecutionOnfailure = false;
+        
         /**
          * need to decide location for downloaded file corresponding to each test scenarios
          */
@@ -133,68 +95,84 @@ public class Config {
             System.out.println("Something went Wrong.!! Error in Creating Folder -" + downloadPath + " switching to predefined download Path - " + System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator);
             downloadPath = System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator;
         }
-        BrowserName = this.getBrowserNameFromRunTimeProperty();
-        if (this.getIsHeadLessModeFromRunTimeProperty() != null && !this.getIsHeadLessModeFromRunTimeProperty().isEmpty()) {
-            isBrowserInHeadlessMode = this.getIsHeadLessModeFromRunTimeProperty().equalsIgnoreCase("true");
-        } else {
-            isBrowserInHeadlessMode = getRunTimeProperty("isHeadlessMode").equalsIgnoreCase("true");
-        }
-        if (this.getLogModeFromRunTimeProperty() != null && !this.getLogModeFromRunTimeProperty().isEmpty()) {
-            logsMode = this.getLogModeFromRunTimeProperty().equalsIgnoreCase("true");
-        }
-        this.putRunTimeProperty("privateKey", this.privateKey);
-        this.putRunTimeProperty("encryptionKey", this.encryptionKey);
+        
+        scenarioName = scenario.getName();
+        String rawFeatureName = scenario.getId().split(";")[0].replace("-", "_");
+        featureName = rawFeatureName.substring(0, 1).toUpperCase() + rawFeatureName.substring(1);
+        
+        initInfo();
     }
 
     public Config(String... configPath) {
-        loggerUtils = new LoggerUtils();
         String defaultConfigPath = System.getProperty("user.dir") + File.separator
                 + "src/test/resources/Config/config.properties";
         this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
                 Helper.generateRandomAlphaNumericString(5) + "-" +
                 Helper.generateRandomAlphaNumericString(4);
-        this.testResult = true;
-        this.DBConnection = null;
-        this.testLog = "";
-        this.softAssert = new SoftAssert();
         this.runtimeProperties = new Properties();
         try {
             loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
-            URL resource = this.getClass().getClassLoader().getResource("config/defaultConfig.properties");
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/elasticConfig.properties"));
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/mongoConfig.properties"));
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/SQLDBConfig.properties"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
         loadPropertiesFile(defaultConfigPath);
-        this.debugMode = getRunTimeProperty("DebugMode").equalsIgnoreCase("true");
-        this.logToStandardOut = getRunTimeProperty("LogToStandardOut").equalsIgnoreCase("true");
-        this.recordPageHTMLOnFailure = getRunTimeProperty("RecordPageHTMLOnFailure").equalsIgnoreCase("true");
-        remoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
-        String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
-        if (debugMode)
-            loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
-        putRunTimeProperty("TestDataSheet", testDataSheet);
+        initInfo();
 
-        BrowserName = this.getBrowserNameFromRunTimeProperty();
-
-        if (this.getIsHeadLessModeFromRunTimeProperty() != null && !this.getIsHeadLessModeFromRunTimeProperty().isEmpty()) {
+    }
+    
+    private void initInfo() {
+		boolean isRemoteExecution;
+        endExecutionOnfailure = false;
+        String BrowserName=null;
+		
+		boolean isBrowserInHeadlessMode=false;
+		String privateKey=null;
+		String encryptedKey=null;
+		String browserVersion=null;
+		
+		singleton_data_instance=ConfigSingleton.getInstance();
+		this.testResult = true;
+	    this.testLog = "";
+	    this.softAssert = new SoftAssert();
+	    this.testScenario = scenario;
+	    UtilityObjectManager = new UtilityObjectManager(this);
+	    loggerUtils = new LoggerUtils(this);
+	    this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
+	                Helper.generateRandomAlphaNumericString(5) + "-" +
+	                Helper.generateRandomAlphaNumericString(4);
+        
+		if (this.getIsHeadLessModeFromRunTimeProperty() != null && !this.getIsHeadLessModeFromRunTimeProperty().isEmpty()) {
             isBrowserInHeadlessMode = this.getIsHeadLessModeFromRunTimeProperty().equalsIgnoreCase("true");
         } else {
             isBrowserInHeadlessMode = getRunTimeProperty("isHeadlessMode").equalsIgnoreCase("true");
         }
-
         if (this.getLogModeFromRunTimeProperty() != null && !this.getLogModeFromRunTimeProperty().isEmpty()) {
             logsMode = this.getLogModeFromRunTimeProperty().equalsIgnoreCase("true");
         }
+        
+        this.logToStandardOut = getRunTimeProperty("LogToStandardOut")!=null && getRunTimeProperty("LogToStandardOut").equalsIgnoreCase("true");
+        this.recordPageHTMLOnFailure =  getRunTimeProperty("RecordPageHTMLOnFailure")!=null && getRunTimeProperty("RecordPageHTMLOnFailure").equalsIgnoreCase("true");
+        this.debugMode = getRunTimeProperty("DebugMode") != null && getRunTimeProperty("DebugMode").equalsIgnoreCase("true");
 
-        endExecutionOnfailure = false;
-        this.putRunTimeProperty("privateKey", this.privateKey);
-        this.putRunTimeProperty("encryptionKey", this.encryptionKey);
-
-    }
+        String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
+        if (debugMode)
+            loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
+        putRunTimeProperty("TestDataSheet", testDataSheet);
+        isRemoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
+        privateKey=this.getRunTimeProperty("privateKey");
+        encryptedKey=this.getRunTimeProperty("encryptionKey");
+        if(this.getBrowserNameFromRunTimeProperty()!=null)
+        	BrowserName = this.getBrowserNameFromRunTimeProperty();
+        if(this.getRunTimeProperty("BrowserVersion")!=null)
+        	browserVersion=this.getRunTimeProperty("BrowserVersion");
+        this.setPrivateKey(privateKey);
+        this.setEncryptionKey(encryptedKey);
+        this.setRemoteExecution(isRemoteExecution);
+        this.setBrowserInHeadlessMode(isBrowserInHeadlessMode);
+        this.setBrowserName(BrowserName);
+        this.setBrowserVersion(browserVersion);
+	}
 
     public static Config getConfig() {
         return threadLocalConfig.get()[0];
@@ -206,6 +184,7 @@ public class Config {
      *
      * @param input string in which some Arguments are present
      * @return replaced string
+     * @author i0465
      */
     public static String replaceArgumentsWithRunTimeProperties(String input) {
         String value = null;
@@ -262,7 +241,7 @@ public class Config {
         String value = "";
         try {
             value = runtimeProperties.get(keyName).toString();
-//            value = Helper.replaceArgumentsWithRunTimeProperties(this, value);
+            value = this.replaceArgumentsWithRunTimeProperties(value);
             if (debugMode)
                 loggerUtils.logComment("Reading Run-Time key-" + keyName + " value:-'" + value + "'");
         } catch (Exception e) {
@@ -359,13 +338,398 @@ public class Config {
         return System.getProperty("logsMode");
     }
 
-    /**
-     * Return the instance of WebDriver
-     *
-     * @author nikitagatagat
-     */
-    public WebDriver getDriver() {
+    public SelfHealingDriver getDriver() {
         return this.driver;
     }
+    
+    
+    public String getUniqueId() {
+		return uniqueId;
+	}
+    
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+    
+	public ConfigSingleton getSingleton_data_instance() {
+		return singleton_data_instance;
+	}
+
+	public void setSingleton_data_instance() {
+		this.singleton_data_instance = ConfigSingleton.getInstance();
+	}
+
+	public void setThreadLocalConfig(ThreadLocal<Config[]> threadLocalConfig) {
+		this.threadLocalConfig = threadLocalConfig;
+	}
+
+    public String getBrowserName() {
+		return singleton_data_instance.getBrowserName();
+	}
+    
+    public void setBrowserName(String browserName) {
+		 singleton_data_instance.setBrowserName(browserName);
+	}
+
+	public String getEnvironment() {
+		return singleton_data_instance.getEnvironment();
+	}
+	public void setEnvironment(String envronment) {
+		singleton_data_instance.setEnvironment(envronment);
+	}
+
+	public String getPlatformName() {
+		return singleton_data_instance.getPlatformName();
+	}
+
+	public String getSharedDirectory() {
+		return singleton_data_instance.getSharedDirectory();
+	}
+
+	public void setSharedDirectory(String sharedDirectory) {
+		singleton_data_instance.setSharedDirectory(sharedDirectory);
+	}
+
+	public String getProjectName() {
+		return singleton_data_instance.getPlatformName();
+	}
+
+	public void setProjectName(String projectName) {
+		singleton_data_instance.setProjectName(projectName);
+	}
+
+	public String getBrowserVersion() {
+		return singleton_data_instance.getBrowserVersion();
+	}
+
+	public void setBrowserVersion(String browserVersion) {
+		singleton_data_instance.setBrowserVersion(browserVersion);
+	}
+
+
+	public boolean isRemoteExecution() {
+		return singleton_data_instance.isRemoteExecution();
+	}
+
+	public void setRemoteExecution(boolean remoteExecution) {
+		singleton_data_instance.setRemoteExecution(remoteExecution);
+	}
+
+	public String getRemoteURL() {
+		return singleton_data_instance.getRemoteURL();
+	}
+
+	public void setRemoteURL(String remoteURL) {
+		singleton_data_instance.setRemoteURL(remoteURL);
+	}
+
+	public boolean isBrowserInHeadlessMode() {
+		return singleton_data_instance.isBrowserInHeadlessMode();
+	}
+
+	public void setBrowserInHeadlessMode(boolean isBrowserInHeadlessMode) {
+		singleton_data_instance.setBrowserInHeadlessMode(isBrowserInHeadlessMode);
+	}
+
+	public boolean isRecordPageHTMLOnFailure() {
+		return this.isRecordPageHTMLOnFailure();
+	}
+
+	public void setRecordPageHTMLOnFailure(boolean recordPageHTMLOnFailure) {
+		this.setRecordPageHTMLOnFailure(recordPageHTMLOnFailure);
+	}
+
+	public Connection getDBConnection() {
+		return singleton_data_instance.getDBConnection();
+	}
+
+	public void setDBConnection(Connection dBConnection) {
+		singleton_data_instance.setDBConnection(dBConnection);
+	}
+	
+	public MongoDatabase getMongoAdminDatabase() {
+		return singleton_data_instance.getMongoAdminDatabase();
+	}
+
+	public void setMongoAdminDatabase(MongoDatabase mongoAdminDatabase) {
+		singleton_data_instance.setMongoAdminDatabase(mongoAdminDatabase);
+	}
+
+	public MongoClient getMongoClientConnection() {
+		return singleton_data_instance.getMongoClientConnection();
+	}
+
+	public void setMongoClientConnection(MongoClient mongoClientConnection) {
+		singleton_data_instance.setMongoClientConnection(mongoClientConnection);
+	}
+	
+	public String getEncryptionKey() {
+		return singleton_data_instance.getEncryptionKey();
+	}
+
+	public void setEncryptionKey(String encryptionKey) {
+		singleton_data_instance.setEncryptionKey(encryptionKey);;
+	}
+
+	public String getPrivateKey() {
+		return singleton_data_instance.getPrivateKey();
+	}
+
+	public void setPrivateKey(String privateKey) {
+		singleton_data_instance.setPrivateKey(privateKey);
+	}
+
+	public HashMap<String, TestDataReader> getTestDataReaderHashMap() {
+		return singleton_data_instance.getTestDataReaderHashMap();
+	}
+
+	public HashMap<String, HashMap<String, String>> getTestData() {
+		return singleton_data_instance.getTestData();
+	}
+	
+	public void storeTestData(String testDataName,HashMap<String, String> testDataValue) {
+		 singleton_data_instance.putTestData(testDataName, testDataValue);
+	}
+
+
+	public Map<String, Map<String, How>> getPagesLocatorData() {
+		return singleton_data_instance.getPagesLocatorData();
+	}
+	
+	public void storePagesLocatorData(String pageName,Map<String, How> mapOflocatorData) {
+		 singleton_data_instance.putPagesLocatorData(pageName, mapOflocatorData);
+	}
+
+
+	public SelfHealingDriver getDefaultBrowser() {
+		return defaultBrowser;
+	}
+
+	public void setDefaultBrowser(SelfHealingDriver defaultBrowser) {
+		this.defaultBrowser = defaultBrowser;
+	}
+
+	public SelfHealingDriver getTempDriver() {
+		return tempDriver;
+	}
+
+	public void setTempDriver(SelfHealingDriver tempDriver) {
+		this.tempDriver = tempDriver;
+	}
+
+	public WebDriver getDelegatedriver() {
+		return delegatedriver;
+	}
+
+	public void setDelegatedriver(WebDriver delegatedriver) {
+		this.delegatedriver = delegatedriver;
+	}
+
+	public String getDownloadPath() {
+		return downloadPath;
+	}
+
+	public void setDownloadPath(String downloadPath) {
+		this.downloadPath = downloadPath;
+	}
+
+	public List<String> getListOfFailedStep() {
+		return listOfFailedStep;
+	}
+
+	public void setListOfFailedStep(List<String> listOfFailedStep) {
+		this.listOfFailedStep = listOfFailedStep;
+	}
+
+	public List<String> getListOfLogsOfEachFailedStep() {
+		return listOfLogsOfEachFailedStep;
+	}
+
+	public void setListOfLogsOfEachFailedStep(List<String> listOfLogsOfEachFailedStep) {
+		this.listOfLogsOfEachFailedStep = listOfLogsOfEachFailedStep;
+	}
+
+	public boolean isFailScenarioStatus() {
+		return isFailScenarioStatus;
+	}
+
+	public void setFailScenarioStatus(boolean isFailScenarioStatus) {
+		this.isFailScenarioStatus = isFailScenarioStatus;
+	}
+
+	public Scenario getScenario() {
+		return scenario;
+	}
+
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
+
+	public String getTestLog() {
+		return testLog;
+	}
+
+	public void setTestLog(String testLog) {
+		this.testLog = testLog;
+	}
+
+	public Scenario getTestScenario() {
+		return testScenario;
+	}
+
+	public void setTestScenario(Scenario testScenario) {
+		this.testScenario = testScenario;
+	}
+
+	public boolean isTestResult() {
+		return testResult;
+	}
+
+	public void setTestResult(boolean testResult) {
+		this.testResult = testResult;
+	}
+
+	public Response getApiResponse() {
+		return apiResponse;
+	}
+
+	public void setApiResponse(Response apiResponse) {
+		this.apiResponse = apiResponse;
+	}
+
+	public StringBuilder getAuthorizationToken() {
+		return authorizationToken;
+	}
+
+	public void setAuthorizationToken(StringBuilder authorizationToken) {
+		this.authorizationToken = authorizationToken;
+	}
+
+	public String getPreviousPage() {
+		return previousPage;
+	}
+
+	public void setPreviousPage(String previousPage) {
+		this.previousPage = previousPage;
+	}
+
+	public SessionId getSession() {
+		return session;
+	}
+
+	public void setSession(SessionId session) {
+		this.session = session;
+	}
+	public void setScenarioName(String scenarioName) {
+		this.scenarioName = scenarioName;
+	}
+
+	public void setDriver(SelfHealingDriver driver) {
+		this.driver = driver;
+	}
+	
+	public String getResultsDir() {
+		return singleton_data_instance.getResultsDir();
+	}
+	
+	public void setResultsDir(String resultDirectory) {
+		singleton_data_instance.setResultsDir(resultDirectory);
+	}
+	
+	public String getFeatureName() {
+		return featureName;
+	}
+
+	public void setFeatureName(String featureName) {
+		this.featureName = featureName;
+	}
+	
+	public boolean isEndExecutionOnfailure() {
+		return endExecutionOnfailure;
+	}
+
+	public void setEndExecutionOnfailure(boolean endExecutionOnfailure) {
+		this.endExecutionOnfailure = endExecutionOnfailure;
+	}
+	
+    public SoftAssert getSoftAssert() {
+		return softAssert;
+	}
+
+	public void setSoftAssert(SoftAssert softAssert) {
+		this.softAssert = softAssert;
+	}
+	
+	public boolean isLogsMode() {
+		return logsMode;
+	}
+
+	public void setLogsMode(boolean logsMode) {
+		this.logsMode = logsMode;
+	}
+
+	public boolean isLogsModeForException() {
+		return logsModeForException;
+	}
+
+	public void setLogsModeForException(boolean logsModeForException) {
+		this.logsModeForException = logsModeForException;
+	}
+
+	public boolean isIslogExceptionSkip() {
+		return islogExceptionSkip;
+	}
+
+	public void setIslogExceptionSkip(boolean islogExceptionSkip) {
+		this.islogExceptionSkip = islogExceptionSkip;
+	}
+
+	public boolean isTakeScreenShotOfPage() {
+		return takeScreenShotOfPage;
+	}
+
+	public void setTakeScreenShotOfPage(boolean takeScreenShotOfPage) {
+		this.takeScreenShotOfPage = takeScreenShotOfPage;
+	}
+
+	public boolean isDebugMode() {
+		return debugMode;
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
+	}
+
+	public boolean isEnableScreenshot() {
+		return enableScreenshot;
+	}
+
+	public void setEnableScreenshot(boolean enableScreenshot) {
+		this.enableScreenshot = enableScreenshot;
+	}
+
+	public boolean isLogToStandardOut() {
+		return logToStandardOut;
+	}
+
+	public void setLogToStandardOut(boolean logToStandardOut) {
+		this.logToStandardOut = logToStandardOut;
+	}
+	
+    public int getStepNumber() {
+		return stepNumber;
+	}
+
+	public void setStepNumber(int stepNumber) {
+		this.stepNumber = stepNumber;
+	}
+	
+    public UtilityObjectManager getUtilityObjectManager() {
+		return UtilityObjectManager;
+	}
+
+	public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
+		UtilityObjectManager = utilityObjectManager;
+	}
 
 }

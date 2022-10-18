@@ -47,13 +47,13 @@ public class PopupUtils {
     public void confirmNoPopup(String txt) {
         try {
             Long ObjectWaitTime = Long.parseLong(testConfig.getRunTimeProperty("ObjectWaitTime"));
-            WebDriverWait wait = new WebDriverWait(testConfig.driver, 10);
+            WebDriverWait wait = new WebDriverWait(testConfig.getDriver(), 10);
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             if (alert != null) {
                 boolean result = true;
                 if (alert.getText().equals(txt)) {
                     result = false;
-                    testConfig.driver.switchTo().alert();
+                    testConfig.getDriver().switchTo().alert();
                     assertionUtils.assertTrue("Absence of Alert with text as:" + txt, result);
                     alert.accept();
                     return;
@@ -70,9 +70,9 @@ public class PopupUtils {
     public Alert getPopup() {
         try {
             Long ObjectWaitTime = Long.parseLong(testConfig.getRunTimeProperty("ObjectWaitTime"));
-            WebDriverWait wait = new WebDriverWait(testConfig.driver, ObjectWaitTime);
+            WebDriverWait wait = new WebDriverWait(testConfig.getDriver(), ObjectWaitTime);
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-            alert = testConfig.driver.switchTo().alert();
+            alert = testConfig.getDriver().switchTo().alert();
             loggerUtils.logComment("Got the Alert with text '" + alert.getText() + "'");
             return alert;
         } catch (Exception e) {
@@ -88,7 +88,7 @@ public class PopupUtils {
 
     public boolean isAlertPresent(boolean doLogging) {
         try {
-            Alert alert = testConfig.driver.switchTo().alert();
+            Alert alert = testConfig.getDriver().switchTo().alert();
             loggerUtils.logComment("Got the Alert with text '" + alert.getText() + "'");
             return true;
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class PopupUtils {
 
         if (alert != null) {
             alert.accept();
-            testConfig.driver.switchTo().defaultContent();
+            testConfig.getDriver().switchTo().defaultContent();
             loggerUtils.logComment("Accepted the Pop-up.");
         }
 

@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class ExcelUtils {
 
-    private Config config;
+    private Config configInstance;
     private LoggerUtils loggerUtils;
 
     public ExcelUtils(Config testConfig) {
@@ -37,8 +37,8 @@ public class ExcelUtils {
     }
 
     private void init(Config testConfig) {
-        this.config = testConfig;
-        loggerUtils = new LoggerUtils(config);
+        this.configInstance = testConfig;
+        loggerUtils = new LoggerUtils(configInstance);
     }
 
     /**
@@ -158,7 +158,7 @@ public class ExcelUtils {
         String fileTimeName = null;
         try {
             fileTimeName = Helper.getCurrentDateTime("HH-mm-ss");
-            excelFileName = config.downloadPath + excelFileName + fileTimeName + ".xls";
+            excelFileName = configInstance.getDownloadPath() + excelFileName + fileTimeName + ".xls";
             HSSFWorkbook wb = new HSSFWorkbook();
             HSSFSheet SettlementInputXLS = wb.createSheet("SettlementInputXLS");
             HSSFRow xlsRow;

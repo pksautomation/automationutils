@@ -18,16 +18,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-
-import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.Browser;
-import com.innovaccer.utils.Element;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.v2.dataHelper.*;
-import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
-import com.mysql.jdbc.log.LogUtils;
 
 import pojo.How;
 
@@ -38,7 +28,6 @@ public class ElementActionsUtils {
 	private Config scenarioContext;
 	private WaitHelper WaitUtils = null;
 	private LoggerUtils LoggerUtils;
-	private WebDriver driver;
 	private TestDataHelper testDataHelper;
 
 	public ElementActionsUtils(Config scenariosInstance) {
@@ -51,11 +40,10 @@ public class ElementActionsUtils {
 
 	private void init(Config scenariosInstance) {
 		this.scenarioContext = scenariosInstance;
-		WaitUtils = new WaitHelper(scenariosInstance);
+		WaitUtils = new WaitHelper(scenarioContext);
 		LoggerUtils = new LoggerUtils(scenarioContext);
-		driver = scenarioContext.driver;
 		testDataHelper = new TestDataHelper(scenarioContext);
-		PageFactory.initElements(scenariosInstance.driver, this);
+		PageFactory.initElements(this.scenarioContext.getDriver(), this);
 	}
 
 	/**
@@ -120,52 +108,6 @@ public class ElementActionsUtils {
 
 	}
 
-	public void setTextField(String Label) {
-		String data = testDataHelper.getTestData(Label);
-		if (data != null && !data.equals(""))
-			enterData(getTextField(Label), data, Label);
-	}
-	/**
-	 * get WebElement of Input field like file, text, textarea using Label or
-	 * Placeholder
-	 * 
-	 * @param Label
-	 * @return
-	 */
-	public WebElement getTextField(String Label) {
-		scenarioContext.driver.manage().timeouts().implicitlyWait(1, TimeUnit.MILLISECONDS);
-		WebElement element = null;
-		try {
-			// finding element at first parent level
-			By by2 = By.xpath("//*[text()='" + Label
-					+ "']/../input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='" + Label + "']");
-			if ((element = getVisibleElement(by2, 2)) != null)
-				return element;
-
-			// finding element at grand parent level
-			by2 = By.xpath("//*[text()='" + Label
-					+ "']/ancestor::div[2]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"
-					+ Label + "']");
-			if ((element = getVisibleElement(by2, 2)) != null)
-				return element;
-
-			// finding element at parent of grand parent level
-			by2 = By.xpath("//*[text()='" + Label
-					+ "']/ancestor::div[3]//input[@type!='file' and @type!='checkbox' ] | //input[@placeholder='"
-					+ Label + "']");
-			if ((element = getVisibleElement(by2, 2)) != null)
-				return element;
-		} catch (Exception e) {
-			LoggerUtils.logExceptionAndSkipFailure("Not found drop down button " + Label, e, true);
-		} finally {
-			Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-			driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
-		}
-		return element;
-	}
-
-
-
 	/**
 	 * 
 	 * @param how  
@@ -174,6 +116,7 @@ public class ElementActionsUtils {
 		WebElement element = null;
 		String data = testDataHelper.getTestData(key);
 		How how = getHow(key);
+		
 		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
 		if(how == null) {
 			LoggerUtils.failFinalTestScenarios(" Locators info " + key + " not found in " + pageName + ".json file ");
@@ -237,7 +180,7 @@ public class ElementActionsUtils {
 		if (data != null && !data.equals("")) {
 			click(getDropDownButton(how), how.getDescription());
 			By by = By.xpath("//*[contains(@class,'Option')]//*[text()='" + data + "']");
-			WebElement element = scenarioContext.driver.findElement(by);
+			WebElement element = scenarioContext.getDriver().findElement(by);
 			click(element, how.getDescription() + " Dropdown option " + data);
 		}
 
@@ -316,18 +259,18 @@ public class ElementActionsUtils {
     }
 
     public String switchToNewWindow() {
-        if (driver != null) {
+        if (scenarioContext.getDriver() != null) {
             LoggerUtils.logComment("Switching to the new window");
-            String oldWindow = driver.getWindowHandle();
+            String oldWindow = scenarioContext.getDriver().getWindowHandle();
 
-            if (driver.getWindowHandles().size() < 2) {
-                LoggerUtils.logFail("No new window appeared, windows count available :-" + driver.getWindowHandles().size());
+            if (scenarioContext.getDriver().getWindowHandles().size() < 2) {
+                LoggerUtils.logFail("No new window appeared, windows count available :-" + scenarioContext.getDriver().getWindowHandles().size());
             }
 
-            for (String winHandle : driver.getWindowHandles()) {
+            for (String winHandle : scenarioContext.getDriver().getWindowHandles()) {
                 if (!winHandle.equals(oldWindow)) {
-                    driver.switchTo().window(winHandle);
-                    LoggerUtils.logComment("Switched to window with URL:- " + driver.getCurrentUrl() + ". And title as :- " + driver.getTitle());
+                	scenarioContext.getDriver().switchTo().window(winHandle);
+                    LoggerUtils.logComment("Switched to window with URL:- " + scenarioContext.getDriver().getCurrentUrl() + ". And title as :- " + scenarioContext.getDriver().getTitle());
                 }
             }
 
@@ -379,7 +322,7 @@ public class ElementActionsUtils {
      * @author i0465
      */
     public void click(WebElement element, String description) {
-        Actions builder = new Actions(driver);
+        Actions builder = new Actions(scenarioContext.getDriver());
         builder.moveToElement(element).click().build().perform();
         LoggerUtils.logComment("Clicked on " + description);
     }
@@ -391,7 +334,7 @@ public class ElementActionsUtils {
      * @param description        For logging
      */
     public void clickThroughJS(WebElement elementToBeClicked, String description) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) scenarioContext.getDriver();
         js.executeScript("arguments[0].click();", elementToBeClicked);
         LoggerUtils.logComment("Clicked on " + description);
     }
@@ -403,7 +346,7 @@ public class ElementActionsUtils {
      * @param description
      */
     public void clearThroughJS(WebElement element, String description) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) scenarioContext.getDriver();
         js.executeScript("arguments[0].value ='';", element);
         LoggerUtils.logComment("Cleared on " + description);
     }
@@ -416,7 +359,7 @@ public class ElementActionsUtils {
      * @param description
      */
     public void enterDataThroughJS(WebElement element, String value, String description) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) scenarioContext.getDriver();
         String message = StringUtils.replaceEach(value, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
         js.executeScript("arguments[0].value='" + value + "';", element);
         LoggerUtils.logComment("Enter the " + description + " as '" + message + "'");
@@ -429,7 +372,7 @@ public class ElementActionsUtils {
      * @author i0465
      */
     public void doubleClick(WebElement element, String description) {
-        Actions action = new Actions(driver);
+        Actions action = new Actions(scenarioContext.getDriver());
         action.doubleClick(element).perform();
         LoggerUtils.logComment("Successfully Double Click on '" + description + "'");
     }
@@ -481,7 +424,7 @@ public class ElementActionsUtils {
      */
     private void clickWithoutLog(WebElement element) {
         try {
-            JavascriptExecutor jse = (JavascriptExecutor) driver;
+            JavascriptExecutor jse = (JavascriptExecutor) scenarioContext.getDriver();
             jse.executeScript("arguments[0].scrollIntoView(false)", element);
             element.click();
         } catch (WebDriverException wde) {
@@ -554,7 +497,7 @@ public class ElementActionsUtils {
     }
 
     public void getOutOfFrame(Config scenariosInstance) {
-        driver.switchTo().defaultContent();
+    	scenarioContext.getDriver().switchTo().defaultContent();
     }
 
 
@@ -590,11 +533,11 @@ public class ElementActionsUtils {
         if (element == null)
             return false;
         try {
-            driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        	scenarioContext.getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             visible = element.isEnabled();
         } catch (StaleElementReferenceException e) {
             LoggerUtils.logComment("Stale element reference exception. Trying again...");
-            driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            scenarioContext.getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
             visible = element.isDisplayed();
 
         } catch (NoSuchElementException e) {
@@ -603,7 +546,7 @@ public class ElementActionsUtils {
             visible = false;
         } finally {
             Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-            driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+            scenarioContext.getDriver().manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
         }
         return visible;
     }
@@ -628,7 +571,7 @@ public class ElementActionsUtils {
      * @param to
      */
     public void pageScroll(String from, String to) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) scenarioContext.getDriver();
         js.executeScript("window.scrollBy(" + from + "," + to + ")");
     }
 
@@ -734,8 +677,8 @@ public class ElementActionsUtils {
      *
      * @param element
      */
-    public void scrollToView(Config testConfig, WebElement element) {
-        JavascriptExecutor jse = (JavascriptExecutor) testConfig.driver;
+    public void scrollToView(WebElement element) {
+        JavascriptExecutor jse = (JavascriptExecutor) scenarioContext.getDriver();
         jse.executeScript("arguments[0].scrollIntoView(false)", element);
 
     }
@@ -747,7 +690,7 @@ public class ElementActionsUtils {
      * @param destination
      */
     public void moveCursorfromSourceToDestination(WebElement source, WebElement destination) {
-        Actions actions = new Actions(driver);
+        Actions actions = new Actions(scenarioContext.getDriver());
         actions.moveToElement(source);
         actions.moveToElement(destination);
         actions.click().perform();
@@ -789,7 +732,7 @@ public class ElementActionsUtils {
      * @param element
      */
     public void mouseHoverOnElement(WebElement element) {
-        Actions builder = new Actions(driver);
+        Actions builder = new Actions(scenarioContext.getDriver());
         builder.moveToElement(element).perform();
     }
 
@@ -807,11 +750,11 @@ public class ElementActionsUtils {
             if (element == null)
                 return false;
             try {
-                driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+            	scenarioContext.getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
                 visible = element.isDisplayed();
             } catch (StaleElementReferenceException e) {
                 LoggerUtils.logComment("Stale element reference exception. Trying again...");
-                driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                scenarioContext.getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
                 visible = element.isDisplayed();
 
             } catch (NoSuchElementException e) {
@@ -820,14 +763,14 @@ public class ElementActionsUtils {
                 visible = false;
             } finally {
                 Long ObjectWaitTime = Long.parseLong(scenarioContext.getRunTimeProperty("ObjectWaitTime"));
-                driver.manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
+                scenarioContext.getDriver().manage().timeouts().implicitlyWait(ObjectWaitTime, TimeUnit.SECONDS);
             }
             return visible;
         }
     }
 
     public void pressEnter() {
-        Actions action = new Actions(driver);
+        Actions action = new Actions(scenarioContext.getDriver());
         action.sendKeys(Keys.ENTER).perform();
     }
 
@@ -838,7 +781,7 @@ public class ElementActionsUtils {
      * @param isBelowScroll --> if true then scrolling will be below other wise scrolling will be up
      */
     public void scrollToViewUsingActionClass(WebElement element, boolean... isBelowScroll) {
-        Actions actions = new Actions(driver);
+        Actions actions = new Actions(scenarioContext.getDriver());
         actions.moveToElement(element);
         actions.click();
         if (isBelowScroll.length == 0)
@@ -859,7 +802,7 @@ public class ElementActionsUtils {
      */
     public void mousehoverOnElementUsingJavaScript(WebElement element) {
         String strJavaScript = "if(document.createEvent){var evObj = document.createEvent('MouseEvents');evObj.initEvent('mouseover',true, false); arguments[0].dispatchEvent(evObj);} else if(document.createEventObject) { arguments[0].fireEvent('onmouseover');}";
-        ((JavascriptExecutor) driver).executeScript(strJavaScript, element);
+        ((JavascriptExecutor) scenarioContext.getDriver()).executeScript(strJavaScript, element);
     }
 
     /**
@@ -885,9 +828,9 @@ public class ElementActionsUtils {
      * @param value
      * @param description
      */
-    public void enterDataThroughActions(Config testConfig, String Value, WebElement element) {
+    public void enterDataThroughActions(String Value, WebElement element) {
         clear(element, "Cleared the existing value");
-        Actions action = new Actions(testConfig.driver);
+        Actions action = new Actions(scenarioContext.getDriver());
         for (char c : Value.toCharArray()) {
             String text = getText(element, "");
             WaitUtils.wait(1);
@@ -907,8 +850,8 @@ public class ElementActionsUtils {
 			LoggerUtils.logFail(" PageObjectName value not found in scenarios context");
 			return null;
 		}
-		else if(Config.pagesLocatorData.containsKey(pageName))
-			return Config.pagesLocatorData.get(pageName).get(id);
+		else if(scenarioContext.getPagesLocatorData().containsKey(pageName))
+			return scenarioContext.getPagesLocatorData().get(pageName).get(id);
 		else {
 			LoggerUtils.logFail(" Locator : " + id + " not found in " + pageName + ".json file");
 			return null;

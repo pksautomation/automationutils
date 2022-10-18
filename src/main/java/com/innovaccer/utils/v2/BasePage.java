@@ -14,7 +14,6 @@ public class BasePage extends PageLocatorHelper{
 	private UtilityObjectManager UtilityObjectManager=null;
 	private LoggerUtils LoggerUtils;
 	private BrowserUtils browserUtils;
-	private WebDriver driver;
 	private ElementActionsUtils Actions;
 
 	public BasePage(Config scenariosInstance) {
@@ -25,8 +24,8 @@ public class BasePage extends PageLocatorHelper{
 		this.scenarioContext=scenariosInstance;
 		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
 		LoggerUtils=new LoggerUtils(scenarioContext);
-		driver=scenarioContext.driver;
-		PageFactory.initElements(scenariosInstance.driver, this);
+		Actions = new ElementActionsUtils(scenarioContext);
+		PageFactory.initElements(scenarioContext.getDriver(), this);
 		scenarioContext.putRunTimeProperty("PageObjectName", this.getClass().getSimpleName());
 		
 	}
@@ -71,7 +70,7 @@ public class BasePage extends PageLocatorHelper{
 	}
 
 	public LoggerUtils getLoggerUtils() {
-		return UtilityObjectManager.getLoggerUtils();
+		return LoggerUtils;
 	}
 
 	public void setLoggerUtils(LoggerUtils loggerUtils) {
@@ -80,10 +79,6 @@ public class BasePage extends PageLocatorHelper{
 
 	public WebDriver getDriver() {
 		return UtilityObjectManager.getConfigInstant().getDriver();
-	}
-
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
 	}
 
 	public ElementActionsUtils getActions() {

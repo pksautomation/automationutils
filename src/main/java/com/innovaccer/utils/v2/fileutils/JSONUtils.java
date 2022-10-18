@@ -8,6 +8,7 @@ import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.WaitHelper;
 import io.restassured.response.Response;
 import org.apache.commons.io.IOUtils;
+import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -369,7 +370,7 @@ public class JSONUtils {
                         orgArray = orgObj.getJSONArray("values");
                         value = (String) orgArray.get(orgObj.getInt("selection") - 1);
                     } else if (childObj.get(key) instanceof JSONObject) {
-                        value = Helper.generateDynamicValue((JSONObject) childObj.get(key));
+                        value = generateDynamicValue((JSONObject) childObj.get(key));
 
                     } else
                         value = childObj.get(key).toString();
@@ -410,4 +411,75 @@ public class JSONUtils {
         JSONObject jo = null;
         return jo;
     }
+    
+    /**
+	 * 
+	 * @param dynamicObje
+	 * @return
+	 * @throws Throwable
+	 */
+	public  String generateDynamicValue(JSONObject dynamicObje) throws Throwable{
+    	int length=dynamicObje.getInt("length");
+    	String email="",prefix="",suffix="",dynamicValue="";
+		try { 
+			switch(dynamicObje.getString("type")) {
+				case "NUMERIC":
+					dynamicValue=(String.valueOf(Helper.generateRandomNumber(length)));
+					break;
+				case "ALPHABETIC":
+					dynamicValue=(String.valueOf(Helper.generateRandomAlphabetsString(length)));
+					break;
+				case "ALPHA_NUMERIC":
+					dynamicValue=(String.valueOf(Helper.generateRandomAlphaNumericString(length)));
+					break;
+			}
+			if(dynamicObje.has("prefix") && !dynamicObje.isNull("prefix")) {
+				prefix=dynamicObje.getString("prefix");
+			}
+			if(dynamicObje.has("suffix") && !dynamicObje.isNull("suffix")) {
+				suffix=dynamicObje.getString("suffix");
+			}
+		dynamicValue=prefix+dynamicValue+suffix;						
+		
+    	}catch (Exception e) {
+    		loggerUtils.logException(e);
+    		
+    	}
+    	return dynamicValue;
+    }
+	
+	/**
+	 * Parse from Document Object into JSONObject
+	 * 
+	 * @param doc
+	 * @author i0465
+	 * @return JSONObject
+	 */
+	public static JSONObject pareseDocumentIntoJSONObject(Document doc) {
+		JSONObject jsonObject = null;
+		try {
+			jsonObject = new JSONObject(doc.toJson());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+	
+	/**
+	 * Returns a JSON key from JSON object
+	 * @author i0465
+	 */
+	public String getJSONKeyValue(Config testConfig, JSONObject jObject, String key) {
+		String value = null;
+		if (jObject != null) {
+			try {
+				if (key != null)
+					value = jObject.get(key).toString();
+			} catch (JSONException e) {
+				loggerUtils.logException(e);
+			}
+		}
+		return value;
+	}
 }

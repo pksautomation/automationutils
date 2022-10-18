@@ -12,7 +12,7 @@ public class CommonTestBase {
 
     public CommonTestBase(TestContext testContext) {
         scenarioContext = testContext.scenarioContext;
-        UtilityObjectManager = testContext.getUtilityObjectManager();
+        UtilityObjectManager = scenarioContext.getUtilityObjectManager();
         LoggerUtils = new LoggerUtils(scenarioContext);
     }
 }
