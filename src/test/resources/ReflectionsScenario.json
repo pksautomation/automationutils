@@ -3,6 +3,7 @@
   "Description": "Executing to validate Reflections in Java",
   "ZephyrScaleId": "JIRA-100",
   "Priority": "High",
+  "Package": "reflections",
   "Steps": [
     {"ClassName": "LoginPage", "MethodName": "loginUsingCredentials", "TestData": "admin"},
     {"ClassName": "LoginPage", "MethodName": "validateSuccessfulLoginUsingUsername", "TestData": "admin"},

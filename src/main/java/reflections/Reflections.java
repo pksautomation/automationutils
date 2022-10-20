@@ -12,12 +12,12 @@ public class Reflections {
     Method method;
     HashMap<String, SingletonMap<Class<?>, Object>> classHashMap = new HashMap<>();
 
-    public void executeStep(String className, String methodName, String... parameters) {
+    public void executeStep(String packageName, String className, String methodName, String... parameters) {
 
         try {
 
             if (!classHashMap.containsKey(className)) {
-                aClass = Class.forName("reflections." + className);
+                aClass = Class.forName(packageName + "." + className);
                 classObject = aClass.newInstance();
                 SingletonMap<Class<?>, Object> singletonMap = new SingletonMap<>(aClass, classObject);
                 classHashMap.put(className, singletonMap);

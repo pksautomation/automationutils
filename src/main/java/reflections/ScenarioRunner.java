@@ -35,9 +35,9 @@ public class ScenarioRunner {
             if (step.size() > 2) {
                 String[] parameters = new String[step.size() - 2];
                 step.subList(2, step.size()).toArray(parameters);
-                reflections.executeStep(step.get(0), step.get(1), parameters);
+//                reflections.executeStep(step.get(0), step.get(1), parameters);
             } else {
-                reflections.executeStep(step.get(0), step.get(1));
+//                reflections.executeStep(step.get(0), step.get(1));
             }
         }
     }
@@ -50,6 +50,7 @@ public class ScenarioRunner {
             System.out.println("Description: " + getValueFromString(scenario, "Description"));
             System.out.println("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
             System.out.println("Priority: " + getValueFromString(scenario, "Priority"));
+            String packageName = getValueFromString(scenario, "Package");
             JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
             for (int i = 0; i < listOfSteps.length(); i++) {
                 String step = listOfSteps.get(i).toString();
@@ -57,9 +58,9 @@ public class ScenarioRunner {
                 methodName = JsonPath.from(step.toString()).getString("MethodName");
                 testData = JsonPath.from(step.toString()).getString("TestData");
                 if (testData.equals("")) {
-                    reflections.executeStep(className, methodName);
+                    reflections.executeStep(packageName, className, methodName);
                 } else {
-                    reflections.executeStep(className, methodName, testData);
+                    reflections.executeStep(packageName, className, methodName, testData);
                 }
             }
         } catch (Exception e) {
