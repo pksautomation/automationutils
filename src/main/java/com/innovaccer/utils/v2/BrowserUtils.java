@@ -57,7 +57,6 @@ public class BrowserUtils {
     public void navigateToURL(String url) {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date startDate = new Date();
-        startDate = new Date();
         loggerUtils.logComment("Starting Navigation to web page- '" + url + "' at:- " + dateFormat.format(startDate) + " for : " + configInstance.getScenarioName());
         try {
             configInstance.getDriver().navigate().to(url);

@@ -5,6 +5,7 @@
   "Priority": "High",
   "Package": "reflections",
   "Steps": [
+    {"ClassName": "LoginPage", "MethodName": "", "TestData": ""},
     {"ClassName": "LoginPage", "MethodName": "loginUsingCredentials", "TestData": "admin"},
     {"ClassName": "LoginPage", "MethodName": "validateSuccessfulLoginUsingUsername", "TestData": "admin"},
     {"ClassName": "HomePage", "MethodName": "clickOnHomePage", "TestData": ""},

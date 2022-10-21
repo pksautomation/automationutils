@@ -2,6 +2,7 @@ package reflections;
 
 import org.apache.commons.collections4.map.SingletonMap;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
@@ -18,7 +19,14 @@ public class Reflections {
 
             if (!classHashMap.containsKey(className)) {
                 aClass = Class.forName(packageName + "." + className);
-                classObject = aClass.newInstance();
+
+                if (methodName.equals("")) {
+                    Constructor<?> constructor = aClass.getConstructor();
+                    classObject = constructor.newInstance();
+                    System.out.println("Calling Constructor");
+                } else
+                    classObject = aClass.newInstance();
+
                 SingletonMap<Class<?>, Object> singletonMap = new SingletonMap<>(aClass, classObject);
                 classHashMap.put(className, singletonMap);
             } else {
@@ -26,10 +34,12 @@ public class Reflections {
                 classObject = classHashMap.get(className).getValue();
             }
 
-            if (parameters.length > 0) {
-                executeClassMethodWithParameters(aClass, methodName, parameters);
-            } else {
-                executeClassMethodWithoutParameters(aClass, methodName);
+            if (!methodName.equals("")) {
+                if (parameters.length > 0) {
+                    executeClassMethodWithParameters(aClass, methodName, parameters);
+                } else {
+                    executeClassMethodWithoutParameters(aClass, methodName);
+                }
             }
 
         } catch (Exception exception) {
