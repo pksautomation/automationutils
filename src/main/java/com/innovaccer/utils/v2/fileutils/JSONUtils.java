@@ -6,7 +6,6 @@ import com.innovaccer.utils.ISO8601DateFormat;
 import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.WaitHelper;
-import io.restassured.response.Response;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.json.JSONArray;
@@ -24,12 +23,13 @@ import com.innovaccer.utils.ISO8601DateFormat;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.WaitHelper;
 
-import io.restassured.response.Response;
+//import io.restassured.response.Response;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import com.jayway.restassured.response.Response;
 
 public class JSONUtils {
 
@@ -56,7 +56,6 @@ public class JSONUtils {
 
     /**
      * Gets the value from json.
-     *
      * @param response the response
      * @param nodePath the node path
      * @return the value from json
@@ -111,8 +110,6 @@ public class JSONUtils {
 
     /**
      * Extracts the Json Body response from the raw restassured Response.
-     *
-     * @param testConfig the test config
      * @param response   complete raw restassured Response
      * @return Json response body
      */
@@ -144,8 +141,6 @@ public class JSONUtils {
 
     /**
      * Extracts the Json Body response from the raw restassured Response.
-     *
-     * @param testConfig the test config
      * @param response   complete raw restassured Response
      * @return Json response Array
      */
