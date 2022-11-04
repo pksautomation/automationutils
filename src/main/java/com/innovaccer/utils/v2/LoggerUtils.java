@@ -35,8 +35,8 @@ public class LoggerUtils {
     }
 
     private void writeMessageInReport(Config testConfig, String message) {
-        testConfig.getScenario().write(message);
-        testConfig.setTestLog(testConfig.getTestLog().concat(message));
+//        testConfig.getScenario().write(message);
+//        testConfig.setTestLog(testConfig.getTestLog().concat(message));
     }
 
     /**

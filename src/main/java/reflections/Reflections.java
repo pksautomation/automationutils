@@ -23,7 +23,6 @@ public class Reflections {
                 if (methodName.equals("")) {
                     Constructor<?> constructor = aClass.getConstructor();
                     classObject = constructor.newInstance();
-                    System.out.println("Calling Constructor");
                 } else
                     classObject = aClass.newInstance();
 
@@ -43,7 +42,6 @@ public class Reflections {
             }
 
         } catch (Exception exception) {
-            System.out.println("Exception Occurred: " + exception.getMessage() + " at: ");
             exception.printStackTrace();
         }
     }
