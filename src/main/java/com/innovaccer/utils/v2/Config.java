@@ -2,7 +2,7 @@ package com.innovaccer.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.TestDataReader;
+import com.innovaccer.utils.v2.dataHelper.TestDataReader;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -23,7 +23,7 @@ import java.util.*;
 
 public class Config {
 
-    public static  ThreadLocal<Config[]> threadLocalConfig;
+	public static  ThreadLocal<Config[]> threadLocalConfig;
     public ConfigSingleton singleton_data_instance=null;
     private static String fileSeparator = File.separator;
     private  String scenarioName;
@@ -731,5 +731,50 @@ public class Config {
 	public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
 		UtilityObjectManager = utilityObjectManager;
 	}
+	
+	public TestDataReader getCachedTestDataReaderObject(String sheetName)
+	{	
+		String path = getRunTimeProperty("TestDataSheet");
+		if(sheetName.contains("."))
+		{	
+			path=System.getProperty("user.dir")+getRunTimeProperty(sheetName.split("\\.")[0]);
+			sheetName=sheetName.split("\\.")[1];
+
+		}
+		return getCachedTestDataReaderObject(sheetName, path);
+	}
+	
+	public TestDataReader getCachedTestDataReaderObject(String sheetName, String path)
+	{
+		TestDataReader obj = getTestDataReaderHashMap().get(path + sheetName);
+		// Object is not in the cache
+		if (obj == null)
+		{
+			// cache for future use
+			synchronized(Config.class)
+			{
+				cacheTestDataReaderObject(sheetName, path);
+				obj = getTestDataReaderHashMap().get(path + sheetName);
+			}
+		}
+		return obj;
+	}
+	
+	/**
+	 * Create TestDataReader object for the given sheet and cache it can be
+	 * fetched using - getCachedTestDataReaderObject()
+	 * 
+	 * @param sheetName
+	 * @author pramod.singh
+	 */
+	private void cacheTestDataReaderObject(String sheetName, String path)
+	{
+		if (getTestDataReaderHashMap().get(path + sheetName) == null)
+		{
+			testDataReaderObj = new TestDataReader(this, sheetName, path);
+			getTestDataReaderHashMap().put(path + sheetName, testDataReaderObj);
+		}
+	}
+	
 
 }
