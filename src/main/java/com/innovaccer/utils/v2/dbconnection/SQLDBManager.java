@@ -1,5 +1,6 @@
 package com.innovaccer.utils.v2.dbconnection;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,8 +12,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import com.innovaccer.utils.v2.Config;
+import com.innovaccer.utils.v2.Encryptions;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.Log;
 import com.innovaccer.utils.v2.dataHelper.TestDataReader;
@@ -23,26 +27,115 @@ import com.innovaccer.utils.v2.fileutils.JSONUtils;
 import com.innovaccer.utils.v2.fileutils.YamlUtils;
 import com.innovaccer.utils.v2.dbconnection.*;
 
-public class SQLConnection {
+public class SQLDBManager {
 	
 	private Config configInstance;
 	private LoggerUtils loggerUtils;
-    private DataBaseConnection dbConnection;
+	private Connection connection;
+    private Encryptions encryption;
     
-    public SQLConnection() {
+    public SQLDBManager() {
         init(Config.getConfig());
     }
 
-    public SQLConnection(Config testConfig) {
+    public SQLDBManager(Config testConfig) {
         init(testConfig);
     }
 
     private void init(Config testConfig) {
         this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(configInstance);
-        dbConnection = new DataBaseConnection(configInstance);
-        
+        encryption = new Encryptions(configInstance);
     }
+    
+    /**
+	 * Creates database connection using the Config parameters -
+	 * 'DBConnectionString', 'DBConnectionUsername' and 'DBConnectionPassword'
+	 *            @author i0465
+	 * @return Db Connection
+	 */
+	public Connection getConnection(DatabaseType databaseType)
+	{
+		Connection con = null;
+		String connectString = null;
+		String userName = null;
+		String password = null;
+		String relationDataBaseType;
+		String dataBaseName =configInstance.getRunTimeProperty("SQLCommonDataBaseName");
+		String isDBCredentialEncrypted = configInstance.getRunTimeProperty("isDBCredentialEncrypted");
+		if(databaseType.values.equalsIgnoreCase("read_from_config"))
+			dataBaseName =configInstance.getRunTimeProperty("SQLCommonDataBaseName");
+		else
+			dataBaseName=databaseType.values;
+		
+		userName=configInstance.getRunTimeProperty("SQLDBConnectionUsername");
+		password=configInstance.getRunTimeProperty("SQLDBConnectionPassword");
+		if(isDBCredentialEncrypted != null && isDBCredentialEncrypted.equalsIgnoreCase("true")) {
+			userName = encryption.aesDecryption(configInstance,userName);
+			password = encryption.aesDecryption(configInstance,password);
+		}
+		
+		if(configInstance.getRunTimeProperty("RelationDataBaseType") != null)
+			relationDataBaseType = configInstance.getRunTimeProperty("RelationDataBaseType");
+		else
+			relationDataBaseType="default";
+		try
+		{
+			Class.forName(configInstance.getRunTimeProperty("DBConnectionDriver"));
+			switch (relationDataBaseType.toLowerCase())
+			{
+			
+			case "redshift" : 
+				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
+				loggerUtils.logComment("Connecting to db :-" + connectString);
+				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
+					return configInstance.getDBConnection();
+				
+				Properties properties = new Properties();
+		        properties.setProperty("user", userName);
+		        properties.setProperty("password", password);
+				loggerUtils.logComment("Connecting to Test db:-" + connectString);
+				configInstance.setDBConnection(DriverManager.getConnection(connectString,properties));
+				connection = configInstance.getDBConnection();
+				break;
+
+			case "greenplum":
+			case "sql":
+			case "postgres" :
+				
+				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
+					return configInstance.getDBConnection();
+				
+				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+ "/" + dataBaseName;		
+				loggerUtils.logComment("Connecting to db :-" + connectString);
+				configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
+				connection = configInstance.getDBConnection();
+				break;
+
+			default:
+				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
+				
+				loggerUtils.logComment("Connecting to db :-" + connectString);
+				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
+					return configInstance.getDBConnection();				
+				loggerUtils.logComment("Connecting to Test db:-" + connectString);
+				connectString = configInstance.getRunTimeProperty("TestDB");
+				configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
+				connection = configInstance.getDBConnection();
+			}
+
+		}
+		catch (ClassNotFoundException e)
+		{
+			con = null;
+			loggerUtils.logException(e);
+		}
+		catch (SQLException e)
+		{
+			loggerUtils.logException(e);
+		}
+		return configInstance.getDBConnection();
+	}
 	
 	/**
 	 * Executes the select db query and returns complete
@@ -102,7 +195,7 @@ public class SQLConnection {
 		ResultSet resultSet = null;
 		try
 		{
-			stmt = dbConnection.getConnection(dbType).createStatement();
+			stmt = connection.createStatement();
 			resultSet = stmt.executeQuery(selectQuery);
 		}
 		catch (SQLException e)
@@ -215,7 +308,7 @@ public class SQLConnection {
 		ResultSet resultSet = null;
 		try
 		{
-			stmt = dbConnection.getConnection(dbType).createStatement();
+			stmt = connection.createStatement();
 			resultSet = stmt.executeQuery(selectQuery);
 		}
 		catch (SQLException e)
@@ -235,7 +328,7 @@ public class SQLConnection {
 			if (rowNumber == -1)
 			{
 				if (resultSet.last())
-					resultMap = dbConnection.addToRunTimeProperties(resultSet);
+					resultMap = addToRunTimeProperties(resultSet);
 			}
 			else
 			{
@@ -243,7 +336,7 @@ public class SQLConnection {
 				{
 					if (row == rowNumber)
 					{
-						resultMap = dbConnection.addToRunTimeProperties(resultSet);
+						resultMap = addToRunTimeProperties(resultSet);
 						break;
 					}
 					else
@@ -292,6 +385,52 @@ public class SQLConnection {
 
 		return resultMap;
 	}
+	
+	/**
+	 * Put single row of resultSet in HashMap and also in runtime properties
+	 * @param sqlResultSet
+	 * @author i0465
+	 * @return
+	 */
+	public Map<String, String> addToRunTimeProperties(ResultSet sqlResultSet)
+	{
+		HashMap<String, String> mapData = new HashMap<String, String>();
+
+		try
+		{
+			ResultSetMetaData meta = sqlResultSet.getMetaData();
+			for (int col = 1; col <= meta.getColumnCount(); col++)
+			{
+				try
+				{
+					String columnName = meta.getColumnLabel(col);
+					String columnValue = sqlResultSet.getObject(col).toString();
+
+					//Code to handle TINYINT case
+					if(meta.getColumnTypeName(col).equalsIgnoreCase("TINYINT"))
+						columnValue = Integer.toString(sqlResultSet.getInt(col));
+
+					mapData.put(columnName, columnValue);
+				}
+				catch (Exception e)
+				{
+					mapData.put(meta.getColumnLabel(col), "");
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			loggerUtils.logException(e);
+		}
+
+		Set<String> keys = mapData.keySet();
+		for (String key : keys)
+		{
+			configInstance.putRunTimeProperty(key, mapData.get(key));
+		}
+		return mapData;
+	}
+	
 	
 	/**
 	 * Executes the select db query, and saves the result in
@@ -347,7 +486,7 @@ public class SQLConnection {
 		int rows = 0;
 		try
 		{
-			stmt = dbConnection.getConnection(dbType).createStatement();
+			stmt = connection.createStatement();
 			updateQuery = configInstance.replaceArgumentsWithRunTimeProperties(updateQuery);
 
 			if(configInstance.getRunTimeProperty("replaceNULLInQuery") != null && configInstance.getRunTimeProperty("replaceNULLInQuery").equalsIgnoreCase("true"))
@@ -574,7 +713,7 @@ public class SQLConnection {
 		ResultSet resultSet = null;
 		try
 		{
-			PreparedStatement stmt=dbConnection.getConnection(dbType).prepareStatement(selectQuery);
+			PreparedStatement stmt=connection.prepareStatement(selectQuery);
 			for(int i=0;i<arg1.length;i++)
 			{	
 				stmt.setString(i+1,arg1[i]);
@@ -596,6 +735,27 @@ public class SQLConnection {
 			loggerUtils.logComment("<B>Time taken to run this query in minutes : " + timeDifference/60 + "</B>");
 	
 		return resultSet;
+	}
+	
+	/**
+	 * Close the SQL database connection, if open.
+	 * @author i0465
+	 */
+	public void closeSQLDatabaseConnection()
+	{
+		if(connection != null)
+		{
+			try
+			{
+				connection.close();
+				connection = null;
+				System.out.println("Database connection closed successfully.");
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
