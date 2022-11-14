@@ -1,5 +1,6 @@
 package reflections;
 
+import com.innovaccer.utils.v2.cucumber.TestContext;
 import com.jayway.restassured.path.json.JsonPath;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class ScenarioRunner {
         }
     }
 
-    public void executeScenarioFromJsonFile(String jsonFilePath) {
+    public void executeScenarioFromJsonFile(String jsonFilePath, TestContext testContext) {
         String scenario, className, methodName, testData;
         try {
             scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
@@ -58,9 +59,9 @@ public class ScenarioRunner {
                 methodName = JsonPath.from(step.toString()).getString("MethodName");
                 testData = JsonPath.from(step.toString()).getString("TestData");
                 if (testData.equals("")) {
-                    reflections.executeStep(packageName, className, methodName);
+                    reflections.executeStep(packageName, className, methodName, testContext);
                 } else {
-                    reflections.executeStep(packageName, className, methodName, testData);
+                    reflections.executeStep(packageName, className, methodName,  testContext,testData);
                 }
             }
         } catch (Exception e) {

@@ -1,9 +1,11 @@
 package reflections;
 
+import com.innovaccer.utils.v2.cucumber.TestContext;
 import org.apache.commons.collections4.map.SingletonMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.HashMap;
 
 public class Reflections {
@@ -13,7 +15,7 @@ public class Reflections {
     Method method;
     HashMap<String, SingletonMap<Class<?>, Object>> classHashMap = new HashMap<>();
 
-    public void executeStep(String packageName, String className, String methodName, String... parameters) {
+    public void executeStep(String packageName, String className, String methodName, TestContext testContext, String... parameters) {
 
         try {
 
@@ -21,8 +23,8 @@ public class Reflections {
                 aClass = Class.forName(packageName + "." + className);
 
                 if (methodName.equals("")) {
-                    Constructor<?> constructor = aClass.getConstructor();
-                    classObject = constructor.newInstance();
+                    Constructor<?> constructor = aClass.getConstructor(TestContext.class);
+                    classObject = constructor.newInstance(testContext);
                 } else
                     classObject = aClass.newInstance();
 
