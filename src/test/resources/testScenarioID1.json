@@ -1,0 +1,24 @@
+{
+  "TestCaseId": "testScenarioID1",
+  "Description": "Executing Test Scenario with ID as 1",
+  "ZephyrScaleId": "JIRA-101",
+  "Priority": "High",
+  "Package": "reflections",
+  "Steps": [
+    {"ClassName": "LoginPage", "MethodName": "", "TestData": ""},
+    {"ClassName": "LoginPage", "MethodName": "loginUsingCredentials", "TestData": "admin"},
+    {"ClassName": "LoginPage", "MethodName": "validateSuccessfulLoginUsingUsername", "TestData": "admin"},
+    {"ClassName": "HomePage", "MethodName": "", "TestData": ""},
+    {"ClassName": "HomePage", "MethodName": "clickOnHomePage", "TestData": ""},
+    {"ClassName": "HomePage", "MethodName": "validateHomePage", "TestData": ""},
+    {"ClassName": "UserPage", "MethodName": "", "TestData": ""},
+    {"ClassName": "UserPage", "MethodName": "clickOnUserInfoButton", "TestData": ""},
+    {"ClassName": "UserPage", "MethodName": "validateUserInfoPage", "TestData": "admin"},
+    {"ClassName": "SettingsPage", "MethodName": "", "TestData": ""},
+    {"ClassName": "SettingsPage", "MethodName": "clickOnSettingsTab", "TestData": ""},
+    {"ClassName": "SettingsPage", "MethodName": "validateSettingsTab", "TestData": ""},
+    {"ClassName": "LogoutPage", "MethodName": "", "TestData": ""},
+    {"ClassName": "LogoutPage", "MethodName": "clickOnLogoutButton", "TestData": ""},
+    {"ClassName": "LogoutPage", "MethodName": "validateLogoutPage", "TestData": ""}
+  ]
+}

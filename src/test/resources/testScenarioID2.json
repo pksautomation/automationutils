@@ -1,0 +1,12 @@
+{
+  "TestCaseId": "testScenarioID2",
+  "Description": "Executing Test Scenario with ID as 2",
+  "ZephyrScaleId": "JIRA-100",
+  "Priority": "High",
+  "Package": "reflections",
+  "Steps": [
+    {"ClassName": "LoginPage", "MethodName": "", "TestData": ""},
+    {"ClassName": "LoginPage", "MethodName": "loginUsingCredentials", "TestData": "admin"},
+    {"ClassName": "LoginPage", "MethodName": "validateSuccessfulLoginUsingUsername", "TestData": "admin"}
+  ]
+}

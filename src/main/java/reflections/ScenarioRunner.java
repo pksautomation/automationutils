@@ -22,30 +22,10 @@ public class ScenarioRunner {
         return JsonPath.from(jsonString).getString(jsonPath);
     }
 
-    public void executePredefinedScenario() {
-        List<List<String>> scenario = Arrays.asList(
-                Arrays.asList("LoginPage", "loginUsingCredentials", "test@mail.com", "password"),
-                Arrays.asList("LoginPage", "validateSuccessfulLoginUsingUsername", "test"),
-                Arrays.asList("HomePage", "clickOnHomePage"),
-                Arrays.asList("HomePage", "validateHomePage"),
-                Arrays.asList("UserPage", "clickOnUserInfoButton"),
-                Arrays.asList("UserPage", "validateUserInfoPage", "Some User", "25", "03/12/1998", "123, Some Street, NY"),
-                Arrays.asList("LoginPage", "validateSuccessfulLoginUsingUsername", "test")
-        );
-        for (List<String> step : scenario) {
-            if (step.size() > 2) {
-                String[] parameters = new String[step.size() - 2];
-                step.subList(2, step.size()).toArray(parameters);
-//                reflections.executeStep(step.get(0), step.get(1), parameters);
-            } else {
-//                reflections.executeStep(step.get(0), step.get(1));
-            }
-        }
-    }
-
     public void executeScenarioFromJsonFile(String jsonFilePath, TestContext testContext) {
         String scenario, className, methodName, testData;
         try {
+            System.out.println("-----Execution Started for Scenario-----");
             scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
             System.out.println("Id: " + getValueFromString(scenario, "TestCaseId"));
             System.out.println("Description: " + getValueFromString(scenario, "Description"));
@@ -53,6 +33,7 @@ public class ScenarioRunner {
             System.out.println("Priority: " + getValueFromString(scenario, "Priority"));
             String packageName = getValueFromString(scenario, "Package");
             JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
+            System.out.println("-----Starting Steps Execution for Scenario-----");
             for (int i = 0; i < listOfSteps.length(); i++) {
                 String step = listOfSteps.get(i).toString();
                 className = JsonPath.from(step.toString()).getString("ClassName");
@@ -64,6 +45,7 @@ public class ScenarioRunner {
                     reflections.executeStep(packageName, className, methodName,  testContext,testData);
                 }
             }
+            System.out.println("-----Execution Completed for Scenario-----");
         } catch (Exception e) {
             e.printStackTrace();
         }

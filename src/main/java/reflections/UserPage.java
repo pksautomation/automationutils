@@ -1,9 +1,15 @@
 package reflections;
 
+import com.innovaccer.utils.v2.cucumber.TestContext;
+
 public class UserPage {
 
     public UserPage() {
         System.out.println("User Page Initialised");
+    }
+
+    public UserPage(TestContext testContext) {
+        System.out.println("User Page Initialised from Test Context Constructor");
     }
 
     public void clickOnUserInfoButton() {

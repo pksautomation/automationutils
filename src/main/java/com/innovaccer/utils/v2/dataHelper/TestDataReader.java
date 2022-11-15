@@ -28,7 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.dbconnection.DataBaseConnection;
+import com.innovaccer.utils.v2.dbconnection.DBManager;
 
 /**
  *@author pramod.singh
