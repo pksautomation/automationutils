@@ -23,7 +23,7 @@ public class TestExecutor {
     private ExcelUtils excel = new ExcelUtils();
     private LoggerUtils loggerUtils = new LoggerUtils();
 
-    @DataProvider(name = "testData", parallel = true)
+    @DataProvider(name = "testData")
     public Object[][] dataProviderMethod() throws IOException {
         Map<String, Integer> columnNameIndexMap = new HashMap<>();
         List<List<String>> testDetails = new ArrayList<>();

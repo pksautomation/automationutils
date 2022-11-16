@@ -1,5 +1,7 @@
 package reflections;
 
+import com.innovaccer.utils.v2.Config;
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
 import com.jayway.restassured.path.json.JsonPath;
 import org.json.JSONArray;
@@ -7,15 +9,17 @@ import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
-import java.util.Arrays;
-import java.util.List;
 
 public class ScenarioRunner {
 
-    Reflections reflections;
+    private Reflections reflections;
+    private Config testConfig;
+    private LoggerUtils loggerUtils;
 
-    public ScenarioRunner() {
-        reflections = new Reflections();
+    public ScenarioRunner(Config config) {
+        this.testConfig = config;
+        this.reflections = new Reflections(this.testConfig);
+        this.loggerUtils = new LoggerUtils(this.testConfig);
     }
 
     private static String getValueFromString(String jsonString, String jsonPath) {
@@ -25,15 +29,14 @@ public class ScenarioRunner {
     public void executeScenarioFromJsonFile(String jsonFilePath, TestContext testContext) {
         String scenario, className, methodName, testData;
         try {
-            System.out.println("-----Execution Started for Scenario-----");
             scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
-            System.out.println("Id: " + getValueFromString(scenario, "TestCaseId"));
-            System.out.println("Description: " + getValueFromString(scenario, "Description"));
-            System.out.println("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
-            System.out.println("Priority: " + getValueFromString(scenario, "Priority"));
+            loggerUtils.logComment("Execution Started for Scenario Id: " + getValueFromString(scenario, "TestCaseId"));
+//            loggerUtils.logComment("Description: " + getValueFromString(scenario, "Description"));
+//            loggerUtils.logComment("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
+//            loggerUtils.logComment("Priority: " + getValueFromString(scenario, "Priority"));
             String packageName = getValueFromString(scenario, "Package");
             JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
-            System.out.println("-----Starting Steps Execution for Scenario-----");
+            loggerUtils.logComment("Starting Steps Execution for Scenario");
             for (int i = 0; i < listOfSteps.length(); i++) {
                 String step = listOfSteps.get(i).toString();
                 className = JsonPath.from(step.toString()).getString("ClassName");
@@ -42,10 +45,10 @@ public class ScenarioRunner {
                 if (testData.equals("")) {
                     reflections.executeStep(packageName, className, methodName, testContext);
                 } else {
-                    reflections.executeStep(packageName, className, methodName,  testContext,testData);
+                    reflections.executeStep(packageName, className, methodName, testContext, testData);
                 }
             }
-            System.out.println("-----Execution Completed for Scenario-----");
+            loggerUtils.logComment("Execution Completed for Scenario");
         } catch (Exception e) {
             e.printStackTrace();
         }

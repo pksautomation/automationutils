@@ -1,23 +1,22 @@
 package reflections;
 
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
 
 public class LoginPage {
 
-    public LoginPage() {
-        System.out.println("Login Page Initialised");
-    }
+    private LoggerUtils loggerUtils;
 
     public LoginPage(TestContext testContext) {
-        System.out.println("Login Page Initialised from Test Context Constructor");
+        this.loggerUtils = new LoggerUtils(testContext.scenarioContext);
     }
 
     public void loginUsingCredentials(String... credentials) {
-        System.out.println("Logging into Application using Credentials from: " + credentials[0]);
+        loggerUtils.logComment("Logging into Application using Credentials from: " + credentials[0]);
     }
 
     public void validateSuccessfulLoginUsingUsername(String... username) {
-        System.out.println("User Login Successful for Username: " + username[0]);
+        loggerUtils.logComment("User Login Successful for Username: " + username[0]);
     }
 
 }

@@ -1,22 +1,21 @@
 package reflections;
 
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
 
 public class HomePage {
 
-    public HomePage() {
-        System.out.println("Home Page Initialised");
-    }
+    private LoggerUtils loggerUtils;
 
     public HomePage(TestContext testContext) {
-        System.out.println("Home Page Initialised from Test Context Constructor");
+        this.loggerUtils = new LoggerUtils(testContext.scenarioContext);
     }
 
     public void clickOnHomePage() {
-        System.out.println("Home Page Button Clicked");
+        loggerUtils.logComment("Home Page Button Clicked");
     }
 
     public void validateHomePage() {
-        System.out.println("Home Page Validated");
+        loggerUtils.logComment("Home Page Validated");
     }
 }

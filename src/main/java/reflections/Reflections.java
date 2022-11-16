@@ -1,11 +1,12 @@
 package reflections;
 
+import com.innovaccer.utils.v2.Config;
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
 import org.apache.commons.collections4.map.SingletonMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.sql.Connection;
 import java.util.HashMap;
 
 public class Reflections {
@@ -14,6 +15,12 @@ public class Reflections {
     Object classObject;
     Method method;
     HashMap<String, SingletonMap<Class<?>, Object>> classHashMap = new HashMap<>();
+
+    private LoggerUtils loggerUtils;
+
+    public Reflections(Config config) {
+        this.loggerUtils = new LoggerUtils(config);
+    }
 
     public void executeStep(String packageName, String className, String methodName, TestContext testContext, String... parameters) {
 
@@ -25,7 +32,7 @@ public class Reflections {
                 if (methodName.equals("")) {
                     Constructor<?> constructor = aClass.getConstructor(TestContext.class);
                     classObject = constructor.newInstance(testContext);
-                    System.out.println("----Instance using Constructor Created----");
+                    loggerUtils.logComment("Instance using Constructor Created");
                 } else
                     classObject = aClass.newInstance();
 

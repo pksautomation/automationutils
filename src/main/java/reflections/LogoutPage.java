@@ -1,22 +1,21 @@
 package reflections;
 
+import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
 
 public class LogoutPage {
 
-    public LogoutPage() {
-        System.out.println("Logout Page Initialised");
-    }
+    private LoggerUtils loggerUtils;
 
     public LogoutPage(TestContext testContext) {
-        System.out.println("Logout Page Initialised from Test Context Constructor");
+        this.loggerUtils = new LoggerUtils(testContext.scenarioContext);
     }
 
     public void clickOnLogoutButton() {
-        System.out.println("Logout Button Clicked");
+        loggerUtils.logComment("Logout Button Clicked");
     }
 
     public void validateLogoutPage() {
-        System.out.println("Logout Page Validated");
+        loggerUtils.logComment("Logout Page Validated");
     }
 }
