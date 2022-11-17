@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,53 +29,97 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.dbconnection.DataBaseConnection;
+//import com.innovaccer.utils.v2.dbconnection.DataBaseConnection;
 
 /**
  *@author pramod.singh
  */
-public class TestDataReader
+public class ExcelDataReader
 {
 
-	String filename;
-
+	String filename,path;
 	private FileOutputStream fileOut = null;
-
 	private FileInputStream fis = null;
-
-	String path;
+    ExcelDataReader testDataReaderObj;
+	public static HashMap<String, ExcelDataReader> excelDataReaderHashMap;
 	private String sheetName;
-	private Config testConfig;
+	private Config configInstance;
 	private LoggerUtils loggerUtils;
 	private ArrayList<List<String>> testData;
 	
-	public TestDataReader() {
+	public ExcelDataReader() {
         init(Config.getConfig());
     }
 
-    public TestDataReader(Config testConfig) {
+    public ExcelDataReader(Config testConfig) {
         init(testConfig);
     }
     
     private void init(Config testConfig) {
-        this.testConfig = testConfig;
+        this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(testConfig);
         
     }
 
-	TestDataReader(Config testConfig, String sheetName)
+	ExcelDataReader(String sheetName)
 	{
-		String path = testConfig.getRunTimeProperty("TestDataSheet");
-		readFile(testConfig, sheetName, path);
+		String path = configInstance.getRunTimeProperty("TestDataSheet");
+		readFile(sheetName, path);
 	}
 	
-	
-
-	public TestDataReader(Config testConfig, String sheetName, String path)
+	public ExcelDataReader(String sheetName, String path)
 	{
-		readFile(testConfig, sheetName, path);
+		readFile(sheetName, path);
 	}
+	
+	/**
+	 * Create TestDataReader object for the given sheet and cache it can be
+	 * fetched using - getCachedTestDataReaderObject()
+	 * 
+	 * @param sheetName
+	 * @author pramod.singh
+	 */
+	private void cacheTestDataReaderObject(String sheetName, String path)
+	{
+		if (getExcelDataReaderHashMap().get(path + sheetName) == null)
+		{
+			testDataReaderObj = new ExcelDataReader(sheetName, path);
+			getExcelDataReaderHashMap().put(path + sheetName, testDataReaderObj);
+		}
+	}
+	
+	public ExcelDataReader getCachedTestDataReaderObject(String sheetName)
+	{	
+		String path = configInstance.getRunTimeProperty("TestDataSheet");
+		if(sheetName.contains("."))
+		{	
+			path=System.getProperty("user.dir")+configInstance.getRunTimeProperty(sheetName.split("\\.")[0]);
+			sheetName=sheetName.split("\\.")[1];
 
+		}
+		return getCachedTestDataReaderObject(sheetName, path);
+	}
+	
+	public ExcelDataReader getCachedTestDataReaderObject(String sheetName, String path)
+	{
+		ExcelDataReader obj = getExcelDataReaderHashMap().get(path + sheetName);
+		// Object is not in the cache
+		if (obj == null)
+		{
+			// cache for future use
+			synchronized(Config.class)
+			{
+				cacheTestDataReaderObject(sheetName, path);
+				obj = getExcelDataReaderHashMap().get(path + sheetName);
+			}
+		}
+		return obj;
+	}
+	
+	public HashMap<String, ExcelDataReader> getExcelDataReaderHashMap() {
+		return excelDataReaderHashMap;
+	}
+	
 	private String convertHSSFCellToString(HSSFCell cell, FormulaEvaluator evaluator)
 	{
 		String value = null;
@@ -231,7 +276,7 @@ public class TestDataReader
 					{
 						data = GetData(rowNum, column);
 						String row = String.valueOf(rowNum);
-						testConfig.putRunTimeProperty("Row", row);
+						configInstance.putRunTimeProperty("Row", row);
 						loggerUtils.logPass(column + " contains the value " + value);
 						break;
 					}
@@ -315,7 +360,7 @@ public class TestDataReader
 	 */
 	public String GetCurrentEnvironmentData(int row, String column)
 	{
-		String env = testConfig.getRunTimeProperty("Environment");
+		String env = configInstance.getRunTimeProperty("Environment");
 		String value = GetData(row, column + "-" + env);
 		if (value.equalsIgnoreCase("{skip}"))
 		{
@@ -389,7 +434,7 @@ public class TestDataReader
 			}
 		}
 
-		if (testConfig.isDebugMode())
+		if (configInstance.isDebugMode())
 			loggerUtils.logComment("Reading '" + sheetName + "' row-" + row + " column-" + column + " value:-'" + data + "'");
 		return data;
 	}
@@ -465,9 +510,8 @@ public class TestDataReader
 			return value;
 	}
 
-	private void readFile(Config testConfig, String sheetName, String path)
+	private void readFile(String sheetName, String path)
 	{
-		this.testConfig = testConfig;
 		int index = path.lastIndexOf("//");
 		if (index != -1)
 			loggerUtils.logComment("Read:-'" + path.substring(path.lastIndexOf("//")) + "', Sheet:- '" + sheetName + "'");
@@ -654,7 +698,7 @@ public class TestDataReader
 					row.add(headerRow + "\n" + dataRow);
 
 					// Create a csv file
-					path = testConfig.getDownloadPath();
+					path = configInstance.getDownloadPath();
 					fileName = "NewFile.csv";
 					FileWriter writeCSVFile = new FileWriter(path + fileName, false);
 					for (String str : row)

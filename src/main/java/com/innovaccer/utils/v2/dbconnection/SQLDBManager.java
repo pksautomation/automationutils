@@ -19,7 +19,7 @@ import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.Encryptions;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.Log;
-import com.innovaccer.utils.v2.dataHelper.TestDataReader;
+import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
 import com.innovaccer.utils.dbconnection.DataBaseEnumConstants.DatabaseType;
 import com.innovaccer.utils.v2.BrowserUtils;
 import com.innovaccer.utils.v2.LoggerUtils;
@@ -33,6 +33,7 @@ public class SQLDBManager {
 	private LoggerUtils loggerUtils;
 	private Connection connection;
     private Encryptions encryption;
+    private ExcelDataReader excelReader;
     
     public SQLDBManager() {
         init(Config.getConfig());
@@ -46,6 +47,7 @@ public class SQLDBManager {
         this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(configInstance);
         encryption = new Encryptions(configInstance);
+        excelReader = new ExcelDataReader(configInstance);
     }
     
     /**
@@ -79,52 +81,50 @@ public class SQLDBManager {
 			relationDataBaseType = configInstance.getRunTimeProperty("RelationDataBaseType");
 		else
 			relationDataBaseType="default";
+		
 		try
 		{
-			Class.forName(configInstance.getRunTimeProperty("DBConnectionDriver"));
-			switch (relationDataBaseType.toLowerCase())
-			{
+			if(configInstance.getRunTimeProperty("NewDBInstance").equalsIgnoreCase("false") && configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed()) {
+					return configInstance.getDBConnection();
+			}
+			else if(configInstance.getRunTimeProperty("NewDBInstance").equalsIgnoreCase("true")) {
+				Class.forName(configInstance.getRunTimeProperty("DBConnectionDriver"));
+				switch (relationDataBaseType.toLowerCase())
+				{
 			
-			case "redshift" : 
-				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
-				loggerUtils.logComment("Connecting to db :-" + connectString);
-				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
-					return configInstance.getDBConnection();
-				
-				Properties properties = new Properties();
-		        properties.setProperty("user", userName);
-		        properties.setProperty("password", password);
-				loggerUtils.logComment("Connecting to Test db:-" + connectString);
-				configInstance.setDBConnection(DriverManager.getConnection(connectString,properties));
-				connection = configInstance.getDBConnection();
-				break;
+				case "redshift" : 
+					connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
+					loggerUtils.logComment("Connecting to db :-" + connectString);
+					Properties properties = new Properties();
+					properties.setProperty("user", userName);
+					properties.setProperty("password", password);
+					loggerUtils.logComment("Connecting to Test db:-" + connectString);
+					configInstance.setDBConnection(DriverManager.getConnection(connectString,properties));
+					connection = configInstance.getDBConnection();
+					break;
 
-			case "greenplum":
-			case "sql":
-			case "postgres" :
+				case "greenplum":
+				case "sql":
+				case "postgres" :
 				
-				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
-					return configInstance.getDBConnection();
-				
-				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+ "/" + dataBaseName;		
-				loggerUtils.logComment("Connecting to db :-" + connectString);
-				configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
-				connection = configInstance.getDBConnection();
-				break;
+					connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+ "/" + dataBaseName;		
+					loggerUtils.logComment("Connecting to db :-" + connectString);
+					configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
+					connection = configInstance.getDBConnection();
+					break;
 
-			default:
-				connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
+				default:
+					connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
 				
-				loggerUtils.logComment("Connecting to db :-" + connectString);
-				if(configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed())
-					return configInstance.getDBConnection();				
+				loggerUtils.logComment("Connecting to db :-" + connectString);				
 				loggerUtils.logComment("Connecting to Test db:-" + connectString);
 				connectString = configInstance.getRunTimeProperty("TestDB");
 				configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
 				connection = configInstance.getDBConnection();
 			}
-
+			}
 		}
+			
 		catch (ClassNotFoundException e)
 		{
 			con = null;
@@ -147,7 +147,7 @@ public class SQLDBManager {
 	public ResultSet executeSelectQuery(int sqlRow, DatabaseType dbType)
 	{
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL");
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL");
 		String selectQuery = sqlData.GetData(sqlRow, "Query");
 		selectQuery = configInstance.replaceArgumentsWithRunTimeProperties(selectQuery);
 		loggerUtils.logComment("Executing the query - '" + selectQuery + "'");
@@ -167,7 +167,7 @@ public class SQLDBManager {
 	public Map<String, String> executeSelectQuery(int sqlRow, int rowNumber, DatabaseType dbType)
 	{
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL");
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL");
 		String selectQuery = sqlData.GetData(sqlRow, "Query");
 		selectQuery = configInstance.replaceArgumentsWithRunTimeProperties(selectQuery);
 		loggerUtils.logComment("Executing the query - '" + selectQuery + "'");
@@ -450,7 +450,7 @@ public class SQLDBManager {
 	public int executeUpdateQuery(int sqlToUpdate, DatabaseType dbType)
 	{		
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL");
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL");
 		String updateQuery = sqlData.GetData(sqlToUpdate, "Query");
 
 		return executeUpdateQuery(updateQuery, dbType);
@@ -465,7 +465,7 @@ public class SQLDBManager {
 	public int executeUpdateQuery(String sheetPath, int sqlRow, DatabaseType dbType)
 	{		
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL",sheetPath);
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL",sheetPath);
 		String updateQuery = sqlData.GetData(sqlRow, "Query");
 
 		return executeUpdateQuery(updateQuery, dbType);
@@ -541,7 +541,7 @@ public class SQLDBManager {
 	public ResultSet executeSelectQuery( int sqlRow, DatabaseType dbType,String sheetname)
 	{
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject(sheetname);
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject(sheetname);
 		String selectQuery = sqlData.GetData(sqlRow, "Query");
 		selectQuery = configInstance.replaceArgumentsWithRunTimeProperties(selectQuery);
 		loggerUtils.logComment("Executing the query - '" + selectQuery + "'");
@@ -558,7 +558,7 @@ public class SQLDBManager {
 	public int executeDeleteQuery(int sqlRow, DatabaseType dbType)
 	{		
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL");
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL");
 		String deleteQuery = sqlData.GetData(sqlRow, "Query");
 		return executeUpdateQuery(deleteQuery, dbType);
 	}
@@ -688,7 +688,7 @@ public class SQLDBManager {
 	public int executeInsertQuery(int sqlRow, DatabaseType dbType)
 	{
 		// Read the Query column of SQL sheet of Test data excel
-		TestDataReader sqlData = configInstance.getCachedTestDataReaderObject("SQL");
+		ExcelDataReader sqlData = excelReader.getCachedTestDataReaderObject("SQL");
 		String insertQuery = sqlData.GetData(sqlRow, "Query");
 
 		return executeUpdateQuery(insertQuery, dbType);

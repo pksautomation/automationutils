@@ -14,7 +14,7 @@ import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.Encryptions;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.fileutils.JSONUtils;
-import com.innovaccer.utils.v2.dataHelper.TestDataReader;
+import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
 import com.innovaccer.utils.v2.dbconnection.*;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -91,7 +91,7 @@ public class MongoDBManager {
 
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
 
-		TestDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		configInstance.setMongoClientConnection(getMongoDBConnection());
@@ -190,7 +190,7 @@ public class MongoDBManager {
 		String mongoDatabaseName;
 		String collectionName;
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
-		TestDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		// testConfig.mongoClientConnection.getDatabaseNames();
@@ -262,7 +262,7 @@ public class MongoDBManager {
 		String mongoDatabaseName;
 		String collectionName;
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
-		TestDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		// testConfig.mongoClientConnection.getDatabaseNames();

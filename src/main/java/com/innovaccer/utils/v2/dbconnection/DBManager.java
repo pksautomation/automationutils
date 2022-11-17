@@ -26,8 +26,7 @@ public class DBManager {
     	if(sqlDBInstance==null) {
     		this.sqlDBInstance = new SQLDBManager(configInstance);
     	}
-    	
-    	return this.sqlDBInstance;
+    		return this.sqlDBInstance;
     }
     
 	 public MongoDBManager getMongoDBInstance() { 
