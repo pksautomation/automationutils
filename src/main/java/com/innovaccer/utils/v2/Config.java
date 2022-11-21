@@ -63,7 +63,7 @@ public class Config {
     private List<String> listOfFailedStep;
     private List<String> listOfLogsOfEachFailedStep;
     private int stepNumber = 0;
-
+    private boolean isNewDBInstance =false;
 	private WaitHelper waitHelper;
     private UtilityObjectManager UtilityObjectManager=null;
 
@@ -731,6 +731,16 @@ public class Config {
 	public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
 		UtilityObjectManager = utilityObjectManager;
 	}
+	
+	
+	public boolean isNewDBconnection () {
+		return this.isNewDBInstance;
+	}
+	
+	public void enableNewDBConnection () {
+		this.isNewDBInstance = true;
+	}
+
 	
 //	public ExcelDataReader getCachedTestDataReaderObject(String sheetName)
 //	{	

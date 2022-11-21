@@ -27,11 +27,10 @@ public class TestExecutor {
         Map<String, Integer> requiredHeaders = new HashMap<>();
         List<List<String>> testData = new ArrayList<>();
         String excelPath = System.getProperty("user.dir") + File.separator + "src/test/resources/TestData/ScenarioDetails.xlsx";
-        FileInputStream file;
+        FileInputStream file = null;
         try {
             file = new FileInputStream(new File(excelPath));
             Workbook workbook = new XSSFWorkbook(file);
-            DataFormatter formatter = new DataFormatter();
             Sheet sheet = workbook.getSheet("ScenarioData");
             int rowCount = excel.getRowCountInWorkSheet(excelPath, sheet.getSheetName());
             for (Cell cell : sheet.getRow(0)) {
@@ -52,6 +51,10 @@ public class TestExecutor {
             //System.out.println(testData);
         } catch (FileNotFoundException e) {
             loggerUtils.logException(e);
+        }
+         finally {
+        	if(file != null) 
+        		file.close();
         }
         return null;
     }

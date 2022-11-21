@@ -84,10 +84,11 @@ public class SQLDBManager {
 		
 		try
 		{
-			if(configInstance.getRunTimeProperty("NewDBInstance").equalsIgnoreCase("false") && configInstance.getDBConnection() !=null && !configInstance.getDBConnection().isClosed()) {
-					return configInstance.getDBConnection();
+			if(!configInstance.isNewDBconnection()) {
+				return configInstance.getDBConnection();
 			}
-			else if(configInstance.getRunTimeProperty("NewDBInstance").equalsIgnoreCase("true")) {
+			else if(configInstance.isNewDBconnection()) {
+				configInstance.enableNewDBConnection();
 				Class.forName(configInstance.getRunTimeProperty("DBConnectionDriver"));
 				switch (relationDataBaseType.toLowerCase())
 				{
@@ -100,7 +101,7 @@ public class SQLDBManager {
 					properties.setProperty("password", password);
 					loggerUtils.logComment("Connecting to Test db:-" + connectString);
 					configInstance.setDBConnection(DriverManager.getConnection(connectString,properties));
-					connection = configInstance.getDBConnection();
+					//connection = configInstance.getDBConnection();
 					break;
 
 				case "greenplum":
@@ -110,18 +111,18 @@ public class SQLDBManager {
 					connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+ "/" + dataBaseName;		
 					loggerUtils.logComment("Connecting to db :-" + connectString);
 					configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
-					connection = configInstance.getDBConnection();
+					//connection = configInstance.getDBConnection();
 					break;
 
 				default:
 					connectString = configInstance.getRunTimeProperty("SQLDBConnectionString")+"/" + dataBaseName;
-				
-				loggerUtils.logComment("Connecting to db :-" + connectString);				
-				loggerUtils.logComment("Connecting to Test db:-" + connectString);
-				connectString = configInstance.getRunTimeProperty("TestDB");
-				configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
-				connection = configInstance.getDBConnection();
+					loggerUtils.logComment("Connecting to db :-" + connectString);				
+					loggerUtils.logComment("Connecting to Test db:-" + connectString);
+					connectString = configInstance.getRunTimeProperty("TestDB");
+					configInstance.setDBConnection(DriverManager.getConnection(connectString, userName, password));
+					
 			}
+				connection = configInstance.getDBConnection();
 			}
 		}
 			

@@ -30,8 +30,8 @@ public class MongoDBManager {
 	private Config configInstance;
 	private LoggerUtils loggerUtils;
 	private JSONUtils jsonUtils;
-	private DBManager dbInstance;
 	private Encryptions encryption; 
+	private ExcelDataReader excelDataReader;
 	
 	public MongoDBManager() {
         init(Config.getConfig());
@@ -45,7 +45,7 @@ public class MongoDBManager {
         this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(configInstance);
         jsonUtils = new JSONUtils(configInstance);
-        dbInstance = new DBManager(configInstance);
+        excelDataReader = new ExcelDataReader(configInstance);
         encryption = new Encryptions(configInstance);
     }
 	
@@ -91,7 +91,7 @@ public class MongoDBManager {
 
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
 
-		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = excelDataReader.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		configInstance.setMongoClientConnection(getMongoDBConnection());
@@ -190,7 +190,7 @@ public class MongoDBManager {
 		String mongoDatabaseName;
 		String collectionName;
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
-		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = excelDataReader.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		// testConfig.mongoClientConnection.getDatabaseNames();
@@ -262,7 +262,7 @@ public class MongoDBManager {
 		String mongoDatabaseName;
 		String collectionName;
 		String mongoQueryExcelSheetPath =  configInstance.getRunTimeProperty("TestDataSheet");
-		ExcelDataReader testDataReader = configInstance.getCachedTestDataReaderObject("MongoQuery",
+		ExcelDataReader testDataReader = excelDataReader.getCachedTestDataReaderObject("MongoQuery",
 				mongoQueryExcelSheetPath);
 
 		// testConfig.mongoClientConnection.getDatabaseNames();
