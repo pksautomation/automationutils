@@ -9,14 +9,14 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.DataProvider;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.*;
-
-import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.fileutils.*;
 
 public class TestExecutor {
 	
@@ -49,7 +49,7 @@ public class TestExecutor {
                     testRow = null;
                 }
             }
-            //System.out.println(testData);
+            return testData.stream().map(List::toArray).toArray(Object[][]::new);
         } catch (FileNotFoundException e) {
             loggerUtils.logException(e);
         }
