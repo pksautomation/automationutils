@@ -2,7 +2,7 @@ package com.innovaccer.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.TestDataReader;
+import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -23,7 +23,7 @@ import java.util.*;
 
 public class Config {
 
-    public static  ThreadLocal<Config[]> threadLocalConfig;
+	public static  ThreadLocal<Config[]> threadLocalConfig;
     public ConfigSingleton singleton_data_instance=null;
     private static String fileSeparator = File.separator;
     private  String scenarioName;
@@ -57,13 +57,13 @@ public class Config {
     private String uniqueId = null;
 	private String timeStamp = null;
     Properties runtimeProperties;
-    TestDataReader testDataReaderObj;
+    ExcelDataReader testDataReaderObj;
     String testEndTime;
     String testStartTime;
     private List<String> listOfFailedStep;
     private List<String> listOfLogsOfEachFailedStep;
     private int stepNumber = 0;
-
+    private boolean isNewDBInstance =false;
 	private WaitHelper waitHelper;
     private UtilityObjectManager UtilityObjectManager=null;
 
@@ -479,9 +479,9 @@ public class Config {
 		singleton_data_instance.setPrivateKey(privateKey);
 	}
 
-	public HashMap<String, TestDataReader> getTestDataReaderHashMap() {
-		return singleton_data_instance.getTestDataReaderHashMap();
-	}
+//	public HashMap<String, ExcelDataReader> getTestDataReaderHashMap() {
+//		return singleton_data_instance.getTestDataReaderHashMap();
+//	}
 
 	public HashMap<String, HashMap<String, String>> getTestData() {
 		return singleton_data_instance.getTestData();
@@ -731,5 +731,60 @@ public class Config {
 	public void setUtilityObjectManager(UtilityObjectManager utilityObjectManager) {
 		UtilityObjectManager = utilityObjectManager;
 	}
+	
+	
+	public boolean isNewDBconnection () {
+		return this.isNewDBInstance;
+	}
+	
+	public void enableNewDBConnection () {
+		this.isNewDBInstance = true;
+	}
+
+	
+//	public ExcelDataReader getCachedTestDataReaderObject(String sheetName)
+//	{	
+//		String path = getRunTimeProperty("TestDataSheet");
+//		if(sheetName.contains("."))
+//		{	
+//			path=System.getProperty("user.dir")+getRunTimeProperty(sheetName.split("\\.")[0]);
+//			sheetName=sheetName.split("\\.")[1];
+//
+//		}
+//		return getCachedTestDataReaderObject(sheetName, path);
+//	}
+//	
+//	public ExcelDataReader getCachedTestDataReaderObject(String sheetName, String path)
+//	{
+//		ExcelDataReader obj = getTestDataReaderHashMap().get(path + sheetName);
+//		// Object is not in the cache
+//		if (obj == null)
+//		{
+//			// cache for future use
+//			synchronized(Config.class)
+//			{
+//				cacheTestDataReaderObject(sheetName, path);
+//				obj = getTestDataReaderHashMap().get(path + sheetName);
+//			}
+//		}
+//		return obj;
+//	}
+	
+	/**
+	 * Create TestDataReader object for the given sheet and cache it can be
+	 * fetched using - getCachedTestDataReaderObject()
+	 * 
+	 * @param sheetName
+	 * @author pramod.singh
+	 */
+//	private void cacheTestDataReaderObject(String sheetName, String path)
+//	{
+//		if (getTestDataReaderHashMap().get(path + sheetName) == null)
+//		{
+//			testDataReaderObj = new ExcelDataReader(this, sheetName, path);
+//			getTestDataReaderHashMap().put(path + sheetName, testDataReaderObj);
+//		}
+//	}
+	
 
 }

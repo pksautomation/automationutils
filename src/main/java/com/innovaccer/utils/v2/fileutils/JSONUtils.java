@@ -7,6 +7,7 @@ import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.WaitHelper;
 import org.apache.commons.io.IOUtils;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -476,5 +477,23 @@ public class JSONUtils {
 			}
 		}
 		return value;
+	}
+	
+	/**
+	 * return Bson Document
+	 * 
+	 * @param jsonString
+	 * @author i0465
+	 * @return
+	 */
+	public BsonDocument convertJSONStringIntoBsonDocument(String jsonString) {
+		BsonDocument document=null;
+		try {
+			document = BsonDocument.parse(jsonString.trim());
+		}
+		catch(Exception e) {
+			loggerUtils.logException(e);
+		}
+		return document;
 	}
 }
