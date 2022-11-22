@@ -71,11 +71,11 @@ public class ExcelDataReader
 	{
 		readFile(sheetName, path);
 	}
-	
+
 	/**
 	 * Create TestDataReader object for the given sheet and cache it can be
 	 * fetched using - getCachedTestDataReaderObject()
-	 * 
+	 *
 	 * @param sheetName
 	 * @author pramod.singh
 	 */
@@ -87,19 +87,19 @@ public class ExcelDataReader
 			getExcelDataReaderHashMap().put(path + sheetName, testDataReaderObj);
 		}
 	}
-	
+
 	public ExcelDataReader getCachedTestDataReaderObject(String sheetName)
-	{	
+	{
 		String path = configInstance.getRunTimeProperty("TestDataSheet");
 		if(sheetName.contains("."))
-		{	
+		{
 			path=System.getProperty("user.dir")+configInstance.getRunTimeProperty(sheetName.split("\\.")[0]);
 			sheetName=sheetName.split("\\.")[1];
 
 		}
 		return getCachedTestDataReaderObject(sheetName, path);
 	}
-	
+
 	public ExcelDataReader getCachedTestDataReaderObject(String sheetName, String path)
 	{
 		ExcelDataReader obj = getExcelDataReaderHashMap().get(path + sheetName);
@@ -115,11 +115,11 @@ public class ExcelDataReader
 		}
 		return obj;
 	}
-	
+
 	public HashMap<String, ExcelDataReader> getExcelDataReaderHashMap() {
 		return excelDataReaderHashMap;
 	}
-	
+
 	private String convertHSSFCellToString(HSSFCell cell, FormulaEvaluator evaluator)
 	{
 		String value = null;
