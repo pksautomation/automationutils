@@ -22,7 +22,7 @@ public class ScenarioRunner {
         this.loggerUtils = new LoggerUtils(this.testConfig);
     }
 
-    private static String getValueFromString(String jsonString, String jsonPath) {
+    private String getValueFromString(String jsonString, String jsonPath) {
         return JsonPath.from(jsonString).getString(jsonPath);
     }
 
@@ -30,25 +30,32 @@ public class ScenarioRunner {
         String scenario, className, methodName, testData;
         try {
             scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
-            loggerUtils.logComment("Execution Started for Scenario Id: " + getValueFromString(scenario, "TestCaseId"));
+            loggerUtils.logComment("<<<<<< Execution Started for Scenario Id: " +
+                    getValueFromString(scenario, "TestCaseId") + " >>>>>>");
 //            loggerUtils.logComment("Description: " + getValueFromString(scenario, "Description"));
 //            loggerUtils.logComment("Zephyr Scale Id: " + getValueFromString(scenario, "ZephyrScaleId"));
 //            loggerUtils.logComment("Priority: " + getValueFromString(scenario, "Priority"));
             String packageName = getValueFromString(scenario, "Package");
             JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
-            loggerUtils.logComment("Starting Steps Execution for Scenario");
+            loggerUtils.logComment("-----Starting Steps Execution for Scenario-----");
             for (int i = 0; i < listOfSteps.length(); i++) {
                 String step = listOfSteps.get(i).toString();
                 className = JsonPath.from(step.toString()).getString("ClassName");
                 methodName = JsonPath.from(step.toString()).getString("MethodName");
                 testData = JsonPath.from(step.toString()).getString("TestData");
+                if (methodName.equals(""))
+                    loggerUtils.logComment(String.format("Calling Constructor for Class: %s", className));
+                else
+                    loggerUtils.logComment(String.format("Executing Method: %s.%s()", className, methodName));
                 if (testData.equals("")) {
                     reflections.executeStep(packageName, className, methodName, testContext);
                 } else {
+                    loggerUtils.logComment("Test Data given to method: " + testData);
                     reflections.executeStep(packageName, className, methodName, testContext, testData);
                 }
             }
-            loggerUtils.logComment("Execution Completed for Scenario");
+            loggerUtils.logComment("-----Steps Execution for Scenario Completed-----");
+            loggerUtils.logComment("<<<<<< Execution Completed for Scenario >>>>>>");
         } catch (Exception e) {
             e.printStackTrace();
         }
