@@ -115,6 +115,7 @@ public class TestBase{
 			String testStartTime = Helper.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
 			scenarioContext.setTestStartTime(testStartTime);
 			scenarioContext.setScenarioName(testName);	
+			threadLocalConfig.set(new Config[]{scenarioContext});
 	        Config.threadLocalConfig.set(new Config[]{scenarioContext});
 	        utilityObjectManager=new UtilityObjectManager(scenarioContext);
 	        loggerUtils=new LoggerUtils(scenarioContext);
