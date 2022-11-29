@@ -137,7 +137,7 @@ public class LoggerUtils {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
         failure(message);
-        if (logPageInfo[0])
+        if (logPageInfo.length>0)
             getPageInfo();
     }
 

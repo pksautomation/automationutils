@@ -758,5 +758,25 @@ public class SQLDBManager {
 			}
 		}
 	}
+	/**
+	 * Close the SQL database connection, if open.
+	 * @author i0465
+	 */
+	public void closeSQLDatabaseConnection(Connection con)
+	{
+		if(con != null)
+		{
+			try
+			{
+				con.close();
+				con = null;
+				System.out.println("Database connection closed successfully.");
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

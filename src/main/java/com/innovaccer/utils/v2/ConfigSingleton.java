@@ -29,13 +29,14 @@ public class ConfigSingleton {
 	private  String encryptionKey = null;
 	private  String privateKey = null;
 	private  String Environment;
-	private  String ResultsDir;
+	private  String ResultsDir=null;
 	private  String PlatformName;
 	private  String SharedDirectory;
 	private  String ProjectName;
 	private  String BrowserVersion;
 	private  String BrowserName;
 	private  String remoteURL;
+
 	private  Connection DBConnection = null;
 	private 	MongoDatabase mongoAdminDatabase = null;
 	private 	MongoClient mongoClientConnection = null;
