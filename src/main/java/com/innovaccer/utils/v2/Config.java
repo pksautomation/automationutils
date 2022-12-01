@@ -1,5 +1,8 @@
 package com.innovaccer.utils.v2;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
@@ -31,7 +34,7 @@ import java.util.*;
 
 public class Config {
 
-	public static  ThreadLocal<Config[]> threadLocalConfig= new ThreadLocal<Config[]>();
+	public static ThreadLocal<Config[]> threadLocalConfig= new ThreadLocal<Config[]>();
     public ConfigSingleton singleton_data_instance=null;
     private static String fileSeparator = File.separator;
     private  String scenarioName=null;
@@ -77,6 +80,9 @@ public class Config {
     private Scenario testScenario;
     private boolean testResult;
 	String testName;
+	ExtentHtmlReporter htmlReporter; 
+	ExtentReports extentReport;
+	ExtentTest testExtentLog;
 
 	/**
      * Load Config
@@ -251,7 +257,8 @@ public class Config {
     public static Config getConfig() {
     	Config config=null;
     	try {
-    	 config = Config.threadLocalConfig.get()[0];
+    		if(Config.threadLocalConfig.get()!= null && Config.threadLocalConfig.get().length>0)
+    			config = Config.threadLocalConfig.get()[0];
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
@@ -439,9 +446,9 @@ public class Config {
 		this.singleton_data_instance = ConfigSingleton.getInstance();
 	}
 
-	public void setThreadLocalConfig(ThreadLocal<Config[]> threadLocalConfig) {
-		this.threadLocalConfig = threadLocalConfig;
-	}
+//	public static void setThreadLocalConfig(ThreadLocal<Config[]> threadLocalConfig) {
+//		Config.threadLocalConfig = threadLocalConfig;
+//	}
 
     public String getBrowserName() {
 		return singleton_data_instance.getBrowserName();
@@ -897,51 +904,75 @@ public class Config {
 	{
 		testEndTime = Helper.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
 		
-		endExecutionOnfailure = false;
-		enableScreenshot = false;
-		recordPageHTMLOnFailure = false;
-		
-		List<String> reporterOutput = Reporter.getOutput(result);
-		if(this.testStartTime != null)
-		{
-			long minutes = 0;
-			long seconds = 0;
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String minuteOrMinutes = " ";
-			String secondOrSeconds = "";
-			try
-			{
-				long timeinMillis = (dateFormat.parse(testEndTime).getTime() - dateFormat.parse(this.testStartTime).getTime())/1000;
-				minutes = timeinMillis/60;
-				seconds = timeinMillis%60;
-				if(minutes > 1)
-					minuteOrMinutes = "s ";
-				if(seconds > 1)
-					secondOrSeconds = "s";
-			}
-			catch(Exception e)
-			{}
-
-			if(!Helper.listContainsString(reporterOutput, "<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '"))
-				loggerUtils.logComment("<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '" + minutes + " minute" + minuteOrMinutes + seconds + " second" + secondOrSeconds + "' </B></font>");
-		}
-		
-		if (!testResult)
-		{
-			if(!Helper.listContainsString(reporterOutput, "<B>Failure occured in test '" + getScenarioName() + "' Ended on '"))
-				loggerUtils.logFail("<B>Failure occured in test '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
-		}
-		else
-		{
-			if(!Helper.listContainsString(reporterOutput, "<B>Test Passed '" + getScenarioName() + "' Ended on '"))
-				loggerUtils.logPass("<B>Test Passed '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
-		}
+//		endExecutionOnfailure = false;
+//		enableScreenshot = false;
+//		recordPageHTMLOnFailure = false;
+//		
+//		List<String> reporterOutput = Reporter.getOutput(result);
+//		if(this.testStartTime != null)
+//		{
+//			long minutes = 0;
+//			long seconds = 0;
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			String minuteOrMinutes = " ";
+//			String secondOrSeconds = "";
+//			try
+//			{
+//				long timeinMillis = (dateFormat.parse(testEndTime).getTime() - dateFormat.parse(this.testStartTime).getTime())/1000;
+//				minutes = timeinMillis/60;
+//				seconds = timeinMillis%60;
+//				if(minutes > 1)
+//					minuteOrMinutes = "s ";
+//				if(seconds > 1)
+//					secondOrSeconds = "s";
+//			}
+//			catch(Exception e)
+//			{}
+//
+//			if(!Helper.listContainsString(reporterOutput, "<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '"))
+//				loggerUtils.logComment("<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '" + minutes + " minute" + minuteOrMinutes + seconds + " second" + secondOrSeconds + "' </B></font>");
+//		}
+//		
+//		if (!testResult)
+//		{
+//			if(!Helper.listContainsString(reporterOutput, "<B>Failure occured in test '" + getScenarioName() + "' Ended on '"))
+//				loggerUtils.logFail("<B>Failure occured in test '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
+//		}
+//		else
+//		{
+//			if(!Helper.listContainsString(reporterOutput, "<B>Test Passed '" + getScenarioName() + "' Ended on '"))
+//				loggerUtils.logPass("<B>Test Passed '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
+//		}
 	}
 	
 	@Attachment(value = "Logs For \"{0}\"", type = "text/html")
 	public String attachLogs(String testName)
 	{
 		return this.testLog;
+	}
+	
+	public ExtentHtmlReporter getExtendHtmlReporter() {
+		return htmlReporter;
+	}
+
+	public void setExtendHtmlReporter(ExtentHtmlReporter htmlReporter) {
+		this.htmlReporter = htmlReporter;
+	}
+
+
+	public ExtentReports getExtentReport() {
+		return extentReport;
+	}
+
+	public void setExtentReport(ExtentReports extentReport) {
+		this.extentReport = extentReport;
+	}
+
+	public ExtentTest getExtentTestLog() {
+		return testExtentLog;
+	}
+	public void setExtentTestLog(ExtentTest extentTestLog) {
+		this.testExtentLog = extentTestLog;
 	}
 
 }

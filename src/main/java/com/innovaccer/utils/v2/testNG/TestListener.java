@@ -22,13 +22,8 @@ package com.innovaccer.utils.v2.testNG;
 		@Override
 		public void onTestFailure(ITestResult result)
 		{
-			//This variable will control the duplicate logging of result & accuracy (in case of dual browser testcase)
 			boolean executeOnce = true;
-			
-			//Will be called in case of unhandled exception in the test case 
-			//as well as after afterInvocation method of this class does assertAll of all Log.fail in test case
-			
-			Config[] testConfigs = TestBase.threadLocalConfig.get();
+			Config[] testConfigs = Config.threadLocalConfig.get();
 			if (testConfigs != null)
 				for (Config testConf : testConfigs)
 				{
@@ -81,7 +76,7 @@ package com.innovaccer.utils.v2.testNG;
 			if (method.isTestMethod() && testResult.getStatus() == TestResult.SUCCESS)
 			{
 				String errorMessage = "";
-				Config[] testConfigs = TestBase.threadLocalConfig.get();
+				Config[] testConfigs = Config.threadLocalConfig.get();
 				if (testConfigs != null)
 				{
 					for (Config testConf : testConfigs)
@@ -111,7 +106,7 @@ package com.innovaccer.utils.v2.testNG;
 		@Override
 		public void onTestSkipped(ITestResult result)
 		{
-			Config[] testConfigs = TestBase.threadLocalConfig.get();
+			Config[] testConfigs = Config.threadLocalConfig.get();
 			if (testConfigs != null)
 				for (Config testConf : testConfigs)
 				{
@@ -133,7 +128,7 @@ package com.innovaccer.utils.v2.testNG;
 		@Override
 		public void onTestSuccess(ITestResult result)
 		{
-			Config[] testConfigs = TestBase.threadLocalConfig.get();
+			Config[] testConfigs = Config.threadLocalConfig.get();
 			if (testConfigs != null)
 				for (Config testConf : testConfigs)
 				{
@@ -159,7 +154,7 @@ package com.innovaccer.utils.v2.testNG;
 		@Override
 		public void onTestStart(ITestResult result)
 		{
-			Config[] testConfigs = TestBase.threadLocalConfig.get();
+			Config[] testConfigs = Config.threadLocalConfig.get();
 			if (testConfigs != null)
 				for (Config testConf : testConfigs)
 				{
@@ -169,7 +164,7 @@ package com.innovaccer.utils.v2.testNG;
 						Reporter.setCurrentTestResult(result);
 						List<String> reporterOutput = Reporter.getOutput(result);
 						if(!Helper.listContainsString(reporterOutput, "<B>Test '" + testConf.getScenarioName() + "' Started on '"))
-							logger.logPass("<B>Test '" + testConf.getScenarioName() + "' Started on '" + testConf.getTestStartTime() + "'</B>");
+							System.out.println("<B>Test '" + testConf.getScenarioName() + "' Started on '" + testConf.getTestStartTime() + "'</B>");
 					}
 					else
 					{
@@ -181,31 +176,13 @@ package com.innovaccer.utils.v2.testNG;
 		@Override
 		public void onFinish(ITestContext context)
 		{
-			/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-			endDate = new Date();
-			double diff = (endDate.getTime() - startDate.getTime()) / 60000.00;
-			String message = "";
-			
-			if (diff < 1)
-				message = "@onFinish - Automation Execution finished after :- " + (endDate.getTime() - startDate.getTime()) / 1000.00 + " seconds. At " + dateFormat.format(endDate)  + " on Thread id:- " + Thread.currentThread().getId();
-			else
-				message = "@onFinish - Automation Execution finished after :- " + (endDate.getTime() - startDate.getTime()) / 60000.00 + " minutes. At " + dateFormat.format(endDate)  + " on Thread id:- " + Thread.currentThread().getId();
-			
-			System.out.println(message);
-			message = "<font color='Green'>" + message + "</font></br>";
-			Reporter.log(message);*/
+			// TODO Auto-generated method stub
 		}
 		
 		@Override
 		public void onStart(ITestContext context)
 		{
-			/*	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-				startDate = new Date();
-				String message = "@onStart-Automation Execution started on " + dateFormat.format(startDate) + " on Thread id:- " + Thread.currentThread().getId();
-				
-				System.out.println(message);
-				message = "<font color='Green'>" + message + "</font></br>";
-				Reporter.log(message);*/
+			// TODO Auto-generated method stub
 		}
 		
 		@Override

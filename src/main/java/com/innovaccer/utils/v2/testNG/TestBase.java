@@ -52,28 +52,27 @@ import org.testng.annotations.BeforeMethod;
 
 
 @Listeners(com.innovaccer.utils.v2.testNG.TestListener.class)
-public class TestBase{
-	 protected static ThreadLocal<Config[]> threadLocalConfig = new ThreadLocal<Config[]>();
+public class TestBase implements ITest{
+	 public static ThreadLocal<String> testName = new ThreadLocal<>();
 	 private LoggerUtils loggerUtils;
-	 private String testName;
 	 private ExcelUtils excel;
 	 protected final static long DEFAULT_TEST_TIMEOUT = 600000;
 	 private String log=null;
 	 public Config scenarioContext;
 	 private  UtilityObjectManager utilityObjectManager;
+	 
 	//builds a new report using the html template 
-	 ExtentHtmlReporter htmlReporter;
-	    
-	 ExtentReports extent;
-	    //helps to generate the logs in test report.
-	 ExtentTest test;
+	 public static ExtentHtmlReporter htmlExtendReporter;  
+	 public static ExtentReports extentReport;
 
 	    @DataProvider(name = "ScenariosRunner", parallel = true)
 	    public Object[][] dataProviderMethod(Method method) throws IOException {
 	        Map<String, Integer> requiredHeaders = new HashMap<>();
 	        List<List<String>> testData = new ArrayList<>();
-	        Config testConfig = (Config) GetTestConfig(method)[0][0];
-	        excel= new ExcelUtils();
+	        //Config testConfig = (Config) GetTestConfig(method)[0][0];
+	        Object[][] obj = new Object[][] {{}};
+	        Config testConfig = new Config(method);
+	        excel= new ExcelUtils(testConfig);
 	        String excelPath = System.getProperty("user.dir") + File.separator + "src/test/resources/TestData/ScenarioDetails.xlsx";
 	        FileInputStream file = null;
 	        try {
@@ -84,6 +83,7 @@ public class TestBase{
 	            for (Cell cell : sheet.getRow(0)) {
 	                requiredHeaders.put(cell.getStringCellValue(), cell.getColumnIndex());
 	            }
+	            int count=0;
 	            for (int i = 0; i < rowCount; i++) {
 	                List<String> testRow = new ArrayList<>();
 	                Row row = sheet.getRow(i + 1);
@@ -93,12 +93,15 @@ public class TestBase{
 	                }
 	                if (testRow.size() != 0) {
 	                    testData.add(testRow);
+	                    //obj[count++]=testRow.toArray();
 	                    testRow = null;
 	                }
+	                
 	            }
+	            //return obj;
 	            return testData.stream().map(List::toArray).toArray(Object[][]::new);
 	        } catch (FileNotFoundException e) {
-	            loggerUtils.logException(e);
+	            e.printStackTrace();
 	        }
 	         finally {
 	        	if(file != null)
@@ -115,10 +118,9 @@ public class TestBase{
 			String testStartTime = Helper.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
 			scenarioContext.setTestStartTime(testStartTime);
 			scenarioContext.setScenarioName(testName);	
-			threadLocalConfig.set(new Config[]{scenarioContext});
-	        Config.threadLocalConfig.set(new Config[]{scenarioContext});
+	        Config.threadLocalConfig.set(new Config[] {scenarioContext});
 	        utilityObjectManager=new UtilityObjectManager(scenarioContext);
-	        loggerUtils=new LoggerUtils(scenarioContext);
+	        loggerUtils=new LoggerUtils();
 	        scenarioContext.setUtilityObjectManager(utilityObjectManager);
 			return new Object[][] { { scenarioContext } };
 		}
@@ -132,75 +134,79 @@ public class TestBase{
 
 		protected void tearDownHelper(ITestResult result)
 		{
-			String testcaseName = "NullConfig";			
+			String testcaseName = result.getTestName();		
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			Date startDate = new Date();
-			scenarioContext.quitBrowser();
-			scenarioContext.closeSQLDBConnection(scenarioContext.getDBConnection());
-			//close driver
-			scenarioContext.setTestEndTime(dateFormat.format(startDate));
-			loggerUtils.logComment("<B>Test '\" + testcaseName + \"' Ended on '\" + dateFormat.format(startDate) + \"'</B>");
 			System.out.println("<B>Test '" + testcaseName + "' Ended on '" + dateFormat.format(startDate) + "'</B>");
 		}
 		
-//		@BeforeClass(alwaysRun = false)
-//		@Parameters({ "browser", "environment", "testngOutputDir", "RemoteAddress", "BrowserVersion","ProjectName"})
-//		public void InitializeParameters(@Optional String browser, @Optional String environment, @Optional String testngOutputDir, @Optional String RemoteAddress, @Optional String BrowserVersion, @Optional String ProjectName)
-//		{
-//			//initialize variable here before running scenarios
-//		}
-		
-		//@Parameters({ "OS", "browser" })
 	    @BeforeTest
 	    public void startReport() {
 	    	// initialize the HtmlReporter
-	        htmlReporter = new ExtentHtmlReporter(System.getProperty("user.dir") +"/test-output/testReport.html");
-	        
+	    	try {
+	        htmlExtendReporter = new ExtentHtmlReporter(System.getProperty("user.dir") +"/test-output/testReport.html");        
 	        //initialize ExtentReports and attach the HtmlReporter
-	        extent = new ExtentReports();
-	        extent.attachReporter(htmlReporter);
-	         
-	        //To add system or environment info by using the setSystemInfo method.
-//	        extent.setSystemInfo("OS", OS);
-//	        extent.setSystemInfo("Browser", browser);
-	        
-	        //configuration items to change the look and feel
-	        //add content, manage tests etc
-	        htmlReporter.config().setChartVisibilityOnOpen(true);
-	        htmlReporter.config().setDocumentTitle("Extent Report Demo");
-	        htmlReporter.config().setReportName("Test Report");
-	        htmlReporter.config().setTestViewChartLocation(ChartLocation.TOP);
-	        htmlReporter.config().setTheme(Theme.STANDARD);
-	        htmlReporter.config().setTimeStampFormat("EEEE, MMMM dd, yyyy, hh:mm a '('zzz')'");
+	        extentReport = new ExtentReports();
+	        extentReport.attachReporter(htmlExtendReporter);
+	        htmlExtendReporter.config().setChartVisibilityOnOpen(true);
+	        htmlExtendReporter.config().setDocumentTitle("Extent Report Demo");
+	        htmlExtendReporter.config().setReportName("Test Report");
+	        htmlExtendReporter.config().setTestViewChartLocation(ChartLocation.TOP);
+	        htmlExtendReporter.config().setTheme(Theme.STANDARD);
+	        htmlExtendReporter.config().setTimeStampFormat("EEEE, MMMM dd, yyyy, hh:mm a '('zzz')'");
+	    	}catch(Exception e) {
+	    		e.printStackTrace();
+	    	}
 	    }
 		
-	    @AfterMethod
-	    public void getResult(ITestResult result) {
-	        if(result.getStatus() == ITestResult.FAILURE) {
-	            test.log(Status.FAIL, MarkupHelper.createLabel(result.getName()+" FAILED ", ExtentColor.RED));
-	            test.fail(result.getThrowable());
-	        }
-	        else if(result.getStatus() == ITestResult.SUCCESS) {
-	            test.log(Status.PASS, MarkupHelper.createLabel(result.getName()+" PASSED ", ExtentColor.GREEN));
-	        }
-	        else {
-	            test.log(Status.SKIP, MarkupHelper.createLabel(result.getName()+" SKIPPED ", ExtentColor.ORANGE));
-	            test.skip(result.getThrowable());
-	        }
-	    }
 	     
 		@AfterTest
 	    public void tearDown() {
 	    	//to write or update test information to reporter
-	        extent.flush();
+	        extentReport.flush();
+	    }
+		
+		@Override
+		public String getTestName() {
+			return testName.get();
+		}
+		
+		@AfterMethod
+	    public void getResult(Method method, Object[] testData, ITestContext ctx,ITestResult result) {
+	    	try {
+	        if(result.getStatus() == ITestResult.FAILURE) {
+	            Config.getConfig().getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(result.getName()+" FAILED ", ExtentColor.RED));
+	            Config.getConfig().getExtentTestLog().fail(result.getThrowable());
+	        }
+	        else if(result.getStatus() == ITestResult.SUCCESS) {
+	        	Config.getConfig().getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(" PASSED "+result.getName(), ExtentColor.GREEN));
+	        }
+	        else {
+	        	Config.getConfig().getExtentTestLog().log(Status.SKIP, MarkupHelper.createLabel(result.getName()+" SKIPPED ", ExtentColor.ORANGE));
+	        	Config.getConfig().getExtentTestLog().skip(result.getThrowable());
+	        }
+	    	}catch(Exception e) {
+	    		e.printStackTrace();
+	    	}
 	    }
 		
 		@BeforeMethod
 		public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
-		   if (testData.length > 0) {
-		     // this.setTestName(method.getName() + "_" + testData[0].toString());
-		      ctx.setAttribute("testName", scenarioContext.getScenarioName());
+		   if (testData!=null && testData.length > 0) {
+			   String [] testInfo = (String[]) testData[0];
+			   Config scenarioContext = new Config(method);
+			   scenarioContext.setScenarioName(testInfo[1]);
+			   ExtentTest extentTestLog=extentReport.createTest(testInfo[1], "Validate Login Flow");
+			   scenarioContext.setExtentTestLog(extentTestLog);
+			   testName.set(method.getName() + "_" + testInfo[1]);
+			   Config.threadLocalConfig.set(new Config[]{scenarioContext});
+			   LoggerUtils logger = new LoggerUtils();
+			   String testcaseName = testInfo[1];	
+			   DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+			   Date startDate = new Date();
+			   logger.logComment("<B>Test '\" + testcaseName : " + testcaseName + " Started on " + dateFormat.format(startDate) + "'</B>");
+			   ctx.setAttribute("testName", scenarioContext.getScenarioName());
 		   } else
-		      ctx.setAttribute("testName", method.getName());
+			   ctx.setAttribute("testName", method.getName());
 		}
 }
