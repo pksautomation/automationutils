@@ -46,7 +46,7 @@ public class LoggerUtils {
     			configInstance.getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(message, ExtentColor.RED));
     		}
     		else if(message.contains("[INFO]") )
-    			configInstance.getExtentTestLog().log(Status.INFO, MarkupHelper.createLabel(message, ExtentColor.CYAN));
+    			configInstance.getExtentTestLog().log(Status.INFO, MarkupHelper.createLabel(message, ExtentColor.WHITE));
     		else if(message.contains("[WARNING]"))
     			configInstance.getExtentTestLog().log(Status.WARNING, MarkupHelper.createLabel(message, ExtentColor.ORANGE));
     		else

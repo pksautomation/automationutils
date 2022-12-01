@@ -150,10 +150,13 @@ public class TestBase implements ITest{
 	        extentReport.attachReporter(htmlExtendReporter);
 	        htmlExtendReporter.config().setChartVisibilityOnOpen(true);
 	        htmlExtendReporter.config().setDocumentTitle("Extent Report Demo");
-	        htmlExtendReporter.config().setReportName("Test Report");
+	        htmlExtendReporter.config().setReportName("Automation Report Details");
 	        htmlExtendReporter.config().setTestViewChartLocation(ChartLocation.TOP);
-	        htmlExtendReporter.config().setTheme(Theme.STANDARD);
+	        htmlExtendReporter.config().setTheme(Theme.DARK);
 	        htmlExtendReporter.config().setTimeStampFormat("EEEE, MMMM dd, yyyy, hh:mm a '('zzz')'");
+	        extentReport.setSystemInfo("Project Name", "TRM Automation Suit");
+	        extentReport.setSystemInfo("Branch", "master");
+	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
@@ -197,6 +200,7 @@ public class TestBase implements ITest{
 			   Config scenarioContext = new Config(method);
 			   scenarioContext.setScenarioName(testInfo[1]);
 			   ExtentTest extentTestLog=extentReport.createTest(testInfo[1], "Validate Login Flow");
+			   extentTestLog.assignCategory("Smoke");
 			   scenarioContext.setExtentTestLog(extentTestLog);
 			   testName.set(method.getName() + "_" + testInfo[1]);
 			   Config.threadLocalConfig.set(new Config[]{scenarioContext});
