@@ -2,6 +2,9 @@ package com.innovaccer.utils.v2;
 
 import org.openqa.selenium.*;
 
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.innovaccer.utils.Browser;
 import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.Log;
@@ -35,8 +38,22 @@ public class LoggerUtils {
     }
 
     private void writeMessageInReport(Config testConfig, String message) {
-//        testConfig.getScenario().write(message);
-//        testConfig.setTestLog(testConfig.getTestLog().concat(message));
+    	if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+    		testConfig.getScenario().write(message);
+    	else {
+    		if(message.contains("[Fail]"))
+    		{
+    			configInstance.getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(message, ExtentColor.RED));
+    		}
+    		else if(message.contains("[INFO]") )
+    			configInstance.getExtentTestLog().log(Status.INFO, MarkupHelper.createLabel(message, ExtentColor.CYAN));
+    		else if(message.contains("[WARNING]"))
+    			configInstance.getExtentTestLog().log(Status.WARNING, MarkupHelper.createLabel(message, ExtentColor.ORANGE));
+    		else
+    			configInstance.getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(message, ExtentColor.GREEN));   		
+    		
+    	}
+        testConfig.setTestLog(testConfig.getTestLog().concat(message));
     }
 
     /**
@@ -94,8 +111,23 @@ public class LoggerUtils {
      */
     public <T> void logPass(String what, T actual, boolean logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        String message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  Verified '" + what + "' as :-'" + actual + "'";
-        logComment(message);
+        String message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	 message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  [Pass] '" + what + "' as :-'" + actual + "'";
+        else {
+        	message= "[Pass] '" + what + "' as :-'" + actual + "'";
+        }
+        try {
+            boolean test = configInstance.isLogToStandardOut();
+            if (test && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                logToStandard(message);
+            if ((configInstance.isLogsMode()) && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                writeMessageInReport(configInstance, message);
+        } catch (Exception e) {
+            logFailureException(e);
+        }
         if (logPageInfo)
             getPageInfo();
     }
@@ -106,8 +138,22 @@ public class LoggerUtils {
      */
     public void logPass(String message, boolean... logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
-        logComment(message);
+        message= "[Pass] '" + message;
+        //message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Pass] --> " + message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
+        
+        try {
+            boolean test = configInstance.isLogToStandardOut();
+            if (test && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                logToStandard(message);
+            if ((configInstance.isLogsMode()) && (configInstance.getRunTimeProperty("beforeHook") == null
+                    || configInstance.getRunTimeProperty("beforeHook").equalsIgnoreCase("false")))
+                writeMessageInReport(configInstance, message);
+        } catch (Exception e) {
+            logFailureException(e);
+        }
         if (logPageInfo[0])
             getPageInfo();
     }
@@ -121,7 +167,8 @@ public class LoggerUtils {
     public <T> void logFail(String what, T expected, T actual, boolean logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         String message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
-        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
         failure(message);
         if (logPageInfo)
             getPageInfo();
@@ -135,9 +182,11 @@ public class LoggerUtils {
      */
     public void logFail(String message, boolean... logPageInfo) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Fail] --> " + message;
+        message="[Fail] --> " + message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
         failure(message);
-        if (logPageInfo[0])
+        if (logPageInfo.length>0)
             getPageInfo();
     }
 
@@ -148,7 +197,9 @@ public class LoggerUtils {
      */
     public void logComment(String message) {
         timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [INFO] -->  " + message;
+        message =  "[INFO] -->  " + message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
         try {
             boolean test = configInstance.isLogToStandardOut();
             if (test && (configInstance.getRunTimeProperty("beforeHook") == null
@@ -168,7 +219,10 @@ public class LoggerUtils {
      * @param message -> warning message to be logged
      */
     public void logWarning(String message) {
-        message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [WARNING] --> " + message;
+        message ="[WARNING] --> " + message;
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
+
         if (configInstance.isLogToStandardOut())
             logToStandard(message);
         if (configInstance.isLogsMode())
