@@ -34,6 +34,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.asserts.SoftAssert;
+import org.testng.internal.TestResult;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -132,11 +133,31 @@ public class TestBase implements ITest{
 			tearDownHelper(result);
 		}
 
-		protected void tearDownHelper(ITestResult result)
+		protected synchronized void tearDownHelper(ITestResult result)
 		{
 			String testcaseName = result.getTestName();		
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			Date startDate = new Date();
+			try {
+		        if(result.getStatus() == ITestResult.FAILURE) {
+		            Config.getConfig().getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(result.getName()+" FAILED ", ExtentColor.RED));
+		            File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getScreenshotFile();
+					String screenshotPath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().captureScreenShoot(screenshotFilepath);
+					Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
+					Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
+
+		        }
+		        else if(result.getStatus() == ITestResult.SUCCESS) {
+		        	Config.getConfig().getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(" PASSED "+result.getName(), ExtentColor.GREEN));						
+		        }
+		        else {
+		        	Config.getConfig().getExtentTestLog().log(Status.SKIP, MarkupHelper.createLabel(result.getName()+" SKIPPED ", ExtentColor.ORANGE));
+		        	Config.getConfig().getExtentTestLog().skip(result.getThrowable());
+		        }
+		    	}catch(Exception e) {
+		    		e.printStackTrace();
+		    	}
+			Config.getConfig().getUtilityObjectManager().getBrowserUtils().quitBrowser();
 			System.out.println("<B>Test '" + testcaseName + "' Ended on '" + dateFormat.format(startDate) + "'</B>");
 		}
 		
@@ -161,6 +182,33 @@ public class TestBase implements ITest{
 	    		e.printStackTrace();
 	    	}
 	    }
+		   
+		   @AfterMethod
+		    public void getResult(Method method, Object[] testData, ITestContext ctx,ITestResult result) {
+		       ///
+		    }
+			
+			@BeforeMethod
+			public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
+			   if (testData!=null && testData.length > 0) {
+				   String [] testInfo = (String[]) testData[0];
+				   Config scenarioContext = new Config(method);
+				   scenarioContext.setScenarioName(testInfo[1]);
+				   ExtentTest extentTestLog=extentReport.createTest(testInfo[1], "Validate Login Flow");
+				   extentTestLog.assignCategory("Smoke");
+				   scenarioContext.setExtentTestLog(extentTestLog);
+				   testName.set(method.getName() + "_" + testInfo[1]);
+				   Config.threadLocalConfig.set(new Config[]{scenarioContext});
+				   LoggerUtils logger = new LoggerUtils();
+				   String testcaseName = testInfo[1];	
+				   DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+				   Date startDate = new Date();
+				   logger.logComment("<B>Test '\" + testcaseName : " + testcaseName + " Started on " + dateFormat.format(startDate) + "'</B>");
+				   ctx.setAttribute("testName", scenarioContext.getScenarioName());
+			   } else
+				   ctx.setAttribute("testName", method.getName());
+			}
+			
 		
 	     
 		@AfterTest
@@ -174,43 +222,4 @@ public class TestBase implements ITest{
 			return testName.get();
 		}
 		
-		@AfterMethod
-	    public void getResult(Method method, Object[] testData, ITestContext ctx,ITestResult result) {
-	    	try {
-	        if(result.getStatus() == ITestResult.FAILURE) {
-	            Config.getConfig().getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(result.getName()+" FAILED ", ExtentColor.RED));
-	            Config.getConfig().getExtentTestLog().fail(result.getThrowable());
-	        }
-	        else if(result.getStatus() == ITestResult.SUCCESS) {
-	        	Config.getConfig().getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(" PASSED "+result.getName(), ExtentColor.GREEN));
-	        }
-	        else {
-	        	Config.getConfig().getExtentTestLog().log(Status.SKIP, MarkupHelper.createLabel(result.getName()+" SKIPPED ", ExtentColor.ORANGE));
-	        	Config.getConfig().getExtentTestLog().skip(result.getThrowable());
-	        }
-	    	}catch(Exception e) {
-	    		e.printStackTrace();
-	    	}
-	    }
-		
-		@BeforeMethod
-		public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
-		   if (testData!=null && testData.length > 0) {
-			   String [] testInfo = (String[]) testData[0];
-			   Config scenarioContext = new Config(method);
-			   scenarioContext.setScenarioName(testInfo[1]);
-			   ExtentTest extentTestLog=extentReport.createTest(testInfo[1], "Validate Login Flow");
-			   extentTestLog.assignCategory("Smoke");
-			   scenarioContext.setExtentTestLog(extentTestLog);
-			   testName.set(method.getName() + "_" + testInfo[1]);
-			   Config.threadLocalConfig.set(new Config[]{scenarioContext});
-			   LoggerUtils logger = new LoggerUtils();
-			   String testcaseName = testInfo[1];	
-			   DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-			   Date startDate = new Date();
-			   logger.logComment("<B>Test '\" + testcaseName : " + testcaseName + " Started on " + dateFormat.format(startDate) + "'</B>");
-			   ctx.setAttribute("testName", scenarioContext.getScenarioName());
-		   } else
-			   ctx.setAttribute("testName", method.getName());
-		}
 }

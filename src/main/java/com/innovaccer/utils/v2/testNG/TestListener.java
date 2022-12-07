@@ -67,7 +67,6 @@ package com.innovaccer.utils.v2.testNG;
 				}
 		}
 		
-		
 		@Override
 		public void afterInvocation(IInvokedMethod method, ITestResult testResult)
 		{
@@ -97,7 +96,7 @@ package com.innovaccer.utils.v2.testNG;
 				if (errorMessage != "")
 				{
 					testResult.setStatus(TestResult.FAILURE);
-					testResult.setThrowable(new AssertionError(errorMessage));
+					//testResult.setThrowable(new AssertionError(errorMessage));
 					System.out.println("<------ Exiting afterInvocation with errorMessage = " + errorMessage + "------>");
 				}
 			}
