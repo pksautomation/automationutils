@@ -30,7 +30,12 @@ public class AssertionUtils {
      * @param message -> Message to be printed
      */
     public void assertFail(String message) {
-        Assert.fail(message);
+    	if (configInstance.isEndExecutionOnfailure()) {
+            if (configInstance.isLogsMode()) {
+            	Assert.fail(message);
+            } else
+            	Assert.fail(" --> [Fail] Something went wrong during Execution");
+        }
     }
 
     /**

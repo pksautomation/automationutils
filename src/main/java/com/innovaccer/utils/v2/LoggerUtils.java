@@ -63,8 +63,9 @@ public class LoggerUtils {
      * @param testConfig -> config instance
      */
     private void failure(String message) {
-    	configInstance.setFailScenarioStatus(true);
+    	configInstance.setTestResult(true);
     	AssertionUtils assertUtils = new AssertionUtils(configInstance);
+    	configInstance.getSoftAssert().fail(message);
         if (configInstance.isLogToStandardOut())
             logToStandard(message);
         if (configInstance.isLogsMode())
