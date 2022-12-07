@@ -115,7 +115,11 @@ public class ElementActionsUtils {
 	public void fillData(String key, boolean... isDesignSystemComponent) {
 		WebElement element = null;
 		String data = testDataHelper.getTestData(key);
-		How how = isDesignSystemComponent[0]? getHowForDesignSystemComponent(key): getHow(key);
+		How how;
+		if((isDesignSystemComponent.length > 0 && isDesignSystemComponent[0]))
+			how = getHowForDesignSystemComponent(key);
+		else
+			how = getHow(key);
 		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
 		if(how == null) {
 			LoggerUtils.failFinalTestScenarios(" Locators info " + key + " not found in " + pageName + ".json file ");

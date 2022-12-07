@@ -8,14 +8,12 @@ import org.apache.commons.collections4.map.SingletonMap;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class Reflections {
 
     Class<?> aClass;
     Object classObject;
-    Method method;
     HashMap<String, SingletonMap<Class<?>, Object>> classHashMap = new HashMap<>();
 
     private LoggerUtils loggerUtils;
