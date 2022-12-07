@@ -1,33 +1,44 @@
 package com.innovaccer.utils.v2;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.Helper;
+import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import cucumber.api.Scenario;
 import pojo.How;
+import ru.yandex.qatools.allure.annotations.Attachment;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.SessionId;
+import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.asserts.SoftAssert;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Config {
 
-	public static  ThreadLocal<Config[]> threadLocalConfig;
+	public static ThreadLocal<Config[]> threadLocalConfig= new ThreadLocal<Config[]>();
     public ConfigSingleton singleton_data_instance=null;
     private static String fileSeparator = File.separator;
-    private  String scenarioName;
-    private  String featureName;
+    private  String scenarioName=null;
+    private  String featureName=null;
     private  LoggerUtils loggerUtils;
     private boolean endExecutionOnfailure = false;
     private boolean debugMode = false;
@@ -47,25 +58,31 @@ public class Config {
 	private  boolean islogExceptionSkip = false;     
 	private  boolean takeScreenShotOfPage = false;
 	private  boolean logToStandardOut = true;
-	private String testLog;
-    private Scenario testScenario;
-    private boolean testResult;
     private Response apiResponse = null;
     private StringBuilder authorizationToken;
     private String previousPage = "";
     private SessionId session = null;
     private String uniqueId = null;
 	private String timeStamp = null;
-    Properties runtimeProperties;
-    ExcelDataReader testDataReaderObj;
-    String testEndTime;
-    String testStartTime;
+    private Properties runtimeProperties;
+    private ExcelDataReader testDataReaderObj;
+    private String testEndTime;
+
+	private String testStartTime;
     private List<String> listOfFailedStep;
     private List<String> listOfLogsOfEachFailedStep;
     private int stepNumber = 0;
     private boolean isNewDBInstance =false;
 	private WaitHelper waitHelper;
     private UtilityObjectManager UtilityObjectManager=null;
+	public String testLog;
+	public Method testMethod;
+    private Scenario testScenario;
+    private boolean testResult;
+	String testName;
+	ExtentHtmlReporter htmlReporter; 
+	ExtentReports extentReport;
+	ExtentTest testExtentLog;
 
 	/**
      * Load Config
@@ -75,49 +92,78 @@ public class Config {
      * @author pramod.singh
      */
     public Config(String configPath, Scenario scenario) {
-    	boolean isRemoteExecution=false;
-        this.runtimeProperties = new Properties();
-        try {
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        loadPropertiesFile(configPath);
-        
-        /**
-         * need to decide location for downloaded file corresponding to each test scenarios
-         */
-        downloadPath = System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator + scenario.getName().replaceAll("[^a-zA-Z0-9]+", "");
-        boolean status = Helper.createFolder(downloadPath);
-        if (status) {
-            downloadPath = downloadPath + fileSeparator;
-        } else {
-            System.out.println("Something went Wrong.!! Error in Creating Folder -" + downloadPath + " switching to predefined download Path - " + System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator);
-            downloadPath = System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator;
-        }
-        
-        scenarioName = scenario.getName();
-        String rawFeatureName = scenario.getId().split(";")[0].replace("-", "_");
-        featureName = rawFeatureName.substring(0, 1).toUpperCase() + rawFeatureName.substring(1);
-        
-        initInfo();
+    	try {
+		    	this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
+				        Helper.generateRandomAlphaNumericString(5) + "-" +
+				        Helper.generateRandomAlphaNumericString(4);
+		    	this.testScenario=scenario;
+		        this.runtimeProperties = new Properties();
+		        try {
+		            loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		        loadPropertiesFile(configPath);
+		        scenarioName = scenario.getName();
+		        String rawFeatureName = scenario.getId().split(";")[0].replace("-", "_");
+		        featureName = rawFeatureName.substring(0, 1).toUpperCase() + rawFeatureName.substring(1);      
+		        initInfo();
+    		}
+    		catch (Exception e)
+    		{
+    			loggerUtils.logException(e);
+    		}
     }
 
     public Config(String... configPath) {
-        String defaultConfigPath = System.getProperty("user.dir") + File.separator
-                + "src/test/resources/Config/config.properties";
-        this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
-                Helper.generateRandomAlphaNumericString(5) + "-" +
-                Helper.generateRandomAlphaNumericString(4);
-        this.runtimeProperties = new Properties();
-        try {
-            loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
-        loadPropertiesFile(defaultConfigPath);
-        initInfo();
+    	try {
+			String defaultConfigPath = System.getProperty("user.dir") + File.separator
+			        + "src/test/resources/Config/config.properties";
+			this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
+			        Helper.generateRandomAlphaNumericString(5) + "-" +
+			        Helper.generateRandomAlphaNumericString(4);
+			this.runtimeProperties = new Properties();
+			try {
+			    loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
+			defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
+			loadPropertiesFile(defaultConfigPath);
+			initInfo();
+    	}
+    	catch (Exception e)
+    	{
+    		loggerUtils.logException(e);
+    	}
+
+    }
+    /**
+     * will be used in case of testNG framework
+     * @param method
+     */
+    public Config(Method method) {
+    	try {
+				this.testMethod = method;
+				this.scenarioName=method.getDeclaringClass().getName() + "." + method.getName();
+				this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
+				Helper.generateRandomAlphaNumericString(5) + "-" +
+				        Helper.generateRandomAlphaNumericString(4);
+				this.runtimeProperties = new Properties();
+				try {
+				    loadPropertiesFile(this.getClass().getResourceAsStream("/config/defaultConfig.properties"));
+				} catch (Exception e) {
+				    e.printStackTrace();
+				}
+				String path = System.getProperty("user.dir") + fileSeparator + "src/test/resources/Config" + fileSeparator + "Config.properties";
+				//defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
+				loadPropertiesFile(path);
+				initInfo();
+			}
+			catch (Exception e)
+			{
+				loggerUtils.logException(e);
+			}
 
     }
     
@@ -135,7 +181,6 @@ public class Config {
 		this.testResult = true;
 	    this.testLog = "";
 	    this.softAssert = new SoftAssert();
-	    this.testScenario = scenario;
 	    UtilityObjectManager = new UtilityObjectManager(this);
 	    loggerUtils = new LoggerUtils(this);
 	    this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
@@ -159,7 +204,6 @@ public class Config {
         if (debugMode)
             loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
         putRunTimeProperty("TestDataSheet", testDataSheet);
-        isRemoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
         privateKey=this.getRunTimeProperty("privateKey");
         encryptedKey=this.getRunTimeProperty("encryptionKey");
         if(this.getBrowserNameFromRunTimeProperty()!=null)
@@ -168,14 +212,57 @@ public class Config {
         	browserVersion=this.getRunTimeProperty("BrowserVersion");
         this.setPrivateKey(privateKey);
         this.setEncryptionKey(encryptedKey);
-        this.setRemoteExecution(isRemoteExecution);
         this.setBrowserInHeadlessMode(isBrowserInHeadlessMode);
         this.setBrowserName(BrowserName);
         this.setBrowserVersion(browserVersion);
+        
+        endExecutionOnfailure = false;
+        
+        isRemoteExecution = getRunTimeProperty("RemoteExecution") != null && getRunTimeProperty("RemoteExecution").equalsIgnoreCase("true");
+        this.setRemoteExecution(isRemoteExecution);
+        if(isRemoteExecution)
+		{
+			String RemoteAddress = getRunTimeProperty("RemoteAddress");
+			downloadPath =  fileSeparator + fileSeparator + RemoteAddress + fileSeparator + "Downloads" + fileSeparator;
+		}
+		else
+		{
+			downloadPath = System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator ;
+		}
+        
+        if(this.scenarioName != null && !this.scenarioName.isEmpty())
+        	downloadPath=downloadPath+this.scenarioName;
+		
+		boolean status = Helper.createFolder(downloadPath);
+		
+		if(status)
+		{
+			downloadPath = downloadPath + fileSeparator;
+		}
+		else
+		{
+			System.out.println("Something went Wrong.!! Error in Creating Folder -" + downloadPath + " switching to predefined download Path - " + System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator);
+			downloadPath = System.getProperty("user.home") + fileSeparator + "Downloads" + fileSeparator;
+		}
+		
+		if (!(this.getResultsDir() == null || this.getResultsDir().isEmpty()))
+		{
+			String resultsDir = System.getProperty("user.dir") + getRunTimeProperty("ResultsDir");
+			loggerUtils.logComment("Results Directory is:- " + resultsDir);
+			putRunTimeProperty("ResultsDir", resultsDir);
+		}
+        
 	}
 
     public static Config getConfig() {
-        return threadLocalConfig.get()[0];
+    	Config config=null;
+    	try {
+    		if(Config.threadLocalConfig.get()!= null && Config.threadLocalConfig.get().length>0)
+    			config = Config.threadLocalConfig.get()[0];
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+        return config;
     }
 
     /**
@@ -359,9 +446,9 @@ public class Config {
 		this.singleton_data_instance = ConfigSingleton.getInstance();
 	}
 
-	public void setThreadLocalConfig(ThreadLocal<Config[]> threadLocalConfig) {
-		this.threadLocalConfig = threadLocalConfig;
-	}
+//	public static void setThreadLocalConfig(ThreadLocal<Config[]> threadLocalConfig) {
+//		Config.threadLocalConfig = threadLocalConfig;
+//	}
 
     public String getBrowserName() {
 		return singleton_data_instance.getBrowserName();
@@ -785,6 +872,107 @@ public class Config {
 //			getTestDataReaderHashMap().put(path + sheetName, testDataReaderObj);
 //		}
 //	}
+    public String getTestEndTime() {
+		return testEndTime;
+	}
+
+	public void setTestEndTime(String testEndTime) {
+		this.testEndTime = testEndTime;
+	}
+
+	public String getTestStartTime() {
+		return testStartTime;
+	}
+
+	public void setTestStartTime(String testStartTime) {
+		this.testStartTime = testStartTime;
+	}
 	
+	public void quitBrowser() {
+		UtilityObjectManager.getBrowserUtils().quitBrowser();
+	}
+	
+	public void closeSQLDBConnection(Connection con) {
+		
+	}
+	
+	/**
+	 * End Test
+	 * @param result - ITestResult
+	 */
+	public void endTest(ITestResult result)
+	{
+		testEndTime = Helper.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
+		
+//		endExecutionOnfailure = false;
+//		enableScreenshot = false;
+//		recordPageHTMLOnFailure = false;
+//		
+//		List<String> reporterOutput = Reporter.getOutput(result);
+//		if(this.testStartTime != null)
+//		{
+//			long minutes = 0;
+//			long seconds = 0;
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//			String minuteOrMinutes = " ";
+//			String secondOrSeconds = "";
+//			try
+//			{
+//				long timeinMillis = (dateFormat.parse(testEndTime).getTime() - dateFormat.parse(this.testStartTime).getTime())/1000;
+//				minutes = timeinMillis/60;
+//				seconds = timeinMillis%60;
+//				if(minutes > 1)
+//					minuteOrMinutes = "s ";
+//				if(seconds > 1)
+//					secondOrSeconds = "s";
+//			}
+//			catch(Exception e)
+//			{}
+//
+//			if(!Helper.listContainsString(reporterOutput, "<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '"))
+//				loggerUtils.logComment("<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '" + minutes + " minute" + minuteOrMinutes + seconds + " second" + secondOrSeconds + "' </B></font>");
+//		}
+//		
+//		if (!testResult)
+//		{
+//			if(!Helper.listContainsString(reporterOutput, "<B>Failure occured in test '" + getScenarioName() + "' Ended on '"))
+//				loggerUtils.logFail("<B>Failure occured in test '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
+//		}
+//		else
+//		{
+//			if(!Helper.listContainsString(reporterOutput, "<B>Test Passed '" + getScenarioName() + "' Ended on '"))
+//				loggerUtils.logPass("<B>Test Passed '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
+//		}
+	}
+	
+	@Attachment(value = "Logs For \"{0}\"", type = "text/html")
+	public String attachLogs(String testName)
+	{
+		return this.testLog;
+	}
+	
+	public ExtentHtmlReporter getExtendHtmlReporter() {
+		return htmlReporter;
+	}
+
+	public void setExtendHtmlReporter(ExtentHtmlReporter htmlReporter) {
+		this.htmlReporter = htmlReporter;
+	}
+
+
+	public ExtentReports getExtentReport() {
+		return extentReport;
+	}
+
+	public void setExtentReport(ExtentReports extentReport) {
+		this.extentReport = extentReport;
+	}
+
+	public ExtentTest getExtentTestLog() {
+		return testExtentLog;
+	}
+	public void setExtentTestLog(ExtentTest extentTestLog) {
+		this.testExtentLog = extentTestLog;
+	}
 
 }

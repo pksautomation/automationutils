@@ -1,6 +1,7 @@
 package com.innovaccer.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
+import com.innovaccer.utils.Browser.MyImageWriteParam;
 import com.innovaccer.utils.v2.Config;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -19,6 +20,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -27,6 +31,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+
 
 public class BrowserUtils {
 
@@ -131,19 +142,17 @@ public class BrowserUtils {
 
 				if (screenshot != null)
 				{
-					/* try
+					if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
 					{
+						configInstance.getScenario().embed(screenshot, "image/png");
+						return;
+					}
+					 try {
 						FileUtils.writeByteArrayToFile(destination, screenshot);
 
 						float compressionQuality = (float) 0.5;
-						try
-						{
-							compressionQuality = Float.parseFloat(testConfig.getRunTimeProperty("ScreenshotCompressionQuality"));
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
+						if(configInstance.getRunTimeProperty("ScreenshotCompressionQuality")!=null)
+								compressionQuality = Float.parseFloat(configInstance.getRunTimeProperty("ScreenshotCompressionQuality"));
 						compressJpegFile(destination, destination, compressionQuality);
 					}
 					catch (IOException e)
@@ -155,14 +164,11 @@ public class BrowserUtils {
 			    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			    ImageIO.write(bImage, "png", bos );
 			    byte [] data = bos.toByteArray();
-				String href = destination.getPath();
-				testConfig.logComment("<B>Screenshot</B>:- <a href=" + href + " target='_blank' >" + destination.getName() + "</a>");
-				 */
-					configInstance.getScenario().embed(screenshot, "image/png");
-					loggerUtils.logComment("Refer Screenshot In Attachement");
+				String href = destination.getAbsolutePath();
+				loggerUtils.logComment("<B>Screenshot</B>:- <a href=" + href + " target='_blank' >" + destination.getName() + "</a>");
+				loggerUtils.logComment("Refer Screenshot In Attachement");
 				}
 			}
-		}
 		catch (Exception e)
 		{
 			configInstance.setEnableScreenshot(false);;
@@ -170,7 +176,11 @@ public class BrowserUtils {
 			loggerUtils.logFailureException(e);
 		}
 	}
-
+	/**
+	 * 
+	 * @return
+	 * @author i0465
+	 */
     private byte[] captureScreenshot() {
         byte[] screenshot = null;
 
@@ -199,6 +209,7 @@ public class BrowserUtils {
         }
         return screenshot;
     }
+    
 
 
     public void deleteCookies() {
@@ -390,7 +401,12 @@ public class BrowserUtils {
     }
 
     private String getScreenshotFileName() {
-        String nameScreenshot = ((List<String>) configInstance.getScenario().getSourceTagNames()).get(0);
+    	String nameScreenshot=null;
+    	if(configInstance.getScenario()!=null)
+    		nameScreenshot = ((List<String>) configInstance.getScenario().getSourceTagNames()).get(0);
+    	else {
+    		nameScreenshot=configInstance.getScenarioName();
+    	}
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
         return dateFormat.format(date) + "_" + nameScreenshot + ".png";
@@ -717,6 +733,118 @@ public class BrowserUtils {
         }
         return driver;
     }
+    
+ // Reads the jpeg image in infile, compresses the image,
+ 	// and writes it back out to outfile.
+ 	// compressionQuality ranges between 0 and 1,
+ 	// 0-lowest, 1-highest.
+ 	private static void compressJpegFile(File infile, File outfile, float compressionQuality)
+ 	{
+ 		try
+ 		{
+ 			// Retrieve jpg image to be compressed
+ 			RenderedImage rendImage = ImageIO.read(infile);
+
+ 			// Find a jpeg writer
+ 			ImageWriter writer = null;
+ 			Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("png");
+ 			if (iter.hasNext())
+ 			{
+ 				writer = iter.next();
+ 			}
+
+ 			// Prepare output file
+ 			ImageOutputStream ios = ImageIO.createImageOutputStream(outfile);
+ 			writer.setOutput(ios);
+
+ 			// Set the compression quality
+ 			ImageWriteParam iwparam = new MyImageWriteParam();
+ 			iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+ 			iwparam.setCompressionQuality(compressionQuality);
+
+ 			// Write the image
+ 			writer.write(new IIOImage(rendImage, null, null));
+
+ 			// Cleanup
+ 			ios.flush();
+ 			writer.dispose();
+ 			ios.close();
+ 		}
+
+ 		catch (IOException e)
+ 		{
+ 			e.printStackTrace();
+ 		}
+ 		catch (OutOfMemoryError outOfMemoryError)
+ 		{
+ 			outOfMemoryError.printStackTrace();
+ 		}
+ 	}
+ 	
+    /**
+ 	 * Takes the screenshot of the current active browser window
+ 	 * 
+ 	 * @param Config
+ 	 *            test config instance
+ 	 * @param destination
+ 	 *            file to which screenshot is to be saved
+ 	 * @author pramod.singh
+ 	 */
+ 	public String captureScreenShoot(File destination)
+ 	{
+ 		String absolutePath=null;
+ 		try
+ 		{
+ 			if (configInstance.getDriver() != null)
+ 			{
+ 				byte[] screenshot = null;
+
+ 				try
+ 				{
+ 					screenshot = captureScreenshot();
+ 				}
+ 				catch (NullPointerException ne)
+ 				{
+ 					loggerUtils.logWarning("NullPointerException:Screenshot can't be taken. Probably browser is not reachable");
+ 					configInstance.setDriver(null);
+ 				}
+
+ 				if (screenshot != null)
+ 				{
+ 					if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+ 					{
+ 						configInstance.getScenario().embed(screenshot, "image/png");
+ 						return destination.getAbsolutePath();
+ 					}
+ 					 try {
+ 						FileUtils.writeByteArrayToFile(destination, screenshot);
+
+ 						float compressionQuality = (float) 0.5;
+ 						if(configInstance.getRunTimeProperty("ScreenshotCompressionQuality")!=null)
+ 								compressionQuality = Float.parseFloat(configInstance.getRunTimeProperty("ScreenshotCompressionQuality"));
+ 						compressJpegFile(destination, destination, compressionQuality);
+ 					}
+ 					catch (IOException e)
+ 					{
+ 						e.printStackTrace();
+ 					}
+ 				}
+ 				BufferedImage bImage = ImageIO.read(destination);
+ 			    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+ 			    ImageIO.write(bImage, "png", bos );
+ 			    byte [] data = bos.toByteArray();
+ 				String href = destination.getAbsolutePath();
+  				return href;
+ 				}
+ 			}
+ 		catch (Exception e)
+ 		{
+ 			configInstance.setEnableScreenshot(false);;
+ 			loggerUtils.logWarning("Unable to take screenshot2:- " + ExceptionUtils.getStackTrace(e));
+ 			loggerUtils.logFailureException(e);
+ 		}
+ 		return absolutePath;
+ 	}
 
 }
 	
