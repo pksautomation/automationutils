@@ -48,7 +48,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * get WebElement using Text
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -59,7 +59,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * get WebElement using Text
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -71,7 +71,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * Get WebElement of Button using Label
-	 * 
+	 *
 	 * @param buttonLabel
 	 * @return
 	 */
@@ -83,7 +83,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * Click on Dropdown button
-	 * 
+	 *
 	 * @param Label
 	 * @return
 	 * @author pramod.singh
@@ -98,7 +98,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * Check Button enable or not
-	 * 
+	 *
 	 * @param buttonName
 	 * @return
 	 */
@@ -109,14 +109,17 @@ public class ElementActionsUtils {
 	}
 
 	/**
-	 * 
-	 * @param how  
+	 *
+	 * @param how
 	 */
-	public void fillData(String key) {
+	public void fillData(String key, boolean... isDesignSystemComponent) {
 		WebElement element = null;
 		String data = testDataHelper.getTestData(key);
-		How how = getHow(key);
-		
+		How how;
+		if((isDesignSystemComponent.length > 0 && isDesignSystemComponent[0]))
+			how = getHowForDesignSystemComponent(key);
+		else
+			how = getHow(key);
 		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
 		if(how == null) {
 			LoggerUtils.failFinalTestScenarios(" Locators info " + key + " not found in " + pageName + ".json file ");
@@ -134,7 +137,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * get WebElement using Text
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -145,7 +148,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * get WebElement using Text
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -156,7 +159,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * get WebElement using Text
-	 * 
+	 *
 	 * @param text
 	 * @return
 	 */
@@ -167,7 +170,7 @@ public class ElementActionsUtils {
 
 	/**
 	 * Select DropDown Value
-	 * 
+	 *
 	 * @param Label --> it is either lable or place holder of dropdown
 	 */
 	public void selectDropDown(String id) {
@@ -185,9 +188,9 @@ public class ElementActionsUtils {
 		}
 
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param how
 	 */
 	public void clickOnButton(String id)
@@ -207,7 +210,7 @@ public class ElementActionsUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param testConfig
 	 * @param how
 	 * @param what
@@ -245,7 +248,7 @@ public class ElementActionsUtils {
 		return byLocator;
 
 	}
-	
+
 
     /**
      * Check Button enable or not
@@ -840,7 +843,7 @@ public class ElementActionsUtils {
     }
 
 	/**
-	 * 
+	 *
 	 * @param locatorkey
 	 * @return
 	 */
@@ -856,6 +859,9 @@ public class ElementActionsUtils {
 			LoggerUtils.logFail(" Locator : " + id + " not found in " + pageName + ".json file");
 			return null;
 		}
-	} 
+	}
 
+	public How getHowForDesignSystemComponent(String designSystemComponent) {
+		return scenarioContext.getPagesLocatorData().get("DesignSystem").get(designSystemComponent);
+	}
 }
