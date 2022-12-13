@@ -38,6 +38,7 @@ import org.testng.asserts.SoftAssert;
 
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.v2.WaitHelper;
+import com.innovaccer.utils.v2.reflections.TestScenarioExecuter;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -132,6 +133,8 @@ public class Config
 	public String privateKey="010100000000000";
 	
 	private WaitHelper waitHelper;
+	private TestScenarioExecuter testScenarioExecutor;
+
 
 	/**
 	 * Load Config
@@ -1109,6 +1112,14 @@ public class Config
 	 */
 	public static Config getConfig() {
 		return threadLocalConfig.get()[0];
+	}
+	
+	public TestScenarioExecuter getTestScenarioExecutor() {
+		return testScenarioExecutor;
+	}
+
+	public void setTestScenarioExecutor(TestScenarioExecuter testScenarioExecutor) {
+		this.testScenarioExecutor = testScenarioExecutor;
 	}
 	
 }

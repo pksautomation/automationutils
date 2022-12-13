@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -31,6 +32,16 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.innovaccer.utils.v2.customexception.CustomRuntimeException;
+import com.innovaccer.utils.v2.fileutils.ExcelUtils;
 
 /**
  * 
@@ -662,4 +673,52 @@ public class Helper {
 		return finalReport.toString();
 		
 	}
+	
+
+    public void scenarioSheetValidation(String excelPath) throws IOException, CustomRuntimeException {
+        DataFormatter dataFormatter = new DataFormatter();
+        Map<Integer, String> requiredHeaders = new HashMap<>();
+        List<String> columnNames = Arrays.asList("ScenarioID", "ScenarioName", "RunTest", "FeatureName","SmokeSuite","RegressionSuite","IntegrationSuite","ParallelMode");
+        Workbook workbook = new XSSFWorkbook(new FileInputStream(new File(excelPath)));
+        Sheet sheet = workbook.getSheet("ScenarioData");
+        int rowCount = sheet.getPhysicalNumberOfRows();
+        int colCount = 0;
+        ExcelUtils excelUtils;
+        excelUtils=Config.getConfig().getUtilityObjectManager().getTestDataHelper().getExcelUtils();
+        try { 
+        for (Cell cell : sheet.getRow(0)) {
+        	requiredHeaders.put(cell.getColumnIndex(),cell.getStringCellValue());
+        	String cellValue = dataFormatter.formatCellValue(cell);
+            if (!columnNames.get(colCount).trim().equalsIgnoreCase(cellValue.trim())) {
+            	throw new CustomRuntimeException("Number of column mismatched from required format.Please verify file headers");
+            }
+            else 
+            	colCount++; 
+        }
+   
+        	for (int j = 1; j < rowCount; j++) {
+        		Row row = sheet.getRow(j);
+        		for(int i = 0; i<4;i++) {
+        			if (!(excelUtils.isCellEmpty(row.getCell(i)))) {
+        				switch(requiredHeaders.get(i)) {
+        					
+        					case "RunTest":
+        						if(!(row.getCell(i).toString().trim().equalsIgnoreCase("Yes") ||row.getCell(i).toString().trim().equalsIgnoreCase("No"))) {
+        							throw new CustomRuntimeException("Value should be Yes or No in the column "+ requiredHeaders.get(i) + " and row number "+ j);
+        						}
+        						break;
+        					default:
+        						if(row.getCell(i).toString().equalsIgnoreCase(""))
+        							throw new CustomRuntimeException("Value should not be blank in the column " + requiredHeaders.get(i));
+        				}
+        		}
+        			else
+        				throw new CustomRuntimeException ("Cell value should not be empty. Please check column  "+ requiredHeaders.get(i) + " and row number "+ j);
+        }
+        
+    } 
+        } catch (CustomRuntimeException e) {
+        	Config.getConfig().getLoggerUtils().logFailureException(e);
+        }
+    }
 }

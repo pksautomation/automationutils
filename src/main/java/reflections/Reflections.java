@@ -1,9 +1,10 @@
 package reflections;
 
 import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.CustomRuntimeException;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.cucumber.TestContext;
+import com.innovaccer.utils.v2.customexception.CustomRuntimeException;
+
 import org.apache.commons.collections4.map.SingletonMap;
 
 import java.lang.reflect.Constructor;
