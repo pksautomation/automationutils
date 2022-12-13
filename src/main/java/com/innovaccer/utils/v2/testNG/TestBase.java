@@ -6,22 +6,31 @@ import org.testng.annotations.AfterMethod;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.testng.ITest;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -48,10 +57,18 @@ import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.UtilityObjectManager;
+import com.innovaccer.utils.v2.cucumber.TestContext;
+import com.innovaccer.utils.v2.customexception.CustomRuntimeException;
 import com.innovaccer.utils.v2.fileutils.ExcelUtils;
+import com.jayway.restassured.path.json.JsonPath;
+
 import org.testng.annotations.BeforeMethod;
 
-
+/**
+ * 
+ * @author i0465
+ *
+ */
 @Listeners(com.innovaccer.utils.v2.testNG.TestListener.class)
 public class TestBase implements ITest{
 	 public static ThreadLocal<String> testName = new ThreadLocal<>();
@@ -70,7 +87,6 @@ public class TestBase implements ITest{
 	    public Object[][] dataProviderMethod(Method method) throws IOException {
 	        Map<String, Integer> requiredHeaders = new HashMap<>();
 	        List<List<String>> testData = new ArrayList<>();
-	        //Config testConfig = (Config) GetTestConfig(method)[0][0];
 	        Object[][] obj = new Object[][] {{}};
 	        Config testConfig = new Config(method);
 	        excel= new ExcelUtils(testConfig);
@@ -103,6 +119,61 @@ public class TestBase implements ITest{
 	            return testData.stream().map(List::toArray).toArray(Object[][]::new);
 	        } catch (FileNotFoundException e) {
 	            e.printStackTrace();
+	        }
+	         finally {
+	        	if(file != null)
+	        		file.close();
+	        }
+	        return null;
+	    }
+	    
+	    @DataProvider(name = "testData", parallel = true)
+	    public Object[][] scenariosDataProvider(Method method) throws IOException {
+	        Map<String, Integer> requiredHeaders = new HashMap<>();
+	        List<List<String>> testData = new ArrayList<>();
+	        boolean flag=false;
+	        Config testConfig = new Config(method);
+	        excel= new ExcelUtils(testConfig);
+	        String excelPath = System.getProperty("user.dir") + File.separator + testConfig.getRunTimeProperty("ScenarioSheet");
+	        FileInputStream file = null;
+	        try {
+	            file = new FileInputStream(new File(excelPath));
+	            Workbook workbook = new XSSFWorkbook(file);
+	            Sheet sheet = workbook.getSheet("ScenarioData");
+	            String featureName = testConfig.getRunTimeProperty("FeatureName");
+	            List<String> suiteType = new ArrayList<>();
+	            suiteType = Stream.of(testConfig.getRunTimeProperty("SuiteType").split("\\s*,\\s*"))
+	            	     .map(String::trim)
+	            	     .collect(Collectors.toList());
+	            int rowCount = excel.getRowCountInWorkSheet(excelPath, sheet.getSheetName());
+	            for (Cell cell : sheet.getRow(0)) {
+	                requiredHeaders.put(cell.getStringCellValue(), cell.getColumnIndex());
+	            }
+	            for (int i = 0; i < rowCount; i++) {
+	                List<String> testRow = new ArrayList<>();
+	                Row row = sheet.getRow(i + 1);
+	                if (row.getCell(requiredHeaders.get("FeatureName")).toString().equalsIgnoreCase(featureName)) {
+	                	for (int k = 0 ; k < suiteType.size() ; k++) {
+	                		if(row.getCell(requiredHeaders.get(suiteType.get(k)+"Suite")).toString().equalsIgnoreCase("Yes"))
+	                			flag=true;
+	                		else if(row.getCell(requiredHeaders.get(suiteType.get(k)+"Suite")).toString().equalsIgnoreCase("No")) {
+	                			flag = false;
+	                			break;
+	                		}
+	                	}
+	                    if(flag==true && row.getCell(requiredHeaders.get("ParallelMode")).toString().equalsIgnoreCase(testConfig.getRunTimeProperty("ParallelMode")) && row.getCell(requiredHeaders.get("RunTest")).toString().equalsIgnoreCase("Yes")) {
+	                    	testRow.add(row.getCell(requiredHeaders.get("ScenarioID")).toString());
+	                    	testRow.add(row.getCell(requiredHeaders.get("ScenarioName")).toString());
+	                  }
+	                }
+	                if (testRow.size() != 0) {
+	                    testData.add(testRow);
+	                    testRow = null;
+	                }
+	            }
+	            return testData.stream().map(List::toArray).toArray(Object[][]::new);
+	        } catch (FileNotFoundException e) {
+	            loggerUtils.logException(e);
 	        }
 	         finally {
 	        	if(file != null)

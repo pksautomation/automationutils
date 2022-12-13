@@ -6,6 +6,7 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.epam.healenium.SelfHealingDriver;
 import com.innovaccer.utils.v2.Helper;
 import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
+import com.innovaccer.utils.v2.reflections.TestScenarioExecuter;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -40,7 +41,7 @@ public class Config {
     private  String scenarioName=null;
     private  String featureName=null;
     private  LoggerUtils loggerUtils;
-    private boolean endExecutionOnfailure = false;
+	private boolean endExecutionOnfailure = false;
     private boolean debugMode = false;
     private SelfHealingDriver driver;
     private SelfHealingDriver defaultBrowser;
@@ -83,6 +84,7 @@ public class Config {
 	ExtentHtmlReporter htmlReporter; 
 	ExtentReports extentReport;
 	ExtentTest testExtentLog;
+	private TestScenarioExecuter testScenarioExecutor;
 
 	/**
      * Load Config
@@ -903,46 +905,6 @@ public class Config {
 	public void endTest(ITestResult result)
 	{
 		testEndTime = Helper.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
-		
-//		endExecutionOnfailure = false;
-//		enableScreenshot = false;
-//		recordPageHTMLOnFailure = false;
-//		
-//		List<String> reporterOutput = Reporter.getOutput(result);
-//		if(this.testStartTime != null)
-//		{
-//			long minutes = 0;
-//			long seconds = 0;
-//			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//			String minuteOrMinutes = " ";
-//			String secondOrSeconds = "";
-//			try
-//			{
-//				long timeinMillis = (dateFormat.parse(testEndTime).getTime() - dateFormat.parse(this.testStartTime).getTime())/1000;
-//				minutes = timeinMillis/60;
-//				seconds = timeinMillis%60;
-//				if(minutes > 1)
-//					minuteOrMinutes = "s ";
-//				if(seconds > 1)
-//					secondOrSeconds = "s";
-//			}
-//			catch(Exception e)
-//			{}
-//
-//			if(!Helper.listContainsString(reporterOutput, "<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '"))
-//				loggerUtils.logComment("<font color='Blue'><B>Total time taken by Test '" + getScenarioName() + "' : '" + minutes + " minute" + minuteOrMinutes + seconds + " second" + secondOrSeconds + "' </B></font>");
-//		}
-//		
-//		if (!testResult)
-//		{
-//			if(!Helper.listContainsString(reporterOutput, "<B>Failure occured in test '" + getScenarioName() + "' Ended on '"))
-//				loggerUtils.logFail("<B>Failure occured in test '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
-//		}
-//		else
-//		{
-//			if(!Helper.listContainsString(reporterOutput, "<B>Test Passed '" + getScenarioName() + "' Ended on '"))
-//				loggerUtils.logPass("<B>Test Passed '" + getScenarioName() + "' Ended on '" + testEndTime + "'</B>");
-//		}
 	}
 	
 	@Attachment(value = "Logs For \"{0}\"", type = "text/html")
@@ -973,6 +935,20 @@ public class Config {
 	}
 	public void setExtentTestLog(ExtentTest extentTestLog) {
 		this.testExtentLog = extentTestLog;
+	}
+    public LoggerUtils getLoggerUtils() {
+		return loggerUtils;
+	}
+
+	public void setLoggerUtils(LoggerUtils loggerUtils) {
+		this.loggerUtils = loggerUtils;
+	}
+	public TestScenarioExecuter getTestScenarioExecutor() {
+		return testScenarioExecutor;
+	}
+
+	public void setTestScenarioExecutor(TestScenarioExecuter testScenarioExecutor) {
+		this.testScenarioExecutor = testScenarioExecutor;
 	}
 
 }
