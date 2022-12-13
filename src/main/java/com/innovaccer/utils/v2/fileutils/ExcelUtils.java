@@ -422,5 +422,21 @@ public class ExcelUtils {
         }
     }
     
+    public boolean isCellEmpty(Cell cell) {
+        if (cell == null) { // use row.getCell(x, Row.CREATE_NULL_AS_BLANK) to avoid null cells
+            return true;
+        }
+
+        if (cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+            return true;
+        }
+
+        if (cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getStringCellValue().trim().isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+    
 
 }
