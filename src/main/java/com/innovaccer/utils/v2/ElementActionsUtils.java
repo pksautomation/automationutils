@@ -864,4 +864,19 @@ public class ElementActionsUtils {
 	public How getHowForDesignSystemComponent(String designSystemComponent) {
 		return scenarioContext.getPagesLocatorData().get("DesignSystem").get(designSystemComponent);
 	}
+	
+	public WebElement getWebElement(String id) {
+		How how = getHow(id);
+		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription());
+		WebElement element = WaitUtils.fluentWaitForVisibility(byLocator, how.getDescription());
+		return element;	
+	}
+	
+	public boolean isElementDisplayed(String id) {
+		if(getWebElement(id)== null)
+			return false;
+		else {
+			return getWebElement(id).isDisplayed();
+		}
+	}
 }

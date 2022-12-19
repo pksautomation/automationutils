@@ -249,6 +249,20 @@ public class TestBase implements ITest{
 	        extentReport.setSystemInfo("Project Name", "TRM Automation Suit");
 	        extentReport.setSystemInfo("Branch", "master");
 	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");
+	        HashMap<String, HashMap<String, String>> jsonMapofMap;
+			String fileName = "ScenarioTestData.json", filePath = "";
+			Config testConfig = new Config();
+			if (fileName != null && !fileName.trim().isEmpty()) {
+				filePath = System.getProperty("user.dir") + File.separator
+						+ testConfig.getRunTimeProperty("TestDataJSONPath");
+				try {
+					jsonMapofMap = testConfig.getUtilityObjectManager().getTestDataHelper().getJSONUtils()
+							.readTestData(filePath, fileName);
+					testConfig.getTestData().putAll(jsonMapofMap);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
@@ -261,12 +275,13 @@ public class TestBase implements ITest{
 			
 			@BeforeMethod
 			public void BeforeMethod(Method method, Object[] testData, ITestContext ctx) {
+				String startedOn;
 			   if (testData!=null && testData.length > 0) {
 				   String [] testInfo = (String[]) testData[0];
 				   Config scenarioContext = new Config(method);
 				   scenarioContext.setScenarioName(testInfo[1]);
 				   ExtentTest extentTestLog=extentReport.createTest(testInfo[1], "Validate Login Flow");
-				   extentTestLog.assignCategory("Smoke");
+				   //extentTestLog.assignCategory("Smoke");
 				   scenarioContext.setExtentTestLog(extentTestLog);
 				   testName.set(method.getName() + "_" + testInfo[1]);
 				   Config.threadLocalConfig.set(new Config[]{scenarioContext});
@@ -274,7 +289,9 @@ public class TestBase implements ITest{
 				   String testcaseName = testInfo[1];	
 				   DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 				   Date startDate = new Date();
-				   logger.logComment("<B>Test '\" + testcaseName : " + testcaseName + " Started on " + dateFormat.format(startDate) + "'</B>");
+				   startedOn = dateFormat.format(startDate);
+				   scenarioContext.setTestStartTime(startedOn);
+				   logger.logComment("<B>Test '\" + testcaseName : " + testcaseName + " Started on " + startedOn + "'</B>");
 				   ctx.setAttribute("testName", scenarioContext.getScenarioName());
 			   } else
 				   ctx.setAttribute("testName", method.getName());
@@ -292,5 +309,23 @@ public class TestBase implements ITest{
 		public String getTestName() {
 			return testName.get();
 		}
+
+//	@BeforeTest
+//	public void BeforeTest(Method method, Object[] testData, ITestContext ctx) {
+//		HashMap<String, HashMap<String, String>> jsonMapofMap;
+//		String fileName = "ScenarioTestData.json", filePath = "";
+//		Config testConfig = new Config();
+//		if (fileName != null && !fileName.trim().isEmpty()) {
+//			filePath = System.getProperty("user.dir") + File.separator
+//					+ scenarioContext.getRunTimeProperty("TestDataJSONPath");
+//			try {
+//				jsonMapofMap = testConfig.getUtilityObjectManager().getTestDataHelper().getJSONUtils()
+//						.readTestData(filePath, fileName);
+//				scenarioContext.getTestData().putAll(jsonMapofMap);
+//			} catch (Throwable e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 		
 }

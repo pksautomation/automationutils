@@ -12,6 +12,7 @@ public class TestDataHelper {
     private ExcelUtils ExcelUtils;
     private XMLUtils XMLUtils;
     private TextFileUtils TextUtils;
+    private JSONUtils JSONUtils;
 
     public TestDataHelper(Config config) {
         init(config);
@@ -28,6 +29,7 @@ public class TestDataHelper {
         this.ExcelUtils = new ExcelUtils(config);
         this.XMLUtils = new XMLUtils(config);
         this.TextUtils = new TextFileUtils(config);
+        this.JSONUtils = new JSONUtils(config);
         this.configInstance = config;
     }
 
@@ -49,6 +51,13 @@ public class TestDataHelper {
 
     public void setLoggerUtils(LoggerUtils loggerUtils) {
         LoggerUtils = loggerUtils;
+    }
+    public JSONUtils getJSONUtils() {
+        return JSONUtils;
+    }
+
+    public void setJSONUtils(JSONUtils jsonUtils) {
+        this.JSONUtils = jsonUtils;
     }
 
     public YamlUtils getYamlUtils() {
