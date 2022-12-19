@@ -349,7 +349,10 @@ public class JSONUtils {
         HashMap<String, HashMap<String, String>> jsonMapofMap = new HashMap<String, HashMap<String, String>>();
         HashMap<String, String> jsonMap = new HashMap<String, String>();
         String value = "", key = "";
-        filePath = filePath + fileName + ".json";
+        if(!fileName.contains(".json"))
+        	filePath = filePath + fileName + ".json";
+        else
+        	filePath = filePath + fileName;
         InputStream is = new FileInputStream(new File(filePath));
         JSONTokener tokener = new JSONTokener(is);
         try {

@@ -32,7 +32,7 @@ public class TestScenarioExecuter {
 	    }
 
 	    public void executeStep(String packageName, String className, String methodName, String... parameters) throws CustomRuntimeException {
-	        if (!classHashMap.containsKey(className)) {
+	    	if (!classHashMap.containsKey(className)) {
 	            try {
 	                aClass = Class.forName(packageName + "." + className);
 	            } catch (ClassNotFoundException e) {
@@ -77,6 +77,8 @@ public class TestScenarioExecuter {
 	    public void executeScenarioFromJsonFile(String jsonFilePath)
 	            throws CustomRuntimeException {
 	        String scenario, className, methodName, testData;
+	        Config configInstance = Config.getConfig();
+	        String categoryName="";
 	        try {
 	            scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
 	        } catch (IOException | ParseException e) {
@@ -84,6 +86,8 @@ public class TestScenarioExecuter {
 	        }
 	        loggerUtils.logComment("<<<<<< Execution Started for Scenario Id: " +
 	                getValueFromString(scenario, "TestCaseId") + " >>>>>>");
+	        categoryName=getValueFromString(scenario, "FeatureName");
+	        configInstance.getExtentTestLog().assignCategory(categoryName);
 	        String packageName = getValueFromString(scenario, "Package");
 	        JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
 	        loggerUtils.logComment("-----Starting Steps Execution for Scenario-----");
@@ -92,17 +96,18 @@ public class TestScenarioExecuter {
 	            className = JsonPath.from(step.toString()).getString("ClassName");
 	            methodName = JsonPath.from(step.toString()).getString("MethodName");
 	            testData = JsonPath.from(step.toString()).getString("TestData");
+	            configInstance.putRunTimeProperty("TestDataName", testData);
 	            if (methodName.equals(""))
 	                loggerUtils.logComment(String.format("Calling Constructor for Class: %s", className));
 	            else
 	                loggerUtils.logComment(String.format("Executing Method: %s.%s()", className, methodName));
 	            try {
-	                if (testData.equals("")) {
+	                //if (testData.equals("")) {
 	                    executeStep(packageName, className, methodName);
-	                } else {
-	                    loggerUtils.logComment("Test Data given to method: " + testData);
-	                    executeStep(packageName, className, methodName, testData);
-	                }
+//	                } else {
+//	                    loggerUtils.logComment("Test Data given to method: " + testData);
+//	                    executeStep(packageName, className, methodName, testData);
+//	                }
 	            } catch (Exception exception) {
 	                loggerUtils.logComment(exception.toString());
 	                break;
