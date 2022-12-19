@@ -202,11 +202,15 @@ public class ElementActionsUtils {
 		}
 		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription());
 		WebElement element = WaitUtils.fluentWaitForElementToBeClickable(byLocator, how.getDescription());
-		if(element !=null)
+		if(element !=null) {
 			click(element, how.getDescription());
+			WaitUtils.wait(4);
+		}
+		
 		else {
 			LoggerUtils.failFinalTestScenarios("Element not Found for " + how.getDescription());
 		}
+		
 	}
 
 	/**

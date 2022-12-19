@@ -216,15 +216,14 @@ public class WaitHelper {
         } else {
             ObjectWaitTime = maxWaitTimeInSecond[0];
         }
+        try {
         loggerUtils.logComment("Wait for element '" + description + "' to be visible on the page.");
         Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(configInstance.getDriver())
                 .withTimeout(Duration.ofSeconds(ObjectWaitTime)).pollingEvery(Duration.ofSeconds(2))
                 .ignoring(NoSuchElementException.class);
 
-        try {
             returnElement = fluentWait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Exception e) {
-            loggerUtils.logException(description, e, true);
             returnElement = null;
         }
         return returnElement;

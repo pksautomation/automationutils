@@ -96,7 +96,8 @@ public class TestScenarioExecuter {
 	            className = JsonPath.from(step.toString()).getString("ClassName");
 	            methodName = JsonPath.from(step.toString()).getString("MethodName");
 	            testData = JsonPath.from(step.toString()).getString("TestData");
-	            configInstance.putRunTimeProperty("TestDataName", testData);
+	            if(testData != null && !testData.isEmpty())
+	            	configInstance.putRunTimeProperty("TestDataName", testData);
 	            if (methodName.equals(""))
 	                loggerUtils.logComment(String.format("Calling Constructor for Class: %s", className));
 	            else

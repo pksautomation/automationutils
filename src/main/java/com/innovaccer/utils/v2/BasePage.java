@@ -46,7 +46,7 @@ public class BasePage extends PageLocatorHelper{
 
 
 	public Config getScenarioContext() {
-		return UtilityObjectManager.getConfigInstant();
+		return this.scenarioContext;
 	}
 
 	public void setScenarioContext(Config scenarioContext) {
