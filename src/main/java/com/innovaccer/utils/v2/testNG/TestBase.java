@@ -83,7 +83,7 @@ public class TestBase implements ITest{
 	 public static ExtentHtmlReporter htmlExtendReporter;  
 	 public static ExtentReports extentReport;
 
-	    @DataProvider(name = "ScenariosRunner", parallel = true)
+	    @DataProvider(name = "ScenariosRunner")
 	    public Object[][] dataProviderMethod(Method method) throws IOException {
 	        Map<String, Integer> requiredHeaders = new HashMap<>();
 	        List<List<String>> testData = new ArrayList<>();
@@ -215,7 +215,6 @@ public class TestBase implements ITest{
 		            File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getScreenshotFile();
 					String screenshotPath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().captureScreenShoot(screenshotFilepath);
 					Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
-					Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
 
 		        }
 		        else if(result.getStatus() == ITestResult.SUCCESS) {
@@ -249,20 +248,6 @@ public class TestBase implements ITest{
 	        extentReport.setSystemInfo("Project Name", "TRM Automation Suit");
 	        extentReport.setSystemInfo("Branch", "master");
 	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");
-	        HashMap<String, HashMap<String, String>> jsonMapofMap;
-			String fileName = "ScenarioTestData.json", filePath = "";
-			Config testConfig = new Config();
-			if (fileName != null && !fileName.trim().isEmpty()) {
-				filePath = System.getProperty("user.dir") + File.separator
-						+ testConfig.getRunTimeProperty("TestDataJSONPath");
-				try {
-					jsonMapofMap = testConfig.getUtilityObjectManager().getTestDataHelper().getJSONUtils()
-							.readTestData(filePath, fileName);
-					testConfig.getTestData().putAll(jsonMapofMap);
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
