@@ -204,7 +204,7 @@ public class TestBase implements ITest{
 			tearDownHelper(result);
 		}
 
-		protected synchronized void tearDownHelper(ITestResult result)
+		protected void tearDownHelper(ITestResult result)
 		{
 			String testcaseName = result.getTestName();		
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

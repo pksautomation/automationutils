@@ -74,23 +74,22 @@ public class TestScenarioExecuter {
 	        return JsonPath.from(jsonString).getString(jsonPath);
 	    }
 
-	    public void executeScenarioFromJsonFile(String jsonFilePath)
-	            throws CustomRuntimeException {
+	    public void executeScenarioFromJsonFile(String jsonFilePath) throws Exception 
+	    	{
 	        String scenario, className, methodName, testData;
 	        Config configInstance = Config.getConfig();
 	        String categoryName="";
+	        scenario="";
 	        try {
 	            scenario = new JSONParser().parse(new FileReader(jsonFilePath)).toString();
 	        } catch (IOException | ParseException e) {
-	            throw new CustomRuntimeException("Scenario Json File not found or is MalFormed");
+	        	loggerUtils.logException("Scenario Json File not found or is MalFormed" + e.getMessage(), e, false);
 	        }
-	        loggerUtils.logComment("<<<<<< Execution Started for Scenario Id: " +
-	                getValueFromString(scenario, "TestCaseId") + " >>>>>>");
+	        loggerUtils.logComment("<<<<<< Start Steps Execution Started for Scenario Id: " +getValueFromString(scenario, "TestCaseId") + " Using Reflection >>>>>>");
 	        categoryName=getValueFromString(scenario, "FeatureName");
 	        configInstance.getExtentTestLog().assignCategory(categoryName);
 	        String packageName = getValueFromString(scenario, "Package");
 	        JSONArray listOfSteps = new JSONObject(scenario).getJSONArray("Steps");
-	        loggerUtils.logComment("-----Starting Steps Execution for Scenario-----");
 	        for (int i = 0; i < listOfSteps.length(); i++) {
 	            String step = listOfSteps.get(i).toString();
 	            className = JsonPath.from(step.toString()).getString("ClassName");
@@ -103,18 +102,12 @@ public class TestScenarioExecuter {
 	            else
 	                loggerUtils.logComment(String.format("Executing Method: %s.%s()", className, methodName));
 	            try {
-	                //if (testData.equals("")) {
 	                    executeStep(packageName, className, methodName);
-//	                } else {
-//	                    loggerUtils.logComment("Test Data given to method: " + testData);
-//	                    executeStep(packageName, className, methodName, testData);
-//	                }
 	            } catch (Exception exception) {
-	                loggerUtils.logComment(exception.toString());
+	            	loggerUtils.logException(exception.getMessage(), exception, false);
 	                break;
 	            }
 	        }
-	        loggerUtils.logComment("-----Steps Execution for Scenario Completed-----");
-	        loggerUtils.logComment("<<<<<< Execution Completed for Scenario >>>>>>");
+	        loggerUtils.logComment("-----End Steps Execution for Scenario -----");
 	    }
 }
