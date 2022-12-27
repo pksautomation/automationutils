@@ -245,14 +245,13 @@ public class WaitHelper {
         } else {
             ObjectWaitTime = maxWaitTimeInSecond[0];
         }
+        try {
         loggerUtils.logComment("Wait for element '" + description + "' to be clickable on the page.");
         Wait<WebDriver> fluentWait = new FluentWait<WebDriver>(configInstance.getDriver())
                 .withTimeout(Duration.ofSeconds(ObjectWaitTime)).pollingEvery(Duration.ofSeconds(2))
                 .ignoring(NoSuchElementException.class);
-        try {
             element = fluentWait.until(ExpectedConditions.elementToBeClickable(by));
         } catch (Exception e) {
-            loggerUtils.logException(description, e, true);
             element = null;
         }
         return element;

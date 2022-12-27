@@ -15,6 +15,8 @@ public class BasePage extends PageLocatorHelper{
 	private LoggerUtils LoggerUtils;
 	private BrowserUtils browserUtils;
 	private ElementActionsUtils Actions;
+	public AssertionUtils AssertionUtils;
+
 
 	public BasePage(Config scenariosInstance) {
 		init(scenariosInstance);
@@ -24,6 +26,7 @@ public class BasePage extends PageLocatorHelper{
 		this.scenarioContext=scenariosInstance;
 		this.UtilityObjectManager = new UtilityObjectManager(scenariosInstance);
 		LoggerUtils=new LoggerUtils(scenarioContext);
+		AssertionUtils = new AssertionUtils(scenarioContext);
 		Actions = new ElementActionsUtils(scenarioContext);
 		PageFactory.initElements(scenarioContext.getDriver(), this);
 		scenarioContext.putRunTimeProperty("PageObjectName", this.getClass().getSimpleName());
@@ -87,6 +90,14 @@ public class BasePage extends PageLocatorHelper{
 
 	public void setActions(ElementActionsUtils actions) {
 		Actions = actions;
+	}
+	
+	public AssertionUtils getAssertionUtils() {
+		return AssertionUtils;
+	}
+
+	public void setAssertionUtils(AssertionUtils assertionUtils) {
+		AssertionUtils = assertionUtils;
 	}
 	
 }
