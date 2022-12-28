@@ -103,6 +103,9 @@ public class BrowserUtils {
         }
     }
 
+    public void refreshBrowser(){
+        configInstance.getDriver().navigate().refresh();
+    }
 
     /* Close the browser
      * @author pramod.singh
@@ -290,6 +293,10 @@ public class BrowserUtils {
         } catch (UnreachableBrowserException e) {
             loggerUtils.logWarning(ExceptionUtils.getFullStackTrace(e));
         }
+    }
+
+    public String getCurrentUrl(){
+      return configInstance.getDriver().getCurrentUrl();
     }
 
     /**
