@@ -9,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.innovaccer.utils.v2.Config;
 import com.innovaccer.utils.v2.dataHelper.PageLocatorHelper;
+import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
 
 import pojo.How;
 
@@ -19,6 +20,12 @@ public class BasePage extends PageLocatorHelper{
 	private LoggerUtils LoggerUtils;
 	private BrowserUtils browserUtils;
 	private ElementActionsUtils Actions;
+	private TestDataHelper testDataHelper;
+	
+	public String getTestData(String datakey) {
+		return testDataHelper.getTestData(datakey);
+	}
+
 	public boolean isButtonClickable(String buttonName) {
 		return Actions.isButtonClickable(buttonName);
 	}
@@ -44,6 +51,7 @@ public class BasePage extends PageLocatorHelper{
 		LoggerUtils=new LoggerUtils(scenarioContext);
 		AssertionUtils = new AssertionUtils(scenarioContext);
 		Actions = new ElementActionsUtils(scenarioContext);
+		testDataHelper = new TestDataHelper(scenarioContext);
 		PageFactory.initElements(scenarioContext.getDriver(), this);
 		scenarioContext.putRunTimeProperty("PageObjectName", this.getClass().getSimpleName());
 		

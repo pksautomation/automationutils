@@ -64,9 +64,9 @@ public class LoggerUtils {
     		else {
     			message=message.replaceFirst(regex, replaceString);
     			configInstance.getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(message, ExtentColor.GREEN));   		
-    		message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
     	
     		}
+    		message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
         }
     	else {
        			message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
@@ -103,7 +103,6 @@ public class LoggerUtils {
      * @param testConfig -> config instance
      */
     private void getPageInfo() {
-    	configInstance.setEnableScreenshot(true);
         if (configInstance.isEnableScreenshot() && configInstance.isLogsMode()) {
             if (configInstance.getDriver() != null) {
             	File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getScreenshotFile();

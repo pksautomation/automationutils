@@ -48,7 +48,7 @@ public class Config {
     private SelfHealingDriver tempDriver;
     private WebDriver delegatedriver;
     private String downloadPath = null;
-    private boolean enableScreenshot = true;
+    private boolean enableScreenshot = false;
     private boolean isFailScenarioStatus = false;
     private Scenario scenario = null;
     private SoftAssert softAssert;
@@ -204,7 +204,7 @@ public class Config {
         this.logToStandardOut = getRunTimeProperty("LogToStandardOut")!=null && getRunTimeProperty("LogToStandardOut").equalsIgnoreCase("true");
         this.recordPageHTMLOnFailure =  getRunTimeProperty("RecordPageHTMLOnFailure")!=null && getRunTimeProperty("RecordPageHTMLOnFailure").equalsIgnoreCase("true");
         this.debugMode = getRunTimeProperty("DebugMode") != null && getRunTimeProperty("DebugMode").equalsIgnoreCase("true");
-
+        this.enableScreenshot = getRunTimeProperty("enableScreenshot") != null && getRunTimeProperty("enableScreenshot").equalsIgnoreCase("true");
         String testDataSheet = System.getProperty("user.dir") + getRunTimeProperty("TestDataSheet");
         if (debugMode)
             loggerUtils.logComment("Test data sheet is:-" + testDataSheet);
