@@ -13,8 +13,10 @@ public class TestDataHelper {
     private XMLUtils XMLUtils;
     private TextFileUtils TextUtils;
     private JSONUtils JSONUtils;
+    private ExcelDataReader excelDataReader;
 
-    public TestDataHelper(Config config) {
+
+	public TestDataHelper(Config config) {
         init(config);
     }
 
@@ -31,6 +33,7 @@ public class TestDataHelper {
         this.TextUtils = new TextFileUtils(config);
         this.JSONUtils = new JSONUtils(config);
         this.configInstance = config;
+        this.excelDataReader=new ExcelDataReader(config);
     }
 
     /*
@@ -99,5 +102,8 @@ public class TestDataHelper {
     public void setTextUtils(TextFileUtils textUtils) {
         TextUtils = textUtils;
     }
+    public ExcelDataReader getExcelDataReader() {
+		return excelDataReader;
+	}
 
 }

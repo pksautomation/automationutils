@@ -209,12 +209,14 @@ public class TestBase implements ITest{
 			String testcaseName = result.getTestName();		
 			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 			Date startDate = new Date();
+			String logsData="";
 			try {
 		        if(result.getStatus() == ITestResult.FAILURE) {
 		            Config.getConfig().getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(result.getName()+" FAILED ", ExtentColor.RED));
 		            File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getScreenshotFile();
-					String screenshotPath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().captureScreenShoot(screenshotFilepath);
-					Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
+					Config.getConfig().getUtilityObjectManager().getBrowserUtils().captureScreenShoot(screenshotFilepath);
+					Config.getConfig().getLoggerUtils().attachScreenShot(screenshotFilepath.getAbsolutePath(), screenshotFilepath.getName());
+					//Config.getConfig().getExtentTestLog().log(Status.INFO,MarkupHelper.createLabel(" Capture Screen Shot" + Config.getConfig().getExtentTestLog().addScreenCaptureFromPath(screenshotPath),ExtentColor.WHITE));
 
 		        }
 		        else if(result.getStatus() == ITestResult.SUCCESS) {
@@ -227,12 +229,18 @@ public class TestBase implements ITest{
 		    	}catch(Exception e) {
 		    		e.printStackTrace();
 		    	}
+			logsData=Config.getConfig().getTestLog();
 			Config.getConfig().getUtilityObjectManager().getBrowserUtils().quitBrowser();
+			File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getTestLogsFile();
+			Config.getConfig().getUtilityObjectManager().getTestDataHelper().getTextUtils().writeTextFile(screenshotFilepath.getAbsolutePath(), logsData, false);
+			Config.getConfig().getLoggerUtils().attachTestLogs(screenshotFilepath.getAbsolutePath(), screenshotFilepath.getName());
 			System.out.println("<B>Test '" + testcaseName + "' Ended on '" + dateFormat.format(startDate) + "'</B>");
 		}
 		
 	    @BeforeTest
 	    public void startReport() {
+	        HashMap<String, HashMap<String, String>> jsonMapofMap;
+			String fileName = "ScenarioTestData.json", filePath = "";
 	    	// initialize the HtmlReporter
 	    	try {
 	        htmlExtendReporter = new ExtentHtmlReporter(System.getProperty("user.dir") +"/test-output/testReport.html");        
@@ -248,6 +256,19 @@ public class TestBase implements ITest{
 	        extentReport.setSystemInfo("Project Name", "TRM Automation Suit");
 	        extentReport.setSystemInfo("Branch", "master");
 	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");
+			Config testConfig = new Config();
+			if (fileName != null && !fileName.trim().isEmpty()) {
+				filePath = System.getProperty("user.dir") + File.separator
+						+ testConfig.getRunTimeProperty("TestDataJSONPath");
+				try {
+					jsonMapofMap = testConfig.getUtilityObjectManager().getTestDataHelper().getJSONUtils()
+							.readTestData(filePath, fileName);
+					testConfig.getTestData().putAll(jsonMapofMap);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}
@@ -312,5 +333,6 @@ public class TestBase implements ITest{
 //			}
 //		}
 //	}
+		       
 		
 }

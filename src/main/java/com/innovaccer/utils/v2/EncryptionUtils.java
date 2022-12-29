@@ -16,18 +16,26 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Properties;
 
-public class Encryptions {
+public class EncryptionUtils   {
 
     private LoggerUtils loggerUtils;
     private boolean isCreatedEncryptedFile = false;
 
-    public Encryptions(Config testConfig) {
-        loggerUtils = new LoggerUtils(testConfig);
+    public EncryptionUtils(Config testConfig) {
+        init(testConfig);
+    }
+
+	private void init(Config testConfig) {
+		loggerUtils = new LoggerUtils(testConfig);
+	}
+
+	public EncryptionUtils() {
+		init(Config.getConfig());
     }
 
     private static String encrypt(Config testConfig, String str) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, Encryptions.getKey(testConfig));
+        cipher.init(Cipher.ENCRYPT_MODE, EncryptionUtils.getKey(testConfig));
         byte[] utf8 = str.getBytes(StandardCharsets.UTF_8);
         byte[] enc = cipher.doFinal(utf8);
         return Base64.getEncoder().encodeToString(enc);
@@ -35,7 +43,7 @@ public class Encryptions {
 
     private static String decrypt(Config testConfig, String str) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
-        cipher.init(Cipher.DECRYPT_MODE, Encryptions.getKey(testConfig));
+        cipher.init(Cipher.DECRYPT_MODE, EncryptionUtils.getKey(testConfig));
         byte[] dec = Base64.getDecoder().decode(str.getBytes());
         byte[] utf8 = cipher.doFinal(dec);
         return new String(utf8, StandardCharsets.UTF_8);
@@ -75,7 +83,7 @@ public class Encryptions {
     public String aesEncryption(Config testConfig, String stringValueToBeEncrypted) {
         String value = null;
         try {
-            value = Encryptions.encrypt(testConfig, stringValueToBeEncrypted);
+            value = EncryptionUtils.encrypt(testConfig, stringValueToBeEncrypted);
         } catch (Exception e) {
             loggerUtils.logComment("Fail to encrypt.....");
             loggerUtils.logFailureException(e);
@@ -86,7 +94,7 @@ public class Encryptions {
     public String aesDecryption(Config testConfig, String encryptedString) {
         String str = null;
         try {
-            str = Encryptions.decrypt(testConfig, encryptedString);
+            str = EncryptionUtils.decrypt(testConfig, encryptedString);
         } catch (Exception e) {
             loggerUtils.logComment("Fail to decrypt.....");
             loggerUtils.logFailureException(e);
