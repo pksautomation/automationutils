@@ -155,7 +155,7 @@ public class AssertionUtils {
 			capturelogPageInfo=true;
 		}
         if (!actual) {
-            loggerUtils.logFail(" Failed to verify " + what, capturelogPageInfo);
+            loggerUtils.logFail("Failed to verify " + what, capturelogPageInfo);
         } else {
             loggerUtils.logPass(what, actual, capturelogPageInfo);
         }
@@ -175,7 +175,7 @@ public class AssertionUtils {
 			capturelogPageInfo=true;
 		}
         if (actual) {
-            loggerUtils.logFail(" Failed to verify " + what, capturelogPageInfo);
+            loggerUtils.logFail("Failed to verify " + what, capturelogPageInfo);
         } else {
             loggerUtils.logPass(what, actual, capturelogPageInfo);
         }
@@ -350,13 +350,13 @@ public class AssertionUtils {
 		if (!actual) {
 			if(hardAssert) {
 				configInstance.setEndExecutionOnfailure(true);
-				String message = " Expected " + what + "  " + actual;
+				String message = "Expected " + what + "  " + actual;
 				assertFail(message,capturelogPageInfo);
 			}
 			else
-				assertFail(" Failed to verify " + what,capturelogPageInfo);
+				assertFail("Failed to verify " + what,capturelogPageInfo);
 		} else {
-			assertPass(" Verified " + what,capturelogPageInfo);
+			assertPass("Verified " + what,capturelogPageInfo);
 		}
 	}
 	
@@ -385,7 +385,7 @@ public class AssertionUtils {
 				assertFail( message,capturelogPageInfo);
 			}
 			else
-				assertFail(" Failed to verify " + what,capturelogPageInfo);
+				assertFail("Failed to verify " + what,capturelogPageInfo);
 		}
 	}
 	

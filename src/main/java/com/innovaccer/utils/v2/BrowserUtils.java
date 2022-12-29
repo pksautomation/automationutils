@@ -38,6 +38,11 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
+/**
+ * 
+ * @author i0465
+ *
+ */
 
 public class BrowserUtils {
 
@@ -409,7 +414,7 @@ public class BrowserUtils {
     	}
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
-        return dateFormat.format(date) + "_" + nameScreenshot.replaceAll("\\s+", "_") + ".png";
+        return  nameScreenshot.replaceAll("\\s+", "_") + "_"+dateFormat.format(date) + ".png";
     }
 
     /*
@@ -845,7 +850,30 @@ public class BrowserUtils {
  		}
  		return absolutePath;
  	}
+ 	
+    public File getTestLogsFile() {
+        File dest = getTestLogsDirectory();
+        return new File(dest.getPath() + File.separator + getTestLogsFileName());
+    }
+    
+    private File getTestLogsDirectory() {
+        File dest = new File(configInstance.getRunTimeProperty("ResultsDir") + File.separator + "ReportsLogs"+File.separator);
+        if(!dest.exists())
+        	dest.mkdir();
+        return dest;
+    }
 
+    private String getTestLogsFileName() {
+    	String nameScreenshot=null;
+    	if(configInstance.getScenario()!=null)
+    		nameScreenshot = ((List<String>) configInstance.getScenario().getSourceTagNames()).get(0);
+    	else {
+    		nameScreenshot=configInstance.getScenarioName();
+    	}
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        Date date = new Date();
+        return  nameScreenshot.replaceAll("\\s+", "_") + "_"+dateFormat.format(date) + ".txt";
+    }
 }
 	
 	

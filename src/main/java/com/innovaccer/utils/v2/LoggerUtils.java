@@ -72,7 +72,7 @@ public class LoggerUtils {
        			message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
         		testConfig.getScenario().write(message);
         	}
-        testConfig.setTestLog(testConfig.getTestLog().concat(message));
+        testConfig.setTestLog(testConfig.getTestLog().concat(message + "\n"));
     }
 
     /**
@@ -93,7 +93,7 @@ public class LoggerUtils {
             if (configInstance.isLogsMode()) {
             	assertUtils.assertFail(message,false);
             } else
-            	assertUtils.assertFail(" --> [Fail] Something went wrong during Execution",false);
+            	assertUtils.assertFail("[Fail] Something went wrong during Execution",false);
         }
     }
 
@@ -114,7 +114,7 @@ public class LoggerUtils {
     }
     
     public void attachScreenShot(String filePathurl,String fileName) {
-    	logComment("<B>Screenshot</B>:- <a href=" + filePathurl + " target='_blank' >" + "ScreenShot  :  " + fileName + "</a>");
+    	logComment("<B>Screenshot : </B>:- <a href=" + filePathurl + " target='_blank' >"  + fileName + "</a>");
     }
 
     /**
@@ -496,6 +496,10 @@ public class LoggerUtils {
 					PageInfo();
 				logWarning(message);
 			}
+			
+		    public void attachTestLogs(String filePathurl,String fileName) {
+		    	logComment("<B>Log File  :</B>:- <a href=" + filePathurl + " target='_blank' >" + fileName + "</a>");
+		    }
 
 
 }
