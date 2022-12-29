@@ -1,5 +1,7 @@
 package com.innovaccer.utils.v2;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.*;
 
 import com.aventstack.extentreports.Status;
@@ -34,25 +36,42 @@ public class LoggerUtils {
     }
 
     private void logToStandard(String message) {
+    	String timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+    	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
         System.out.println(message);
     }
 
     private void writeMessageInReport(Config testConfig, String message) {
-    	if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-    		testConfig.getScenario().write(message);
-    	else {
+        String timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+        String regex = "\\[[^\\[]*\\]";
+        String replaceString="";
+        if(configInstance.getRunTimeProperty("ExtentReportEnable") != null || configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true")) {
+ 
     		if(message.contains("[Fail]"))
     		{
+    			message=message.replaceFirst(regex, replaceString);
     			configInstance.getExtentTestLog().log(Status.FAIL, MarkupHelper.createLabel(message, ExtentColor.RED));
     		}
     		else if(message.contains("[INFO]") )
+    		{
+    			message=message.replaceFirst(regex, replaceString);
     			configInstance.getExtentTestLog().log(Status.INFO, MarkupHelper.createLabel(message, ExtentColor.WHITE));
-    		else if(message.contains("[WARNING]"))
+    		}
+    		else if(message.contains("[WARNING]")) {
+    			message=message.replaceFirst(regex, replaceString);
     			configInstance.getExtentTestLog().log(Status.WARNING, MarkupHelper.createLabel(message, ExtentColor.ORANGE));
-    		else
+    		}
+    		else {
+    			message=message.replaceFirst(regex, replaceString);
     			configInstance.getExtentTestLog().log(Status.PASS, MarkupHelper.createLabel(message, ExtentColor.GREEN));   		
-    		
-    	}
+    		message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
+    	
+    		}
+        }
+    	else {
+       			message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]" + message;
+        		testConfig.getScenario().write(message);
+        	}
         testConfig.setTestLog(testConfig.getTestLog().concat(message));
     }
 
@@ -72,9 +91,9 @@ public class LoggerUtils {
             writeMessageInReport(configInstance, message);
         if (configInstance.isEndExecutionOnfailure()) {
             if (configInstance.isLogsMode()) {
-            	assertUtils.assertFail(message);
+            	assertUtils.assertFail(message,false);
             } else
-            	assertUtils.assertFail(" --> [Fail] Something went wrong during Execution");
+            	assertUtils.assertFail(" --> [Fail] Something went wrong during Execution",false);
         }
     }
 
@@ -86,10 +105,16 @@ public class LoggerUtils {
     private void getPageInfo() {
     	configInstance.setEnableScreenshot(true);
         if (configInstance.isEnableScreenshot() && configInstance.isLogsMode()) {
-            if (configInstance.getDriver() != null && configInstance.getScenario()!= null) {
-//           TODO: To be resoled -> BrowserUtils.takeScreenshot();
+            if (configInstance.getDriver() != null) {
+            	File screenshotFilepath=Config.getConfig().getUtilityObjectManager().getBrowserUtils().getScreenshotFile();
+				Config.getConfig().getUtilityObjectManager().getBrowserUtils().captureScreenShoot(screenshotFilepath);
+				attachScreenShot(screenshotFilepath.getAbsolutePath(), screenshotFilepath.getName());
             }
         }
+    }
+    
+    public void attachScreenShot(String filePathurl,String fileName) {
+    	logComment("<B>Screenshot</B>:- <a href=" + filePathurl + " target='_blank' >" + "ScreenShot  :  " + fileName + "</a>");
     }
 
     /**
@@ -111,13 +136,8 @@ public class LoggerUtils {
      * @param <T>
      */
     public <T> void logPass(String what, T actual, boolean logPageInfo) {
-        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         String message;
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	 message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]  [Pass] '" + what + "' as :-'" + actual + "'";
-        else {
-        	message= "[Pass] '" + what + "' as :-'" + actual + "'";
-        }
+        message= "[Pass] '" + what + "' as :-'" + actual + "'";
         try {
             boolean test = configInstance.isLogToStandardOut();
             if (test && (configInstance.getRunTimeProperty("beforeHook") == null
@@ -138,11 +158,8 @@ public class LoggerUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public void logPass(String message, boolean... logPageInfo) {
-        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message= "[Pass] '" + message;
         //message = "[" + this.uniqueId + "] " + "[" + timeStamp + "] [Pass] --> " + message;
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
         
         try {
             boolean test = configInstance.isLogToStandardOut();
@@ -166,10 +183,8 @@ public class LoggerUtils {
      * @param logPageInfo -> Boolean to enable/disable logging page info
      */
     public <T> void logFail(String what, T expected, T actual, boolean logPageInfo) {
-        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        String message = " [Fail] --> Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
+        
+        String message = " [Fail] Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
         failure(message);
         if (logPageInfo)
             getPageInfo();
@@ -182,12 +197,9 @@ public class LoggerUtils {
      * @param logPageInfo -> boolean to enable/disable logging page info
      */
     public void logFail(String message, boolean... logPageInfo) {
-        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
         message="[Fail] --> " + message;
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
         failure(message);
-        if (logPageInfo.length>0)
+        if (logPageInfo.length>0 && logPageInfo[0])
             getPageInfo();
     }
 
@@ -197,10 +209,7 @@ public class LoggerUtils {
      * @param message -> message to be logged
      */
     public void logComment(String message) {
-        timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
-        message =  "[INFO] -->  " + message;
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
+        message =  "[INFO]  " + message;
         try {
             boolean test = configInstance.isLogToStandardOut();
             if (test && (configInstance.getRunTimeProperty("beforeHook") == null
@@ -220,10 +229,7 @@ public class LoggerUtils {
      * @param message -> warning message to be logged
      */
     public void logWarning(String message) {
-        message ="[WARNING] --> " + message;
-        if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
-        	message = "[" + this.uniqueId + "] " + "[" + timeStamp + "]"+message;
-
+        message ="[WARNING] " + message;
         if (configInstance.isLogToStandardOut())
             logToStandard(message);
         if (configInstance.isLogsMode())
@@ -350,11 +356,11 @@ public class LoggerUtils {
 	 * @param testConfig
 	 * @author i0465
 	 */
-	private void PageInfo(Config testConfig) {
-		testConfig.setEnableScreenshot(true);
-		BrowserUtils BrowserUtils = new BrowserUtils(testConfig);
-		if (testConfig.isEnableScreenshot() && testConfig.isLogsMode()) {
-			if (testConfig.getDriver() != null && testConfig.getScenario() != null) {
+	private void PageInfo() {
+		configInstance.setEnableScreenshot(true);
+		BrowserUtils BrowserUtils = new BrowserUtils();
+		if (configInstance.isEnableScreenshot() && configInstance.isLogsMode()) {
+			if (configInstance.getDriver() != null && configInstance.getScenario() != null) {
 				File dest = BrowserUtils.getScreenshotFile();
 				BrowserUtils.takeScreenShoot(dest);
 			}
@@ -371,7 +377,7 @@ public class LoggerUtils {
 		try {
 			if (configInstance.getRunTimeProperty("LogPageInfo") != null
 					&& (configInstance.getRunTimeProperty("LogPageInfo").equalsIgnoreCase("true")))
-				PageInfo(configInstance);
+				PageInfo();
 			failure(msg);
 
 		} catch (Exception e) {
@@ -387,5 +393,109 @@ public class LoggerUtils {
 			 logException(message, e, false);
 		 configInstance.setIslogExceptionSkip(false);
     }
+
+		   
+			/**
+			 * Log Exception But Skip Failure
+			 * @param message
+			 * @param e
+			 * @param IsTakeScreenShot
+			 * @author pramod.singh
+			 */
+			public void logExceptionSkipFailure(String message , Throwable e , boolean ...IsTakeScreenShot) {
+				 configInstance.setIslogExceptionSkip(true);
+				 if(IsTakeScreenShot.length != 0)
+					 if(IsTakeScreenShot[0])
+						 this.logException(message, e, true);
+				else
+					this.logException(message, e, false);
+				 
+				 configInstance.setIslogExceptionSkip(false);
+			}
+			
+			/**
+			 * 
+			 * @param <T>
+			 * @param what
+			 * @param expected
+			 * @param actual
+			 * @author pramod.singh
+			 */
+			public <T> void logFail(String what, T expected, T actual,boolean... pageInfo)
+			{
+				String message = " Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+				logFail(message);
+			}
+			/**
+			 * 
+			 * @param what
+			 * @param expected
+			 * @param actual
+			 * @author pramod.singh
+			 */
+			public void logFail(String what, String expected, String actual)
+			{
+				String message = null;
+				message = "Expected '" + what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+				timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+				logFail(message);
+			}
+
+			/**
+			 * 
+			 * @param what
+			 * @param expected
+			 * @param actual
+			 * @author pramod.singh
+			 */
+			public void logWarning(String what, String expected, String actual)
+			{
+				String message = what + "' was :-'" + expected + "'. But actual is '" + actual + "'";
+				logWarning(message);
+			}
+
+
+			/**
+			 * 
+			 * @param <T>
+			 * @param what
+			 * @param actual
+			 * @author pramod.singh
+			 */
+			public <T> void logPass(String what, T actual)
+			{
+				timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+				String message =  what + "' as :-'" + actual + "'";
+				logPass(message);
+			}
+
+			/**
+			 * 
+			 * @param what
+			 * @param actual
+			 * @author pramod.singh
+			 */
+			public void logPass(String what, String actual)
+			{
+				timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+				String message = StringUtils.replaceEach(actual, new String[] { "&", "\"", "<", ">" }, new String[] { "&amp;", "&quot;", "&lt;", "&gt;" });
+				message =  what + "' as :-'" + message + "'";
+				logPass(message);
+			}
+
+			/**
+			 * 
+			 * @param message
+			 * @param logPageInfo
+			 * @author pramod.singh
+			 */
+			public void logWarning(String message, boolean logPageInfo)
+			{
+				timeStamp = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now());
+				if(logPageInfo)
+					PageInfo();
+				logWarning(message);
+			}
+
 
 }

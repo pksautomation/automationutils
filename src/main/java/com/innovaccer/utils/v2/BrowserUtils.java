@@ -409,7 +409,7 @@ public class BrowserUtils {
     	}
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         Date date = new Date();
-        return dateFormat.format(date) + "_" + nameScreenshot + ".png";
+        return dateFormat.format(date) + "_" + nameScreenshot.replaceAll("\\s+", "_") + ".png";
     }
 
     /*

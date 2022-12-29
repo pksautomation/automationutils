@@ -27,8 +27,16 @@ public class TestScenarioExecuter {
 	    private LoggerUtils loggerUtils;
 
 	    public TestScenarioExecuter() {
-	        this.loggerUtils = new LoggerUtils();
-	        configInstance=Config.getConfig();
+	        init(Config.getConfig());
+	    }
+
+		private void init(Config config) {
+			this.loggerUtils = new LoggerUtils(config);
+			configInstance=config;
+		}
+	    
+	    public TestScenarioExecuter(Config config) {
+	        init(config);
 	    }
 
 	    public void executeStep(String packageName, String className, String methodName, String... parameters) throws CustomRuntimeException {

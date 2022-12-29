@@ -67,7 +67,8 @@ public class Config {
 	private String timeStamp = null;
     private Properties runtimeProperties;
     private ExcelDataReader testDataReaderObj;
-    private String testEndTime;
+
+	private String testEndTime;
 
 	private String testStartTime;
     private List<String> listOfFailedStep;
@@ -160,6 +161,8 @@ public class Config {
 				String path = System.getProperty("user.dir") + fileSeparator + "src/test/resources/Config" + fileSeparator + "Config.properties";
 				//defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
 				loadPropertiesFile(path);
+				testDataReaderObj = new  ExcelDataReader(this);
+				testScenarioExecutor = new TestScenarioExecuter(this);
 				initInfo();
 			}
 			catch (Exception e)
@@ -949,6 +952,14 @@ public class Config {
 
 	public void setTestScenarioExecutor(TestScenarioExecuter testScenarioExecutor) {
 		this.testScenarioExecutor = testScenarioExecutor;
+	}
+	
+    public ExcelDataReader getTestDataReaderObj() {
+		return testDataReaderObj;
+	}
+
+	public void setTestDataReaderObj(ExcelDataReader testDataReaderObj) {
+		this.testDataReaderObj = testDataReaderObj;
 	}
 
 }
