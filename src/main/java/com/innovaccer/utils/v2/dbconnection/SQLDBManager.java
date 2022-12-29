@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.Encryptions;
+import com.innovaccer.utils.v2.EncryptionUtils;
 import com.innovaccer.utils.Helper;
 import com.innovaccer.utils.Log;
 import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
@@ -32,7 +32,7 @@ public class SQLDBManager {
 	private Config configInstance;
 	private LoggerUtils loggerUtils;
 	private Connection connection;
-    private Encryptions encryption;
+    private EncryptionUtils encryption;
     private ExcelDataReader excelReader;
     
     public SQLDBManager() {
@@ -46,7 +46,7 @@ public class SQLDBManager {
     private void init(Config testConfig) {
         this.configInstance = testConfig;
         loggerUtils = new LoggerUtils(configInstance);
-        encryption = new Encryptions(configInstance);
+        encryption = new EncryptionUtils(configInstance);
         excelReader = new ExcelDataReader(configInstance);
     }
     

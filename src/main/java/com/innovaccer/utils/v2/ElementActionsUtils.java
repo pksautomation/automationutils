@@ -332,6 +332,7 @@ public class ElementActionsUtils {
         Actions builder = new Actions(scenarioContext.getDriver());
         builder.moveToElement(element).click().build().perform();
         LoggerUtils.logComment("Clicked on " + description);
+        
     }
 
     /**
@@ -882,5 +883,32 @@ public class ElementActionsUtils {
 		else {
 			return getWebElement(id).isDisplayed();
 		}
+	}
+	
+	/**
+	 *
+	 * @param how
+	 */
+	public void fillData(String xpathkey,String testDataKey, boolean... isDesignSystemComponent) {
+		WebElement element = null;
+		String data = testDataHelper.getTestData(testDataKey);
+		How how;
+		if((isDesignSystemComponent.length > 0 && isDesignSystemComponent[0]))
+			how = getHowForDesignSystemComponent(xpathkey);
+		else
+			how = getHow(xpathkey);
+		String pageName = scenarioContext.getRunTimeProperty("PageObjectName");
+		if(how == null) {
+			LoggerUtils.failFinalTestScenarios(" Locators info " + xpathkey + " not found in " + pageName + ".json file ");
+		}
+		else if (data != null && !data.equals("")) {
+			By by = getPageElementLocator( how.getStrategy(), how.getValue(), how.getDescription());
+			element = WaitUtils.fluentWaitForVisibility(by, how.getDescription());
+			if(element != null)
+				enterData(element, data, how.getDescription());
+			else {
+					LoggerUtils.failFinalTestScenarios("Element not Found for " + how.getDescription());
+				}
+			}
 	}
 }

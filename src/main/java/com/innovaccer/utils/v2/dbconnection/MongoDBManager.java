@@ -11,7 +11,7 @@ import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.Encryptions;
+import com.innovaccer.utils.v2.EncryptionUtils;
 import com.innovaccer.utils.v2.LoggerUtils;
 import com.innovaccer.utils.v2.fileutils.JSONUtils;
 import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
@@ -30,7 +30,7 @@ public class MongoDBManager {
 	private Config configInstance;
 	private LoggerUtils loggerUtils;
 	private JSONUtils jsonUtils;
-	private Encryptions encryption; 
+	private EncryptionUtils encryption; 
 	private ExcelDataReader excelDataReader;
 	
 	public MongoDBManager() {
@@ -46,7 +46,7 @@ public class MongoDBManager {
         loggerUtils = new LoggerUtils(configInstance);
         jsonUtils = new JSONUtils(configInstance);
         excelDataReader = new ExcelDataReader(configInstance);
-        encryption = new Encryptions(configInstance);
+        encryption = new EncryptionUtils(configInstance);
     }
 	
 	/**

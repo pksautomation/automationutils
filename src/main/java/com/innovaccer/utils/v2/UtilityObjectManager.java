@@ -18,29 +18,16 @@ public class UtilityObjectManager {
     private BrowserUtils BrowserUtils;
     private TestDataHelper testDataHelper;
     private WaitHelper WaitUtils;
-
-    public WaitHelper getWaitUtils() {
-		return WaitUtils;
-	}
-
-	public void setWaitUtils(WaitHelper waitUtils) {
-		WaitUtils = waitUtils;
-	}
-
-	public UtilityObjectManager(Config config) {
-        init(config);
-    }
-
-    public UtilityObjectManager() {
-        init(Config.getConfig());
-    }
+    private APIHelper apiHelper;
+  
+	private EncryptionUtils encryptionUtils;
 
     private void init(Config config) {
         this.BrowserUtils = new BrowserUtils(config);
         this.testDataHelper = new TestDataHelper(config);
         this.WaitUtils = new WaitHelper(config);
-        //this.LoggerUtils = new LoggerUtils(config);
         this.AssertionUtils = new AssertionUtils(config);
+        this.encryptionUtils = new EncryptionUtils(config);
     }
 
     public TestDataHelper getTestDataHelper() {
@@ -65,6 +52,36 @@ public class UtilityObjectManager {
 
     public void setBrowserUtils(BrowserUtils browserUtils) {
         BrowserUtils = browserUtils;
+    }
+    public APIHelper getApiHelper() {
+  		return apiHelper;
+  	}
+
+  	public void setApiHelper(APIHelper apiHelper) {
+  		this.apiHelper = apiHelper;
+  	}
+  	 public EncryptionUtils getEncryptionUtils() {
+ 		return encryptionUtils;
+ 	}
+
+ 	public void setEncryptionUtils(EncryptionUtils encryptionUtils) {
+ 		this.encryptionUtils = encryptionUtils;
+ 	}
+ 	
+ 	public WaitHelper getWaitUtils() {
+		return WaitUtils;
+	}
+
+	public void setWaitUtils(WaitHelper waitUtils) {
+		WaitUtils = waitUtils;
+	}
+
+	public UtilityObjectManager(Config config) {
+        init(config);
+    }
+
+    public UtilityObjectManager() {
+        init(Config.getConfig());
     }
 
 //    public LoggerUtils getLoggerUtils() {
