@@ -876,7 +876,13 @@ public class ElementActionsUtils {
 		WebElement element = WaitUtils.fluentWaitForVisibility(byLocator, how.getDescription());
 		return element;	
 	}
-	
+
+	public List<WebElement> getWebElements(String id) {
+		How how = getHow(id);
+		By byLocator = this.getPageElementLocator(how.getStrategy(), how.getValue(),how.getDescription());
+		return scenarioContext.getDriver().findElements(byLocator);
+	}
+
 	public boolean isElementDisplayed(String id) {
 		if(getWebElement(id)== null)
 			return false;
