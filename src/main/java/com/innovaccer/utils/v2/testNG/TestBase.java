@@ -243,7 +243,7 @@ public class TestBase implements ITest{
 			String fileName = "ScenarioTestData.json", filePath = "";
 	    	// initialize the HtmlReporter
 	    	try {
-	        htmlExtendReporter = new ExtentHtmlReporter(System.getProperty("user.dir") +"/test-output/testReport.html");        
+	        htmlExtendReporter = new ExtentHtmlReporter(System.getProperty("user.dir") +"/ExtendReport/testReport.html");        
 	        //initialize ExtentReports and attach the HtmlReporter
 	        extentReport = new ExtentReports();
 	        extentReport.attachReporter(htmlExtendReporter);

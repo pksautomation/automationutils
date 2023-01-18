@@ -167,7 +167,7 @@ public class Config {
 			}
 			catch (Exception e)
 			{
-				loggerUtils.logException(e);
+				e.printStackTrace();
 			}
 
     }

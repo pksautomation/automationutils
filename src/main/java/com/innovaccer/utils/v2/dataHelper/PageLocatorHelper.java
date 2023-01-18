@@ -75,7 +75,8 @@ public class PageLocatorHelper {
 	 * @param fileName
 	 */
 	synchronized private void storeLocatorMap(Map<String,How> mapOfLocators, String fileName) {
-		configInstance.getPagesLocatorData().put(fileName, mapOfLocators);
+		if(!configInstance.getPagesLocatorData().containsKey("fileName"))
+			configInstance.getPagesLocatorData().put(fileName, mapOfLocators);
 	}
 
 	public void loadDesignSystemObjects() {
