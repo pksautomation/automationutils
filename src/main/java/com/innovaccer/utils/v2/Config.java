@@ -403,6 +403,7 @@ public class Config {
                 putRunTimeProperty(str, (String) property.get(str));
             }
         } catch (Exception e) {
+        	e.printStackTrace();
             loggerUtils.logException(e.getMessage(), e);
         }
     }
