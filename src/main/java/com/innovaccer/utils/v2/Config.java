@@ -121,7 +121,7 @@ public class Config {
     public Config(String... configPath) {
     	try {
 			String defaultConfigPath = System.getProperty("user.dir") + File.separator
-			        + "src/test/resources/Config/config.properties";
+			        + "src/test/resources/config/config.properties";
 			this.uniqueId = Helper.generateRandomAlphaNumericString(4) + "-" +
 			        Helper.generateRandomAlphaNumericString(5) + "-" +
 			        Helper.generateRandomAlphaNumericString(4);
@@ -158,7 +158,7 @@ public class Config {
 				} catch (Exception e) {
 				    e.printStackTrace();
 				}
-				String path = System.getProperty("user.dir") + fileSeparator + "src/test/resources/Config" + fileSeparator + "Config.properties";
+				String path = System.getProperty("user.dir") + fileSeparator + "src/test/resources/config" + fileSeparator + "config.properties";
 				//defaultConfigPath = configPath.length > 0 ? configPath[0] : defaultConfigPath;
 				loadPropertiesFile(path);
 				testDataReaderObj = new  ExcelDataReader(this);
