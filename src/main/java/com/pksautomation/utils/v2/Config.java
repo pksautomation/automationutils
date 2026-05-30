@@ -86,6 +86,9 @@ public class Config {
 	ExtentReports extentReport;
 	ExtentTest testExtentLog;
 	private TestScenarioExecuter testScenarioExecutor;
+	private boolean isGlobalTestData =false;
+	HashMap<String, HashMap<String, String>> mapOfTestData = new HashMap<String, HashMap<String, String>>();
+
 
 	/**
      * Load Config
@@ -576,12 +579,21 @@ public class Config {
 //		return singleton_data_instance.getTestDataReaderHashMap();
 //	}
 
-	public HashMap<String, HashMap<String, String>> getTestData() {
+	public HashMap<String, HashMap<String, String>> getGlobalTestData() {
 		return singleton_data_instance.getTestData();
 	}
 	
-	public void storeTestData(String testDataName,HashMap<String, String> testDataValue) {
+	
+	public void storeTestDataGlobally(String testDataName,HashMap<String, String> testDataValue) {
 		 singleton_data_instance.putTestData(testDataName, testDataValue);
+	}
+	
+	public HashMap<String, HashMap<String, String>> getScenariosTestData() {
+		return mapOfTestData;
+	}
+
+	public void setScenariosTestDataG(HashMap<String, HashMap<String, String>> mapOfTestData) {
+		this.mapOfTestData = mapOfTestData;
 	}
 
 
@@ -961,6 +973,33 @@ public class Config {
 
 	public void setTestDataReaderObj(ExcelDataReader testDataReaderObj) {
 		this.testDataReaderObj = testDataReaderObj;
+	}
+	
+	/**
+	 *  Load test data and put in map collection
+	 * @param testDataFileName
+	 */
+	public void loadTestData(String testDataFileName) {
+		if (testDataFileName != null && testDataFileName.isEmpty())
+			return;
+		String filePath = "";
+		boolean isGlobal = false;
+		HashMap<String, HashMap<String, String>> mapOfData = new HashMap<String, HashMap<String, String>>();
+		if (testDataFileName.startsWith("#")) {
+			isGlobal = true;
+			testDataFileName=testDataFileName.substring(1, testDataFileName.length());			
+		}
+		filePath = System.getProperty("user.dir") + File.separator + this.getRunTimeProperty("TestDataJSONPath");
+		try {
+			mapOfData = this.getUtilityObjectManager().getTestDataHelper().getJSONUtils().readTestData(filePath,
+					testDataFileName);
+			this.getScenariosTestData().putAll(mapOfData);
+			if (isGlobal) {
+				this.getGlobalTestData().putAll(mapOfData);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 }

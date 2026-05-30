@@ -255,20 +255,7 @@ public class TestBase implements ITest{
 	        htmlExtendReporter.config().setTimeStampFormat("EEEE, MMMM dd, yyyy, hh:mm a '('zzz')'");
 	        extentReport.setSystemInfo("Project Name", "TRM Automation Suit");
 	        extentReport.setSystemInfo("Branch", "master");
-	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");
-			Config testConfig = new Config();
-			if (fileName != null && !fileName.trim().isEmpty()) {
-				filePath = System.getProperty("user.dir") + File.separator
-						+ testConfig.getRunTimeProperty("TestDataJSONPath");
-				try {
-					jsonMapofMap = testConfig.getUtilityObjectManager().getTestDataHelper().getJSONUtils()
-							.readTestData(filePath, fileName);
-					testConfig.getTestData().putAll(jsonMapofMap);
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
-		
+	        extentReport.setSystemInfo("Environemnt", "Nucleous Dev");		
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
 	    	}

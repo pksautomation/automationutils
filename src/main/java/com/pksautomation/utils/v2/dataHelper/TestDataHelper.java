@@ -41,9 +41,9 @@ public class TestDataHelper {
      */
     public String getTestData(String datakey) {
         String testDataName = configInstance.getRunTimeProperty("TestDataName");
-        if (configInstance.getTestData().containsKey(testDataName)
-                && configInstance.getTestData().get(testDataName).containsKey(datakey))
-            return configInstance.getTestData().get(testDataName).get(datakey);
+        if (configInstance.getGlobalTestData().containsKey(testDataName)
+                && configInstance.getGlobalTestData().get(testDataName).containsKey(datakey))
+            return configInstance.getGlobalTestData().get(testDataName).get(datakey);
         else
             return null;
     }
