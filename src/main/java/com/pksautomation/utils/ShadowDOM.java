@@ -1,6 +1,6 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 /**
- * @author ranjeet.kumar@innovaccer.com
+ * @author pksautomation
  */
 
 import java.util.Arrays;

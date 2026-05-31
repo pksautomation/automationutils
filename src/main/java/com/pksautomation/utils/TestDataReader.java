@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +27,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
- *@author pramod.singh
+ *@author pksautomation
  */
 public class TestDataReader
 {

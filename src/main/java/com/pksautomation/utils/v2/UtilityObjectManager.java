@@ -1,6 +1,6 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
-import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
+import com.pksautomation.utils.v2.dataHelper.TestDataHelper;
 
 public class UtilityObjectManager {
 

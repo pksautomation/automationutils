@@ -1,10 +1,10 @@
-package com.innovaccer.utils.dbconnection;
+package com.pksautomation.utils.dbconnection;
 
 public class DataBaseEnumConstants {
 	
 	/**
 	 * For RDBMS Database
-	 * @author pramod.singh
+	 * @author pksautomation
 	 *
 	 */
 	public enum DatabaseType
@@ -20,7 +20,7 @@ public class DataBaseEnumConstants {
 	
 	/**
 	 * Enum for For No-SQL database
-	 * @author I0465
+	 * @author pksautomation
 	 *
 	 */
 	public enum MongoDataBaseType{
@@ -34,7 +34,7 @@ public class DataBaseEnumConstants {
 	
 	/**
 	 * Enum for DataBase category like SQL, Greenplum
-	 * @author I0465
+	 * @author pksautomation
 	 *
 	 */
 	public enum DataBaseCategory{

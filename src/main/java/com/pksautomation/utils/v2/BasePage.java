@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import java.io.File;
 
@@ -7,9 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.dataHelper.PageLocatorHelper;
-import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.dataHelper.PageLocatorHelper;
+import com.pksautomation.utils.v2.dataHelper.TestDataHelper;
 
 import pojo.How;
 

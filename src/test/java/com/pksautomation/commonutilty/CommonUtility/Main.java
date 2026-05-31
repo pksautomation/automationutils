@@ -1,7 +1,7 @@
-package com.innovaccer.commonutilty.CommonUtility;
+package com.pksautomation.commonutilty.CommonUtility;
 
 /**
- * @author pramod.singh
+ * @author pksautomation
  */
 public class Main {
 

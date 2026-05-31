@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -11,7 +11,7 @@ import sun.misc.BASE64Encoder;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class AesEncrypter {

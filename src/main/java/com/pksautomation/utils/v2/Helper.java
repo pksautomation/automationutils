@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -40,12 +40,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.innovaccer.utils.v2.customexception.CustomRuntimeException;
-import com.innovaccer.utils.v2.fileutils.ExcelUtils;
+import com.pksautomation.utils.v2.customexception.CustomRuntimeException;
+import com.pksautomation.utils.v2.fileutils.ExcelUtils;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Helper {
@@ -59,7 +59,7 @@ public class Helper {
 	 *                           dd/mm/yyyy
 	 * @param expectedDateFormat is the format which we get after converting ex:
 	 *                           yyyy-mm-dd
-	 *                           @author i0465
+	 *                           @author pksautomation
 	 * @return
 	 * @throws ParseException
 	 */
@@ -77,7 +77,7 @@ public class Helper {
 	 * Function to change Date from 20/12/15 to 20-12-15
 	 * 
 	 * @param date
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String changeDateFormatSeperator(String date) {
@@ -92,7 +92,7 @@ public class Helper {
 	 * 
 	 * @param date
 	 * @param time
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String changeDateTimeFormat(String date, String time) {
@@ -108,7 +108,7 @@ public class Helper {
 	 * 
 	 * @param date
 	 * @return boolean value
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static boolean verifyDateFormat(String date, String format) {
 
@@ -156,7 +156,7 @@ public class Helper {
 	 * @param regex
 	 * @param str
 	 * @return 
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static int getFirstMatchingPoint(Pattern regex, String str) {
 		Matcher m = regex.matcher(str);
@@ -172,7 +172,7 @@ public class Helper {
 	 * Generate a random Alphabets string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String generateRandomAlphabetsString(int length) {
 		Random rd = new Random();
@@ -190,7 +190,7 @@ public class Helper {
 	 * Generate a random Alpha-Numeric string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String generateRandomAlphaNumericString(int length) {
 		Random rd = new Random();
@@ -208,7 +208,7 @@ public class Helper {
 	 * Generate a random Special Character string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 
 	public static String generateRandomSpecialCharacterString(int length) {
@@ -227,7 +227,7 @@ public class Helper {
 	 * Generate a random number of given length
 	 * 
 	 * @param length Length of number to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static long generateRandomNumber(int length) {
@@ -281,7 +281,7 @@ public class Helper {
 	/**
 	 * Get current  Date
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getCurrentDateTime(String format) {
@@ -294,7 +294,7 @@ public class Helper {
 	/**
 	 * Get current  Time
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getCurrentTime(String format) {
@@ -310,7 +310,7 @@ public class Helper {
  * @param mm
  * @param yyyy
  * @param format
- * @author i0465
+ * @author pksautomation
  * @return
  */
 	public static String getDate(int dd, int mm, int yyyy, String format) {
@@ -325,7 +325,7 @@ public class Helper {
 	 * 
 	 * @param days
 	 * @param format sample format yyyy-MM-dd
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterDays(int days, String format) {
@@ -345,7 +345,7 @@ public class Helper {
 	 * @param days
 	 * @param NEW_FORMAT
 	 * @param date
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterDays(int days, String NEW_FORMAT, String date) {
@@ -375,7 +375,7 @@ public class Helper {
 	 * 
 	 * @param years
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterYears(int years, String format) {
@@ -394,7 +394,7 @@ public class Helper {
 	 * @param mm
 	 * @param yyyy
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDatePreviousTo(int dd, int mm, int yyyy, String format) {
@@ -410,7 +410,7 @@ public class Helper {
 	 * 
 	 * @param roundOffValue
 	 * @param minimumFractionDigits
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String roundOff(double roundOffValue, int minimumFractionDigits) {
@@ -427,7 +427,7 @@ public class Helper {
 	 * This Method is used to create folder at given path
 	 * 
 	 * @param path
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static boolean createFolder(String path) {
@@ -455,7 +455,7 @@ public class Helper {
 	 * 
 	 * @param dateTime -> to be updated
 	 * @param hour     -> to be updated with
-	 * @author i0465
+	 * @author pksautomation
 	 * @return dateTime String
 	 * 
 	 */
@@ -484,7 +484,7 @@ public class Helper {
 	 * 
 	 * @param list
 	 * @param stringToMatch
-	 * @author i0465
+	 * @author pksautomation
 	 * @return true/false
 	 * 
 	 */
@@ -505,7 +505,7 @@ public class Helper {
 	 * @param filePath
 	 * @param search
 	 * @param replacement
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void replaceStringInFile(String filePath, String search, String replacement) {
 		File htmlFile = new File(filePath);
@@ -535,7 +535,7 @@ public class Helper {
 	 * 
 	 * @param dataFormat
 	 * @param epoch
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String convertEpochTimeToHumanReadable(String dataFormat, long epoch) {
@@ -579,7 +579,7 @@ public class Helper {
 	 * @param format
 	 * @param date
 	 * @return
-	 * * @author pramod.singh
+	 * * @author pksautomation
 	 */
 	public static String getDateBeforeOrAfterYearsFromGiveDate(int years, String format, String date) {
 		DateFormat dateFormat = new SimpleDateFormat(format);
@@ -604,7 +604,7 @@ public class Helper {
 	 * @param roundOffValue
 	 * @param minimumFractionDigits
 	 * @return
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static String roundOff(double roundOffValue, int minimumFractionDigits,int maximumFractionDigit) {
 

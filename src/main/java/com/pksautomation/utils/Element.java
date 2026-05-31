@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -33,12 +33,12 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.innovaccer.utils.Element.How;
-import com.innovaccer.utils.v2.WaitHelper;
+import com.pksautomation.utils.Element.How;
+import com.pksautomation.utils.v2.WaitHelper;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Element
@@ -64,7 +64,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void check(Config testConfig, WebElement element, String description)
 	{
@@ -93,7 +93,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void clear(Config testConfig, WebElement element, String description)
 	{
@@ -111,7 +111,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void click(Config testConfig, WebElement element, String description)
 	{	
@@ -132,7 +132,7 @@ public class Element
 	 *            - Element to be clicked
 	 * @param description
 	 *            For logging
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void clickThroughJS(Config testConfig, WebElement elementToBeClicked, String description)
 	{
@@ -147,7 +147,7 @@ public class Element
 	 * @param testConfig
 	 * @param elementToBeClicked
 	 * @param description
-	 * @author ranjeet
+	 * @author pksautomation
 	 */
 	public static void clearThroughJS(Config testConfig, WebElement element, String description)
 	{
@@ -164,7 +164,7 @@ public class Element
 	 * @param element
 	 * @param value
 	 * @param description
-	 * @author ranjeet
+	 * @author pksautomation
 	 */
 	public static void enterDataThroughJS(Config testConfig, WebElement element, String value, String description) {
 		JavascriptExecutor js = (JavascriptExecutor) testConfig.driver;
@@ -182,7 +182,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 *   @author i0465
+	 *   @author pksautomation
 	 */
 	public static void doubleClick(Config testConfig, WebElement element, String description)
 	{
@@ -203,7 +203,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 *           @author i0465
+	 *           @author pksautomation
 	 */
 	public static void enterData(Config testConfig, WebElement element, String value, String description)
 	{
@@ -227,7 +227,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 *            @author i0465
+	 *            @author pksautomation
 	 */
 	public static void enterDataAfterClick(Config testConfig, WebElement element, String value, String description)
 	{
@@ -260,7 +260,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 *            @author i0465
+	 *            @author pksautomation
 	 */
 		public static void enterDataWithoutClear(Config testConfig, WebElement element, String value, String description)
 	{
@@ -290,7 +290,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 *            @author i0465
+	 *            @author pksautomation
 	 */
 	public static void enterFileName(Config testConfig, WebElement element, String value, String description)
 	{
@@ -311,7 +311,7 @@ public class Element
 	 * @param testConfig
 	 * @param how
 	 * @param what
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	private static WebElement findiFrameElement(Config testConfig, How how, String what)
@@ -366,7 +366,7 @@ public class Element
 	 * @param element
 	 *            Select WebElement
 	 * @return String list of options
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static List<String> getAllOptionsInSelect(Config testConfig, WebElement element)
 	{
@@ -389,7 +389,7 @@ public class Element
 	 *            Config instance used for logging
 	 * @param element
 	 *            Select WebElement
-	 * @author i0465
+	 * @author pksautomation
 	 * @return String list of options
 	 */
 	public static List<String> getAllValuesInSelect(Config testConfig, WebElement element)
@@ -414,7 +414,7 @@ public class Element
 	 * @param element
 	 *            Select WebElement
 	 * @return String list of options
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static List<String> getAllSelectedOptions(Config testConfig, WebElement element)
 	{
@@ -438,7 +438,7 @@ public class Element
 	 *            Config instance used for logging
 	 * @param element
 	 *            WebElement whose first selected value is to be read
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static WebElement getFirstSelectedOption(Config testConfig, WebElement element, String description)
@@ -515,7 +515,7 @@ public class Element
 	 * @param what
 	 *            element to be found with given technique (any arguments in
 	 *            this string will be replaced with run time properties)
-	 * @author i0465
+	 * @author pksautomation
 	 * @return List of WebElements Found
 	 */
 	public static List<WebElement> getListOfElements(Config testConfig, How how, String what)
@@ -580,7 +580,7 @@ public class Element
 	 * @param isTestCaseFailedIfNoSuchExcetion
 	 *             ---> true : If NoSuchElement exception is thrown then test case will be failed immediately 
 	 *             ---> false : If NoSuchElement exception is thrown then test case will never failed
-	 * @author i0465
+	 * @author pksautomation
 	 * @return found WebElement
 	 */
 	public static WebElement getPageElement(Config testConfig, How how, String what,Boolean isTestCaseFailedIfNoSuchExcetion)
@@ -646,7 +646,7 @@ public class Element
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
 	 * @return
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String getText(Config testConfig, How how, String what, String description)
 	{
@@ -675,7 +675,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String getText(Config testConfig, WebElement element, String description)
 	{
@@ -748,7 +748,7 @@ public class Element
 	 * Verify is webelement is enable or not
 	 * @param testConfig
 	 * @param element
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static Boolean IsElementEnabled(Config testConfig, WebElement element)
@@ -797,7 +797,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void KeyPress(Config testConfig, WebElement element, Keys key, String description)
 	{
@@ -813,7 +813,7 @@ public class Element
 	 * @param testConfig
 	 * @param from
 	 * @param to
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void pageScroll(Config testConfig, String from, String to)
 	{
@@ -833,7 +833,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void selectValue(Config testConfig, WebElement element, String value, String description)
 	{
@@ -863,7 +863,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void selectVisibleText(Config testConfig, WebElement element, String value, String description)
 	{
@@ -896,7 +896,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void submit(Config testConfig, WebElement element, String description)
 	{
@@ -918,7 +918,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void waitForStaleness(Config testConfig, WebElement element, String description)
 	{
@@ -939,7 +939,7 @@ public class Element
 	 * Click without logging
 	 * @param testConfig
 	 * @param element
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	private static void clickWithoutLog(Config testConfig, WebElement element)
 	{
@@ -962,7 +962,7 @@ public class Element
 	 * @param attributeName
 	 * @param comment
 	 * @return attributeValue
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String getAttribute(Config testConfig, WebElement element, String attributeName, String comment)
 	{
@@ -987,7 +987,7 @@ public class Element
 	 * @param css
 	 * @param comment
 	 * @return cssValue
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String getCSSValue(Config testConfig, WebElement element, String css, String comment)
 	{
@@ -1011,7 +1011,7 @@ public class Element
 	 * @param webElements - List of elements
 	 * @param value - Value to select
 	 * @param comment - Comments
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void selectByValueInRadioGroup(Config testConfig, List<WebElement> webElements, String value, String comment)
 	{
@@ -1045,7 +1045,7 @@ public class Element
 	 * @param testConfig
 	 * @param javaScriptToExecute
 	 * @param elemen
-	 * @author i0465
+	 * @author pksautomation
 	 * @return result
 	 */
 	public static Object executeJavaScript(Config testConfig, String javaScriptToExecute, Object...element)
@@ -1060,7 +1060,7 @@ public class Element
 	 * @param testConfig
 	 * @param element
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void verifyElementNotEnabled(Config testConfig, WebElement element, String description)
 	{
@@ -1096,7 +1096,7 @@ public class Element
 	 * @param testConfig
 	 * @param element
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void verifyElementEnabled(Config testConfig, WebElement element, String description)
 	{
@@ -1131,7 +1131,7 @@ public class Element
 	 * This function is used to scroll an element into view
 	 * @param element
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void scrollToView(Config testConfig, WebElement element)
 	{
@@ -1260,7 +1260,7 @@ public class Element
 	 * @param value the value
 	 * @param element the element
 	 * @return true, if successful
-	 * @author I0465
+	 * @author pksautomation
 	 */
 	public static boolean bootStrapSelectDropDown(Config testConfig,String value, List<WebElement> elementsOfListInDropDown,WebElement dropDownElement, String ...description) {
 		boolean flag = false;
@@ -1299,7 +1299,7 @@ public class Element
 	 * @param elementsOfListInDropDown
 	 * @param description (optional)
 	 * @return true, if successful
-	 * @author ranjeet
+	 * @author pksautomation
 	 */
 	public static boolean bootStrapSelectDropDown(Config testConfig,String value, List<WebElement> elementsOfListInDropDown, String ...description) {
 		boolean flag = false;
@@ -1334,7 +1334,7 @@ public class Element
 	 * @param how         : locator method
 	 * @param what        : locator value
 	 * @param description : about element
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void verifyElementNotPresent(Config testConfig, How how, String what, String description) {
 		List<WebElement> listofelements = null;
@@ -1391,7 +1391,7 @@ public class Element
 	 * @param testConfig
 	 * @param element
 	 * @return
-	 * @author I0465
+	 * @author pksautomation
 	 */
 	public static boolean uploadFileUsingRobot(Config testConfig,WebElement element,String filePath,String description) {
 		boolean flag=true;
@@ -1429,7 +1429,7 @@ public class Element
 	 * Mouse hove on given web element
 	 * @param testConfig
 	 * @param element
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void  mousehoverOnElement(Config testConfig,WebElement element,String description) {
 		Actions builder = new Actions(testConfig.driver);
@@ -1443,7 +1443,7 @@ public class Element
 	 * @param by
 	 * @param maxWaitTimeInSecond
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static boolean waitForElementToLoad(Config testConfig,By by,int maxWaitTimeInSecond,String description) {
@@ -1470,7 +1470,7 @@ public class Element
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static boolean waitForElementToLoad(Config testConfig, How how, String what, String description,int objectWaitTime)
 	{
@@ -1539,7 +1539,7 @@ public class Element
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
 	 * @return   null in case of Element not found other wise return WebElement
-	 * @author I0465
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig, By by,String description, Long ...maxwaitTime) {
 		testConfig.logComment("Wait for element '" + description + "' to be visible on the page.");
@@ -1570,7 +1570,7 @@ public class Element
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig, How how, String what, String description)
 	{
@@ -1659,7 +1659,7 @@ public class Element
 	 * @param by
 	 * @param maxWaitTimeInSecond
 	 * @param description
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static boolean waitForElementToLoad(Config testConfig,By by,String description) {
@@ -1758,7 +1758,7 @@ public class Element
 	 * @param description
 	 *            description logical name of specified WebElement, used for
 	 *            Logging purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void verifyElementNotPresent(Config testConfig, WebElement element, String description)
 	{
@@ -1799,7 +1799,7 @@ public class Element
 	 * @param description
 	 *            description logical name of specified WebElement, used for
 	 *            Logging purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void verifyElementPresent(Config testConfig, WebElement element, String description)
 	{
@@ -1827,7 +1827,7 @@ public class Element
 	 *            purposes in report
 	 * @param timeInSeconds
 	 *            Polling time
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void waitForVisibility(Config testConfig, WebElement element, int timeInSeconds, String description)
 	{
@@ -1889,7 +1889,7 @@ public class Element
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void enterPassword(Config testConfig, WebElement element, String value, String description)
 	{
@@ -1908,7 +1908,7 @@ public class Element
 	 * @param element
 	 * @param value
 	 * @param description
-	 * @author Shriram
+	 * @author pksautomation
 	 */
 	public static void enterDataThroughActions(Config testConfig, String Value, WebElement element) {
 		Element.clear(testConfig, element, "Cleared the existing value");

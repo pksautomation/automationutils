@@ -1,4 +1,4 @@
-package com.innovaccer.utils.report;
+package com.pksautomation.utils.report;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.codehaus.jackson.map.ObjectMapper;
-import com.innovaccer.utils.Config;
+import com.pksautomation.utils.Config;
 import cucumber.api.Scenario;
 
 public class DumpResultStore {

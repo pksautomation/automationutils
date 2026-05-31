@@ -1,8 +1,8 @@
-package com.innovaccer.utils.v2.dbconnection;
+package com.pksautomation.utils.v2.dbconnection;
 
 import java.sql.Connection;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.LoggerUtils;
 
 public class DBManager {
 	

@@ -1,15 +1,15 @@
-package com.innovaccer.utils.dbconnection;
+package com.pksautomation.utils.dbconnection;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.TestDataReader;
+import com.pksautomation.utils.Config;
+import com.pksautomation.utils.TestDataReader;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class ColumnMappingOfTables {

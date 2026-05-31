@@ -1,11 +1,11 @@
-package com.innovaccer.utils.v2.fileutils;
+package com.pksautomation.utils.v2.fileutils;
 
-import com.innovaccer.utils.APIHelper;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.ISO8601DateFormat;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.WaitHelper;
+import com.pksautomation.utils.APIHelper;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.ISO8601DateFormat;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.WaitHelper;
 import org.apache.commons.io.IOUtils;
 import org.bson.BsonDocument;
 import org.bson.Document;
@@ -17,12 +17,12 @@ import org.json.simple.parser.JSONParser;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 import com.google.gson.JsonSyntaxException;
-import com.innovaccer.utils.APIHelper;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.ISO8601DateFormat;
-import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.WaitHelper;
+import com.pksautomation.utils.APIHelper;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.ISO8601DateFormat;
+import com.pksautomation.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.WaitHelper;
 
 //import io.restassured.response.Response;
 import java.io.*;
@@ -60,7 +60,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the value from json
-     * @author pramod.singh
+     * @author pksautomation
      */
     public String getValueFromJson(Response response, String nodePath) {
         String value = null;
@@ -78,7 +78,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the values from json
-     * @author ranjeetkumar-i0803
+     * @author pksautomation
      */
     public List<String> getValuesFromJson(Response response, String nodePath) {
         List<String> value = null;
@@ -97,7 +97,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the hashmap of values from json
-     * @author ranjeetkumar-i0803
+     * @author pksautomation
      */
     public Map<String, Object> getValueInHashMapFromJson(Response response, String nodePath) {
         Map<String, Object> valueMap = null;
@@ -255,7 +255,7 @@ public class JSONUtils {
      * @param testConfig the test config
      * @param parameters the parameters --> map of values
      * @return paramaters in JSON format
-     * @author i0465 (pramod.singh)
+     * @author pksautomation (pramod.singh)
      */
     public String createJsonParameters(Map<String, String> parameters) {
         LinkedHashMap<String, String> hasMap = new LinkedHashMap<String, String>(parameters);
@@ -287,7 +287,7 @@ public class JSONUtils {
      * @param jo
      * @return
      * @throws JSONException
-     * @author pramod.singh
+     * @author pksautomation
      */
     public Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -315,7 +315,7 @@ public class JSONUtils {
     /**
      * JSONArray is an ordered sequence of values -> convert to List (equivalent to Freemarker "sequence")
      *
-     * @author pramod.singh
+     * @author pksautomation
      */
     public List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException {
         List<Object> model = new ArrayList<Object>();
@@ -341,7 +341,7 @@ public class JSONUtils {
 
     /* Read data from JSON File and return Map of Map with all the details
      * @return Map of Map of String
-     * @author nikita.gatagat
+     * @author pksautomation
      */
     public HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
         JSONArray orgArray;
@@ -391,7 +391,7 @@ public class JSONUtils {
      * @param String jsonString
      * @return JSONObject
      * @throws JSONException
-     * @author nikita.gatagat
+     * @author pksautomation
      */
     public JSONObject convertStringToJSONObject(String jsonString) throws Throwable {
         JSONObject jo = null;
@@ -451,7 +451,7 @@ public class JSONUtils {
 	 * Parse from Document Object into JSONObject
 	 * 
 	 * @param doc
-	 * @author i0465
+	 * @author pksautomation
 	 * @return JSONObject
 	 */
 	public static JSONObject pareseDocumentIntoJSONObject(Document doc) {
@@ -467,7 +467,7 @@ public class JSONUtils {
 	
 	/**
 	 * Returns a JSON key from JSON object
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public String getJSONKeyValue(Config testConfig, JSONObject jObject, String key) {
 		String value = null;
@@ -486,7 +486,7 @@ public class JSONUtils {
 	 * return Bson Document
 	 * 
 	 * @param jsonString
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public BsonDocument convertJSONStringIntoBsonDocument(String jsonString) {

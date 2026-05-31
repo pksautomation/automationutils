@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
@@ -87,10 +87,10 @@ import com.opera.core.systems.OperaDriver;
 import cucumber.api.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import com.innovaccer.utils.Element.How;
+import com.pksautomation.utils.Element.How;
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Browser
@@ -124,7 +124,7 @@ public class Browser
 
 	/**
 	 * Refresh browser once
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void browserRefresh(Config testConfig)
 	{
@@ -186,7 +186,7 @@ public class Browser
 	 * 
 	 * @param Config
 	 *            test config instance for the browser to be closed
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void closeBrowser(Config testConfig)
 	{
@@ -256,7 +256,7 @@ public class Browser
 	 * 
 	 * @param Config
 	 *            test config instance
-	 *  @author pramod.singh
+	 *  @author pksautomation
 	 */
 	public static void deleteCookies(Config testConfig)
 	{
@@ -270,7 +270,7 @@ public class Browser
 	 * Wait for given browser's  title to display
 	 * @param testConfig
 	 * @param title
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void waitForPageTitleToContain(Config testConfig, String title)
 	{
@@ -287,7 +287,7 @@ public class Browser
 	 *            - path of the folder where file is present
 	 * @param name
 	 *            - some text that is present in file name
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return - file name with matching text
 	 */
 	public static File DesiredFileDownload(Config testConfig, String path, String name)
@@ -354,7 +354,7 @@ public class Browser
 	}
 	/**
 	 * Get name of Caller Class Name of current function
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	private static String getCallerClassName()
@@ -374,7 +374,7 @@ public class Browser
 	 * get cookies value for current browser
 	 * @param testConfig
 	 * @param cookieName
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getCookieValue(Config testConfig, String cookieName)
@@ -430,7 +430,7 @@ public class Browser
 	 * 
 	 * @param Config
 	 *            test config instance
-	 *            @author pramod.singh
+	 *            @author pksautomation
 	 * @return file using which we can call takescreenshot
 	 */
 	public static File getScreenShotFile(Config testConfig)
@@ -441,7 +441,7 @@ public class Browser
 	/**
 	 * 
 	 * @param testConfig
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	private static String getScreenshotFileName(Config testConfig)
@@ -457,7 +457,7 @@ public class Browser
 	 * 
 	 * @param testConfig
 	 * @param url
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void goBack(Config testConfig)
 	{
@@ -469,7 +469,7 @@ public class Browser
 	 * Get last update file name from specific directory
 	 * @param testConfig
 	 * @param dir
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public static File lastFileModified(Config testConfig, String dir)
@@ -488,7 +488,7 @@ public class Browser
 	 *            - path of the folder where file is present
 	 * @param name
 	 *            - some text that is present in file name
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return - file name of the last modified file with matching text
 	 */
 	public static File lastFileModifiedWithDesiredName(Config testConfig, String path, String name)
@@ -543,7 +543,7 @@ public class Browser
 	 *            test config instance
 	 * @param url
 	 *            URL to be navigated
-	 *  @author pramod.singh
+	 *  @author pksautomation
 	 */
 	public static void navigateToURL(Config testConfig, String url)
 	{
@@ -574,7 +574,7 @@ public class Browser
 	 * 
 	 * @return new browser instance
 	 * @throws IOException
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static SelfHealingDriver openBrowser(Config testConfig)
 	{
@@ -749,7 +749,7 @@ public class Browser
 	 * 
 	 * @param Config
 	 *            test config instance for the browser to be quit
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void quitBrowser(Config testConfig)
 	{
@@ -825,7 +825,7 @@ public class Browser
 	 *            test config instance
 	 * @param windowHandle
 	 *            Name of the window to be switched to
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void switchToGivenWindow(Config testConfig, String windowHandle)
 	{
@@ -844,7 +844,7 @@ public class Browser
 	 *            test config instance
 	 * @return window handle of the old window, so that it can be switched back
 	 *         later
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static String switchToNewWindow(Config testConfig)
 	{
@@ -883,7 +883,7 @@ public class Browser
 	 *            test config instance
 	 * @param destination
 	 *            file to which screenshot is to be saved
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void takeScreenShoot(Config testConfig, File destination)
 	{
@@ -963,7 +963,7 @@ public class Browser
 	 *            test config instance
 	 * @param expectedURL
 	 * @return true if actual URL contains the expected URL
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static boolean verifyURL(Config testConfig, String expectedURL)
 	{
@@ -1010,7 +1010,7 @@ public class Browser
 	 * Method use to wait until given url visible
 	 * @param url
 	 * @param maxTimeToWaitInSec
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void waitForUrlToDisplay(Config testConfig, String url,int maxTimeToWaitInSec)
 	{
@@ -1028,7 +1028,7 @@ public class Browser
 	 * @param testConfig
 	 * @param pollTime
 	 *            - Intervals in which Browser should be polled for alert
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void waitForPopUp(Config testConfig, int pollTime)
 	{
@@ -1059,7 +1059,7 @@ public class Browser
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig,WebDriver driver, By by, int maxWaitTimeInSecond,
 			String description) {
@@ -1132,7 +1132,7 @@ public class Browser
 	 * 
 	 * @param testConfig
 	 * @param maxtimeoutInSecond
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void implicitWait(Config testConfig, int maxtimeoutInSecond) {
 		testConfig.driver.manage().timeouts().implicitlyWait(maxtimeoutInSecond, TimeUnit.SECONDS);
@@ -1144,7 +1144,7 @@ public class Browser
  * @param maxWaitTimeInSecond
  * @param description
  * @return --> WebElement
- * @author pramod.singh
+ * @author pksautomation
  */
 	public static WebElement waitForElementToBeClickable(Config testConfig, By by, int maxWaitTimeInSecond,String description) {
 		WebElement element = null;
@@ -1160,7 +1160,7 @@ public class Browser
 	/**
 	 * wait for js to load 
 	 * @param testConfig
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public static boolean waitForJStoLoad(Config testConfig) {
@@ -1199,7 +1199,7 @@ public class Browser
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig, By by, int maxWaitTimeInSecond,String description) {
 		Long waitTime = Long.valueOf(maxWaitTimeInSecond);
@@ -1210,7 +1210,7 @@ public class Browser
 	 * overloaded method - Pause the execution for given less than one seconds
 	 * 
 	 * @param seconds
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static void wait(Config testConfig, double seconds)
 	{
@@ -1231,7 +1231,7 @@ public class Browser
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig, How how, String what, String description)
 	{
@@ -1244,7 +1244,7 @@ public class Browser
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static boolean waitForElementToLoad(Config testConfig, By by, String description)
 	{
@@ -1257,7 +1257,7 @@ public class Browser
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static boolean waitForElementToLoad(Config testConfig, How how, String what, String description,int objectWaitTime)
 	{
@@ -1270,7 +1270,7 @@ public class Browser
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static boolean waitForElementToLoad(Config testConfig, How how, String what, String description)
 	{
@@ -1283,7 +1283,7 @@ public class Browser
 	 * @param how
 	 * @param what
 	 * @param description
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static boolean waitForElementToLoad(Config testConfig, By by,int maxWaitTime, String description)
 	{
@@ -1298,7 +1298,7 @@ public class Browser
 	 * @param description
 	 *            logical name of specified WebElement, used for Logging
 	 *            purposes in report
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static WebElement waitForVisibility(Config testConfig, By by,String description) {
 		return Element.waitForVisibility(testConfig, by, description);

@@ -1,4 +1,4 @@
-package com.innovaccer.utils.dbconnection;
+package com.pksautomation.utils.dbconnection;
 
 import java.io.File;
 import java.util.HashMap;
@@ -8,18 +8,18 @@ import org.apache.http.entity.ContentType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.innovaccer.utils.APIHelper;
-import com.innovaccer.utils.Browser;
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.TestDataReader;
+import com.pksautomation.utils.APIHelper;
+import com.pksautomation.utils.Browser;
+import com.pksautomation.utils.Config;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.TestDataReader;
 import com.jayway.restassured.response.Response;
 
 import enums.APIMethodType.APIMethodsType;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class ElasticConnection {
@@ -29,7 +29,7 @@ public class ElasticConnection {
 	 * @param testConfig
 	 * @param query
 	 * @return JSON String
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	private static String convertSQLQueryToJSONStrinPayLoad(Config testConfig, String selectQuery) {
 		String jsonString=null;
@@ -52,7 +52,7 @@ public class ElasticConnection {
 	 * @param sqlSelectQuery
 	 * @param indexName
 	 * @return JSONObject
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static JSONArray executeSelectQuery(Config testConfig,String sqlSelectQuery,String indexName) {
 		JSONObject jsonObject = new JSONObject();
@@ -87,7 +87,7 @@ public class ElasticConnection {
 	 * @param elasticsqlRowNum
 	 * @param indexName
 	 * @return
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static JSONArray executeSelectQuery(Config testConfig,int elasticsqlRowNum,String indexName) {
 		String excelFilePath = System.getProperty("user.dir") +File.separator
@@ -102,7 +102,7 @@ public class ElasticConnection {
 	 * @param sqlSelectQuery
 	 * @param indexName
 	 * @return
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static int executeDeleteQuery(Config testConfig,String sqlSelectQuery,String indexName) {
 		JSONObject jsonObject = new JSONObject();
@@ -136,7 +136,7 @@ public class ElasticConnection {
 	 * @param testConfig
 	 * @param elasticsqlRowNum
 	 * @param indexName
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static int executeDeleteQuery(Config testConfig,int elasticsqlRowNum,String indexName) {

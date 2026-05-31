@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 
 import java.io.File;
@@ -37,15 +37,15 @@ import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
 
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.v2.WaitHelper;
-import com.innovaccer.utils.v2.reflections.TestScenarioExecuter;
+import com.pksautomation.utils.v2.WaitHelper;
+import com.pksautomation.utils.v2.reflections.TestScenarioExecuter;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 
@@ -140,7 +140,7 @@ public class Config
 	 * Load Config
 	 * @param configPath
 	 * @param scenario
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public Config(String configPath,Scenario scenario)
 	{
@@ -242,7 +242,7 @@ public class Config
 	 * fetched using - getCachedTestDataReaderObject()
 	 * 
 	 * @param sheetName
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	private void cacheTestDataReaderObject(String sheetName, String path)
 	{
@@ -255,7 +255,7 @@ public class Config
 	
 	/**
 	 * Open Browser
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void openBrowser()
 	{
@@ -288,7 +288,7 @@ public class Config
 	}
 	
 	/* Close the browser
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void closeBrowser()
 	{
@@ -306,7 +306,7 @@ public class Config
 	 * 
 	 * @param sheetName
 	 * @return TestDataReader object or null if object is not in cache
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public TestDataReader getCachedTestDataReaderObject(String sheetName)
 	{	
@@ -328,7 +328,7 @@ public class Config
 	 * @param sheetName
 	 * @param path
 	 *            Path of excel sheet to read
-	 *  @author pramod.singh
+	 *  @author pksautomation
 	 * @return TestDataReader object or null if object is not in cache
 	 */
 	public TestDataReader getCachedTestDataReaderObject(String sheetName, String path)
@@ -352,7 +352,7 @@ public class Config
 	 * 
 	 * @param key
 	 *            key name whose value is needed
-	 *            @author pramod.singh
+	 *            @author pksautomation
 	 * @return value of the specified key
 	 */
 	@SuppressWarnings("unchecked")
@@ -384,7 +384,7 @@ public class Config
 	 * @param key
 	 *            key name whose value is needed
 	 * @return value of the specified key
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public Object getObjectRunTimeProperty(String key)
 	{
@@ -415,7 +415,7 @@ public class Config
 	 * @param sheetName
 	 * @param path
 	 *            Path of excel sheet to read
-	 *            @author i0465
+	 *            @author pksautomation
 	 * @return TestDataReader object or null if object is not in cache
 	 */
 	public TestDataReader getRefreshedTestDataReaderObject(String sheetName, String path)
@@ -434,7 +434,7 @@ public class Config
 	 * @param key
 	 *            key name whose value is needed
 	 * @return value of the specified key
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	
 	public String getRunTimeProperty(String key)
@@ -462,7 +462,7 @@ public class Config
 	}
 	
 	/* Get Scenarios Name
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public String getScenarioName()
 	{
@@ -476,7 +476,7 @@ public class Config
 	/**
 	 * 
 	 * @param message
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logComment(String message)
 	{
@@ -499,7 +499,7 @@ public class Config
 	/**
 	 * 
 	 * @param e
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public void logException(Throwable e) {
 			this.logException("", e);
@@ -510,7 +510,7 @@ public class Config
 	 * @param message
 	 * @param e
 	 * @param IsTakeScreenShot
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logExceptionSkipFailure(String message , Throwable e , boolean ...IsTakeScreenShot) {
 		 this.islogExceptionSkip = true;
@@ -527,7 +527,7 @@ public class Config
 	 * @param message
 	 * @param throwable
 	 * @param pageLogInfo optionnal
-	 * @author ranjeet
+	 * @author pksautomation
 	 */
 	public void logException(String message , Throwable e , boolean ...IsTakeScreenShot)
 	{
@@ -539,7 +539,7 @@ public class Config
 		
 		StackTraceElement[] s =  e.getStackTrace();
 		for (StackTraceElement ss  : s ) {
-			if(ss.getClassName().startsWith("com.innovaccer")) {
+			if(ss.getClassName().startsWith("com.pksautomation")) {
 				errorFilePath  = ss.getClassName()+":"+ss.getLineNumber();
 				stbr.append(errorFilePath+"\n");
 			}
@@ -627,7 +627,7 @@ public class Config
 	 * 
 	 * @param message
 	 * @param isLoadPageinfo
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logFail(String message,boolean ...isLoadPageinfo)
 	{
@@ -643,7 +643,7 @@ public class Config
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public <T> void logFail(String what, T expected, T actual)
 	{
@@ -657,7 +657,7 @@ public class Config
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logFail(String what, String expected, String actual)
 	{
@@ -682,7 +682,7 @@ public class Config
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logWarning(String what, String expected, String actual)
 	{
@@ -695,7 +695,7 @@ public class Config
 	/**
 	 * 
 	 * @param e
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logFailureException(Throwable e)
 	{
@@ -707,7 +707,7 @@ public class Config
 	/**
 	 * 
 	 * @param message
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logPass(String message)
 	{
@@ -720,7 +720,7 @@ public class Config
 	 * @param <T>
 	 * @param what
 	 * @param actual
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public <T> void logPass(String what, T actual)
 	{
@@ -733,7 +733,7 @@ public class Config
 	 * 
 	 * @param what
 	 * @param actual
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logPass(String what, String actual)
 	{
@@ -744,7 +744,7 @@ public class Config
 	}
 
 	/**
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @param message
 	 */
 	public void logWarning(String message)
@@ -758,7 +758,7 @@ public class Config
 	 * 
 	 * @param message
 	 * @param logPageInfo
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logWarning(String message, boolean logPageInfo)
 	{
@@ -771,7 +771,7 @@ public class Config
 	 * 
 	 * @param message
 	 * @param logPageInfo
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logFail(String message, boolean logPageInfo)
 	{
@@ -786,7 +786,7 @@ public class Config
 
 	/**
 	 * Add the given key ArrayListJSONObject pair in the Run Time Properties
-	 *  @author pramod.singh
+	 *  @author pksautomation
 	 */
 	public void putJSONArrayListInRunTimeProperty(String key, ArrayList<JSONObject> table)
 	{
@@ -801,7 +801,7 @@ public class Config
 	 * 
 	 * @param key
 	 * @param value
-	 ** @author pramod.singh
+	 ** @author pksautomation
 	 */
 	public void putRunTimeProperty(String key, Object value)
 	{
@@ -816,7 +816,7 @@ public class Config
 	 * 
 	 * @param key
 	 * @param value
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void putRunTimeProperty(String key, String value)
 	{
@@ -832,7 +832,7 @@ public class Config
 	 * Removes the given key from the Run Time Properties
 	 * 
 	 * @param key
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void removeRunTimeProperty(String key)
 	{
@@ -846,7 +846,7 @@ public class Config
 	/**
 	 * read and load properties file into RunTime Properties
 	 * @param configPath
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void loadPropertiesFile(Object file ) {
 		// Read the Config file
@@ -876,7 +876,7 @@ public class Config
 	/**
 	 * read and load properties file into RunTime Properties
 	 * @param configPath
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void loadPropertiesFromMap(Map<String, String> data ) {
 		// Read the Config file
@@ -896,7 +896,7 @@ public class Config
 	 * Load Config
 	 * @param configPath
 	 * @param scenario
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public Config(String ...configPath)
 	{
@@ -964,7 +964,7 @@ public class Config
 	/**
 	 * Launch windows app
 	 * @param appPath : Application path in system
-	 * @author charitra.kumar
+	 * @author pksautomation
 	 */
 	public void launchWindowsApp() {
 		int retryCnt = 10;
@@ -991,7 +991,7 @@ public class Config
 	/**
 	 * Quits windows application and kills task manager instance
 	 * 
-	 * @author charitra.kumar
+	 * @author pksautomation
 	 */
 	public void quitWindowsApp()
 	{
@@ -1005,7 +1005,7 @@ public class Config
 	 * Note : Before calling this function must set current scenarios to testConfig
 	 * @param testConfig
 	 * @return
-	 * @author I0465
+	 * @author pksautomation
 	 */
 	public static String setDownLoadPathForEachScenarios(Config testConfig) {
 		/**
@@ -1034,7 +1034,7 @@ public class Config
 	
 	/**
 	 * get browser type from pom.xml at run time
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public String getBrowserNameFromRunTimeProperty() {
@@ -1044,7 +1044,7 @@ public class Config
 	}
 	/**
 	 * get browser type from pom.xml at run time
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public String getIsHeadLessModeFromRunTimeProperty() {
@@ -1054,7 +1054,7 @@ public class Config
 	
 	/**
 	 * get browser type from pom.xml at run time
-	 * @author pramod.singh
+	 * @author pksautomation
 	 * @return
 	 */
 	public String getLogsModeFromRunTimeProperty() {
@@ -1065,7 +1065,7 @@ public class Config
 	/**
 	 * this function is used to write message in logs file without any PHM data
 	 * @param message
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void logCommentWithoutPHMData(String message)
 	{
@@ -1086,7 +1086,7 @@ public class Config
 	/**
 	 * This method fail test scenarios just after calling it
 	 * @param msg
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void failFinalTestScenarios(String msg) {
 		this.endExecutionOnfailure=true;

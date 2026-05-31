@@ -1,4 +1,4 @@
-package com.innovaccer.utils.dbconnection;
+package com.pksautomation.utils.dbconnection;
 
 import java.io.File;
 import java.sql.Connection;
@@ -19,13 +19,13 @@ import java.util.Set;
 
 import org.bson.conversions.Bson;
 
-import com.innovaccer.utils.AesEncrypter;
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.Log;
-import com.innovaccer.utils.TestDataReader;
-import com.innovaccer.utils.dbconnection.DataBaseEnumConstants.DatabaseType;
-import com.innovaccer.utils.dbconnection.DataBaseEnumConstants.MongoDataBaseType;
+import com.pksautomation.utils.AesEncrypter;
+import com.pksautomation.utils.Config;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.Log;
+import com.pksautomation.utils.TestDataReader;
+import com.pksautomation.utils.dbconnection.DataBaseEnumConstants.DatabaseType;
+import com.pksautomation.utils.dbconnection.DataBaseEnumConstants.MongoDataBaseType;
 import com.mongodb.CommandResult;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
@@ -35,7 +35,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.ServerAddress;
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class DataBase
@@ -45,7 +45,7 @@ public class DataBase
 	 * Put single row of resultSet in HashMap and also in runtime properties
 	 * @param testConfig
 	 * @param sqlResultSet
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static Map<String, String> addToRunTimeProperties(Config testConfig, ResultSet sqlResultSet)
@@ -96,7 +96,7 @@ public class DataBase
 	 * @param sqlRow
 	 *            row number of the 'Query' column of 'SQL' sheet of Test data
 	 *            excel having the query to be executed
-	 *            @author i0465
+	 *            @author pksautomation
 	 * @return ResultSet -- Complete Result which is fetched is returned
 	 */
 	public static ResultSet executeSelectQuery(Config testConfig, int sqlRow, DatabaseType dbType)
@@ -121,7 +121,7 @@ public class DataBase
 	 * @param rowNumber
 	 *            row number to be returned (use 1 for first row and -1 for last
 	 *            row)
-	 * @author i0465
+	 * @author pksautomation
 	 * @return Map containing key:value pairs of specified row
 	 */
 	public static Map<String, String> executeSelectQuery(Config testConfig, int sqlRow, int rowNumber, DatabaseType dbType)
@@ -143,7 +143,7 @@ public class DataBase
 	 *            query to be executed
 	 * @param DatabaseType
 	 *            online/offline
-	 * @author i0465
+	 * @author pksautomation
 	 * @return Resultset
 	 */
 
@@ -221,7 +221,7 @@ public class DataBase
 	 * @param testConfig
 	 * @param DataBaseType  type 
 	 * @param sqlRow Row number of SQl Query in dataSheet 
-	 * @author i0465
+	 * @author pksautomation
 	 * @return HashMap <Integer, Map<String,String>>
 	 * 	Integer --> Row Numbers
 	 * 	Map->Column Name And Values 
@@ -240,7 +240,7 @@ public class DataBase
 	 * @param testConfig
 	 * @param DataBaseType  type 
 	 * @param sqlRow Row number of SQl Query in dataSheet 
-	 * @author i0465
+	 * @author pksautomation
 	 * @return HashMap <Integer, Map<String,String>>
 	 * 	Integer --> Row Numbers
 	 * 	Map->Column Name And Values 
@@ -264,7 +264,7 @@ public class DataBase
 	 * @param rowNumber
 	 *            row number to be returned (use 1 for first row and -1 for last
 	 *            row)
-	 * @author i0465
+	 * @author pksautomation
 	 * @return Map containing key:value pairs of specified row
 	 */
 	public static Map<String, String> executeSelectQuery(Config testConfig, String selectQuery, int rowNumber, DatabaseType dbType)
@@ -367,7 +367,7 @@ public class DataBase
 	 * @param rowNumber
 	 *            row number to be returned (use 1 for first row and -1 for last
 	 *            row)
-	 * @author i0465
+	 * @author pksautomation
 	 * @return Map containing key:value pairs of specified row
 	 */
 	public static int executeUpdateQuery(Config testConfig, int sqlToUpdate, DatabaseType dbType)
@@ -384,7 +384,7 @@ public class DataBase
 	 * @param testConfig
 	 * @param sqlRow
 	 * @param dbType
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static int executeUpdateQuery(Config testConfig,  String sheetPath, int sqlRow, DatabaseType dbType)
@@ -403,7 +403,7 @@ public class DataBase
 	 *            test config instance
 	 * @param updateQuery
 	 *            query to be executed
-	 *            @author i0465
+	 *            @author pksautomation
 	 * @return number of rows affected
 	 */
 	public static int executeUpdateQuery(Config testConfig, String updateQuery, DatabaseType dbType)
@@ -463,7 +463,7 @@ public class DataBase
 	 * @param sqlRow
 	 * @param dbType
 	 * @param sheetname
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static ResultSet executeSelectQuery(Config testConfig, int sqlRow, DatabaseType dbType,String sheetname)
@@ -482,7 +482,7 @@ public class DataBase
 	 * 
 	 * @param Config
 	 *            test config instance
-	 *            @author i0465
+	 *            @author pksautomation
 	 * @return Db Connection
 	 */
 	private static Connection getConnection(Config testConfig, DatabaseType dataBaseType)
@@ -572,7 +572,7 @@ public class DataBase
 	 * @param testConfig : test config instance
 	 * @param sqlRow : row number of sql query in excel
 	 * @param dbType : type of DB
-	 * @author i0465
+	 * @author pksautomation
 	 * @return 
 	 */
 	public static int executeDeleteQuery(Config testConfig, int sqlRow, DatabaseType dbType)
@@ -589,7 +589,7 @@ public class DataBase
 	 * 
 	 * @param resultset
 	 *            SQL resultSet
-	 * @author i0465
+	 * @author pksautomation
 	 * @return sql data in list<hashmap<string,string>
 	 */
 	public static List<HashMap<String, String>> convertResultSetToList(Config testConfig, ResultSet rs)
@@ -625,7 +625,7 @@ public class DataBase
 	 * @param connectString
 	 * @param userName
 	 * @param password
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static ResultSet executeQueryWithoutClosingConnection(String query, String connectionString, String username, String password)
@@ -663,7 +663,7 @@ public class DataBase
 	 * @param connectString
 	 * @param userName
 	 * @param password
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static ResultSet executePostgresQueryWithoutClosingConnection(String query, String connectionString, String username, String password)
@@ -701,7 +701,7 @@ public class DataBase
 	
 	/**
 	 * Close the database connection, if open.
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void closeDatabaseConnection()
 	{
@@ -725,7 +725,7 @@ public class DataBase
 	 * @param testConfig 	test config instance
 	 * @param sqlRow 		row number of sql query in excel
 	 * @param dbType		type of DB
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static int executeInsertQuery(Config testConfig, int sqlRow, DatabaseType dbType)
@@ -743,7 +743,7 @@ public class DataBase
 	 * @param selectQuery 	Skeleton Query
 	 * @param dbType		type of DB
 	 * arg1					array of arguments to prepare the final query
-	 * @author 				i0556
+	 * @author pksautomation
 	 * @return
 	 */
 	

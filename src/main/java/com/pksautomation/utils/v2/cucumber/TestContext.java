@@ -1,7 +1,7 @@
-package com.innovaccer.utils.v2.cucumber;
+package com.pksautomation.utils.v2.cucumber;
 
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.UtilityObjectManager;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.UtilityObjectManager;
 
 import java.io.File;
 

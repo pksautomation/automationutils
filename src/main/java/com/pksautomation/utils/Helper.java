@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -44,7 +44,7 @@ import com.google.common.base.CharMatcher;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Helper {
@@ -59,7 +59,7 @@ public class Helper {
 	 *                     yyyy-mm-dd
 	 * @param newDateFomat -> is the format which we get after converting ex: dd MMM
 	 *                     yy
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String changeDateFormat(Config testConfig, String date, String oldDateFomat, String newDateFomat) {
@@ -99,7 +99,7 @@ public class Helper {
 	 *                           dd/mm/yyyy
 	 * @param expectedDateFormat is the format which we get after converting ex:
 	 *                           yyyy-mm-dd
-	 *                           @author i0465
+	 *                           @author pksautomation
 	 * @return
 	 * @throws ParseException
 	 */
@@ -117,7 +117,7 @@ public class Helper {
 	 * Function to change Date from 20/12/15 to 20-12-15
 	 * 
 	 * @param date
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String changeDateFormatSeperator(String date) {
@@ -132,7 +132,7 @@ public class Helper {
 	 * 
 	 * @param date
 	 * @param time
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String changeDateTimeFormat(String date, String time) {
@@ -148,7 +148,7 @@ public class Helper {
 	 * 
 	 * @param date
 	 * @return boolean value
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static boolean verifyDateFormat(String date, String format) {
 
@@ -205,7 +205,7 @@ public class Helper {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareContains(Config testConfig, String what, String expected, String actual) {
 		actual = actual.trim();
@@ -227,7 +227,7 @@ public class Helper {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static <T> void compareEquals(Config testConfig, String what, T expected, T actual, boolean... hardAssert ) {
 		if ((expected == null & actual == null) || (expected == null && actual.toString().isEmpty())
@@ -254,7 +254,7 @@ public class Helper {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareEqualsWarning(Config testConfig, String what, String expected, String actual) {
 		if (expected == null & actual == null) {
@@ -278,7 +278,7 @@ public class Helper {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareExcelEquals(Config testConfig, String what, String expected, String actual) {
 		if (actual != null) {
@@ -306,7 +306,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param what
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareTrue(Config testConfig, String what, boolean actual, boolean... hardAssert) {
 		if (!actual) {
@@ -326,7 +326,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param what
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 
 	public static void compareFalse(Config testConfig, String what, boolean actual) {
@@ -343,7 +343,7 @@ public class Helper {
 	 * @param expected   This value must be value having more than 2 digits after
 	 *                   decimal
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareValues(Config testConfig, String what, String expected, String actual) {
 		if (expected == null & actual == null) {
@@ -372,7 +372,7 @@ public class Helper {
 	 * Generate a random Alphabets string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String generateRandomAlphabetsString(int length) {
 		Random rd = new Random();
@@ -390,7 +390,7 @@ public class Helper {
 	 * Generate a random Alpha-Numeric string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String generateRandomAlphaNumericString(int length) {
 		Random rd = new Random();
@@ -408,7 +408,7 @@ public class Helper {
 	 * Generate a random Special Character string of given length
 	 * 
 	 * @param length Length of string to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 */
 
 	public static String generateRandomSpecialCharacterString(int length) {
@@ -427,7 +427,7 @@ public class Helper {
 	 * Generate a random number of given length
 	 * 
 	 * @param length Length of number to be generated
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static long generateRandomNumber(int length) {
@@ -481,7 +481,7 @@ public class Helper {
 	/**
 	 * Get current  Date
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getCurrentDateTime(String format) {
@@ -494,7 +494,7 @@ public class Helper {
 	/**
 	 * Get current  Time
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getCurrentTime(String format) {
@@ -510,7 +510,7 @@ public class Helper {
  * @param mm
  * @param yyyy
  * @param format
- * @author i0465
+ * @author pksautomation
  * @return
  */
 	public static String getDate(int dd, int mm, int yyyy, String format) {
@@ -525,7 +525,7 @@ public class Helper {
 	 * 
 	 * @param days
 	 * @param format sample format yyyy-MM-dd
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterDays(int days, String format) {
@@ -545,7 +545,7 @@ public class Helper {
 	 * @param days
 	 * @param NEW_FORMAT
 	 * @param date
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterDays(int days, String NEW_FORMAT, String date) {
@@ -575,7 +575,7 @@ public class Helper {
 	 * 
 	 * @param years
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDateBeforeOrAfterYears(int years, String format) {
@@ -594,7 +594,7 @@ public class Helper {
 	 * @param mm
 	 * @param yyyy
 	 * @param format
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String getDatePreviousTo(int dd, int mm, int yyyy, String format) {
@@ -609,7 +609,7 @@ public class Helper {
 	 * from RuntimeProperties
 	 * 
 	 * @param input string in which some Argument is present
-	 * @author i0465
+	 * @author pksautomation
 	 * @return replaced string
 	 */
 	public static String replaceArgumentsWithRunTimeProperties(Config testConfig, String input) {
@@ -633,7 +633,7 @@ public class Helper {
 	 * 
 	 * @param roundOffValue
 	 * @param minimumFractionDigits
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String roundOff(double roundOffValue, int minimumFractionDigits) {
@@ -648,7 +648,7 @@ public class Helper {
 
 	/**
 	 * Returns a JSON key from JSON object
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String getJSONKeyValue(Config testConfig, JSONObject jObject, String key) {
 		String value = null;
@@ -667,7 +667,7 @@ public class Helper {
 	 * This Method is used to create a file with given format
 	 * 
 	 * @param extension
-	 * @author i0465
+	 * @author pksautomation
 	 * @return -- File Path
 	 */
 	public static String createFileWithGivenFormat(Config testConfig, String extension) {
@@ -690,7 +690,7 @@ public class Helper {
 	 * This Method is used to create folder at given path
 	 * 
 	 * @param path
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static boolean createFolder(String path) {
@@ -720,7 +720,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param location
 	 * @param textToUpdate
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void updateTextFile(Config testConfig, String location, String textToUpdate) {
 		try {
@@ -749,7 +749,7 @@ public class Helper {
 	 * @param What     is to be tested
 	 * @param Expected String to be tested
 	 * @param Actual   String to be tested
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareDifferent(Config testConfig, String what, String firstStr, String secondStr) {
 		if (firstStr != null && secondStr != null) {
@@ -777,7 +777,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void compareEquals(Config testConfig, Map<String, String> expected, Map<String, String> actual) {
 		for (Map.Entry<String, String> entry : expected.entrySet()) {
@@ -790,7 +790,7 @@ public class Helper {
 	 * 
 	 * @param dateTime -> to be updated
 	 * @param hour     -> to be updated with
-	 * @author i0465
+	 * @author pksautomation
 	 * @return dateTime String
 	 * 
 	 */
@@ -819,7 +819,7 @@ public class Helper {
 	 * 
 	 * @param list
 	 * @param stringToMatch
-	 * @author i0465
+	 * @author pksautomation
 	 * @return true/false
 	 * 
 	 */
@@ -840,7 +840,7 @@ public class Helper {
 	 * @param filePath
 	 * @param search
 	 * @param replacement
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void replaceStringInFile(Config testConfig, String filePath, String search, String replacement) {
 		File htmlFile = new File(filePath);
@@ -869,7 +869,7 @@ public class Helper {
 	 * return Bson Document
 	 * 
 	 * @param jsonString
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static BsonDocument convertJSONStringIntoBsonDocument(Config testConfig,String jsonString) {
@@ -887,7 +887,7 @@ public class Helper {
 	 * Parse from Document Object into JSONObject
 	 * 
 	 * @param doc
-	 * @author i0465
+	 * @author pksautomation
 	 * @return JSONObject
 	 */
 	public static JSONObject pareseDocumentIntoJSONObject(Document doc) {
@@ -905,7 +905,7 @@ public class Helper {
 	 * Fail test scenarios
 	 * 
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 * @param message
 	 */
 	public static void failTestScenario(Config testConfig, String message) {
@@ -918,7 +918,7 @@ public class Helper {
 	 * 
 	 * @param dataFormat
 	 * @param epoch
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static String convertEpochTimeToHumanReadable(String dataFormat, long epoch) {
@@ -962,7 +962,7 @@ public class Helper {
 	 * @param format
 	 * @param date
 	 * @return
-	 * * @author pramod.singh
+	 * * @author pksautomation
 	 */
 	public static String getDateBeforeOrAfterYearsFromGiveDate(int years, String format, String date) {
 		DateFormat dateFormat = new SimpleDateFormat(format);
@@ -987,7 +987,7 @@ public class Helper {
 	 * @param roundOffValue
 	 * @param minimumFractionDigits
 	 * @return
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public static String roundOff(double roundOffValue, int minimumFractionDigits,int maximumFractionDigit) {
 
@@ -1037,7 +1037,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param filePath
 	 * @return
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static JSONObject convertJSONFileToJSONObject(Config testConfig, String filePath) {
 		JSONObject jsonObj = null;
@@ -1063,7 +1063,7 @@ public class Helper {
 	 * @param testConfig
 	 * @param filePath
 	 * @return
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static JSONArray convertJSONFileToJSONArrayObject(Config testConfig, String filePath) {
 		JSONArray jsonarray = null;

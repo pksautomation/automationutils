@@ -1,9 +1,9 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import org.testng.Assert;
 
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.Log;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.Log;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -223,7 +223,7 @@ public class AssertionUtils {
      * @param string1     -> First String
      * @param string2     -> Second String
      * @param loglogPageInfo -> Boolean to enable/disable logging page info
-     * @author i0465
+     * @author pksautomation
      */
     public void assertDifferentStrings(String what, String firstStr, String secondStr, boolean... logPageInfo) {
     	
@@ -294,7 +294,7 @@ public class AssertionUtils {
 	 * @param testConfig
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public  void compareEquals(Map<String, String> expected, Map<String, String> actual) {
 		for (Map.Entry<String, String> entry : expected.entrySet()) {
@@ -308,7 +308,7 @@ public class AssertionUtils {
 	 * @param What     is to be tested
 	 * @param Expected String to be tested
 	 * @param Actual   String to be tested
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public  void compareDifferent(String what, String firstStr, String secondStr,boolean...logPageInfo ) {
 		
@@ -340,7 +340,7 @@ public class AssertionUtils {
 	 * @param testConfig
 	 * @param what
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public void compareTrue( String what, boolean actual, boolean hardAssert,boolean ...logPageInfo) {
 		boolean capturelogPageInfo=false;
@@ -367,7 +367,7 @@ public class AssertionUtils {
 	 * @param testConfig
 	 * @param what
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 
 	public void compareFalse(String what, boolean actual,boolean hardAssert,boolean... logPageInfo) {
@@ -396,7 +396,7 @@ public class AssertionUtils {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public void compareEqualsWarning(String what, String expected, String actual) {
 		if (expected == null & actual == null) {
@@ -422,7 +422,7 @@ public class AssertionUtils {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public <T> void compareEquals(String what, T expected, T actual, boolean hardAssert,boolean... logPageInfo  ) {
 		boolean capturelogPageInfo=false;
@@ -455,7 +455,7 @@ public class AssertionUtils {
 	 * @param what
 	 * @param expected
 	 * @param actual
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public  void compareContains(String what, String expected, String actual, boolean hardAssert,boolean... logPageInfo) {
 		actual = actual.trim();

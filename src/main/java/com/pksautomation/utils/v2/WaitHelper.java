@@ -1,11 +1,11 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
 import java.util.NoSuchElementException;
-import com.innovaccer.utils.v2.Config;
+import com.pksautomation.utils.v2.Config;
 
 public class WaitHelper {
 

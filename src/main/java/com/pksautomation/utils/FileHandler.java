@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.awt.AWTException;
 import java.io.BufferedReader;
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class FileHandler

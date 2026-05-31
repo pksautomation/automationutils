@@ -1,4 +1,4 @@
-package com.innovaccer.commonutilty.CommonUtility;
+package com.pksautomation.commonutilty.CommonUtility;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

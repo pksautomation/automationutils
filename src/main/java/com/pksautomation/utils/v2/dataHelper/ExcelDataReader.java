@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2.dataHelper;
+package com.pksautomation.utils.v2.dataHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,13 +26,13 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.innovaccer.utils.v2.Helper;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.LoggerUtils;
-//import com.innovaccer.utils.v2.dbconnection.DataBaseConnection;
+import com.pksautomation.utils.v2.Helper;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.LoggerUtils;
+//import com.pksautomation.utils.v2.dbconnection.DataBaseConnection;
 
 /**
- *@author pramod.singh
+ *@author pksautomation
  */
 public class ExcelDataReader
 {
@@ -77,7 +77,7 @@ public class ExcelDataReader
 	 * fetched using - getCachedTestDataReaderObject()
 	 *
 	 * @param sheetName
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	private void cacheTestDataReaderObject(String sheetName, String path)
 	{

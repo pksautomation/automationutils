@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2.customexception;
+package com.pksautomation.utils.v2.customexception;
 
 public class CustomRuntimeException extends Exception {
 

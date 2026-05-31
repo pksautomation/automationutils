@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import org.json.JSONTokener;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class JSONtoFmModel {
@@ -34,7 +34,7 @@ public class JSONtoFmModel {
 	     * @param jsonString String
 	     * @return model
 	     * @throws JSONException
-	     * @author pramod.singh
+	     * @author pksautomation
 	     */
 	    public static Map<String, Object> convertJSONObjectToMap(String jsonString) throws JSONException
 	    {
@@ -48,7 +48,7 @@ public class JSONtoFmModel {
 	     * @param jo
 	     * @return
 	     * @throws JSONException
-	     * @author pramod.singh
+	     * @author pksautomation
 	     */
 	    public static Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException
 	    {
@@ -92,7 +92,7 @@ public class JSONtoFmModel {
 	     * @param jsonString String
 	     * @return model
 	     * @throws JSONException
-	     * @author pramod.singh
+	     * @author pksautomation
 	     */
 	    public static Map<String, Object> convertJSONArrayToMap(String jsonString) throws JSONException
 	    {
@@ -104,7 +104,7 @@ public class JSONtoFmModel {
 	    
 	    /**
 	     * JSONArray is an ordered sequence of values -> convert to List (equivalent to Freemarker "sequence")
-	     * @author pramod.singh
+	     * @author pksautomation
 	     */
 	    public static List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException
 	    {

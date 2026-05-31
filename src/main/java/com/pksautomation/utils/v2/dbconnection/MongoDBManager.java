@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2.dbconnection;
+package com.pksautomation.utils.v2.dbconnection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,12 +10,12 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.EncryptionUtils;
-import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.fileutils.JSONUtils;
-import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
-import com.innovaccer.utils.v2.dbconnection.*;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.EncryptionUtils;
+import com.pksautomation.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.fileutils.JSONUtils;
+import com.pksautomation.utils.v2.dataHelper.ExcelDataReader;
+import com.pksautomation.utils.v2.dbconnection.*;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
@@ -55,7 +55,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author i0465
+	 * @author pksautomation
 	 * @return JSONObject
 	 */
 	public JSONObject executeMongoQuery(int rowNum) {
@@ -73,7 +73,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public ArrayList<JSONObject> executeMongoQueryAndReturnArrayOfJSON(int rowNum) {
@@ -180,7 +180,7 @@ public class MongoDBManager {
 	 * @param testConfig
 	 * @param mongoQueryRowNum
 	 * @param many
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 
@@ -213,7 +213,7 @@ public class MongoDBManager {
 	 * @param dataBaseName   ---> Mongo DataBase Name
 	 * @param collectionName ---> Mongo collection Name
 	 * @param many
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public int updateDocument(BsonDocument filterBson, BsonDocument updateBson,
@@ -254,7 +254,7 @@ public class MongoDBManager {
 	 * Remove document in Mongo DB collection
 	 * @param mongoQueryRowNum
 	 * @param many
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public int removeDocument(int mongoQueryRowNum, boolean many) {
@@ -285,7 +285,7 @@ public class MongoDBManager {
 	 * @param dataBaseName   ---> Mongo DataBase Name
 	 * @param collectionName ---> Mongo collection Name
 	 * @param many
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public int removeDocuments(BsonDocument filterBson, String dataBaseName,
@@ -325,7 +325,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public boolean insertMultipleDocuments(List<JSONObject> listOfJSONObject, String mongoDatabaseName, String collectionName) {
@@ -366,7 +366,7 @@ public class MongoDBManager {
 	/**
 	 * Get connection with mongo DB
 	 * @param dbType
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	private  MongoClient getMongoDBConnection() {
@@ -397,7 +397,7 @@ public class MongoDBManager {
 	 * Connection
 	 * @param userName
 	 * @param password
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	private  MongoClient getMongoServerConnection(String userName, String password,
 			String mongoDatabaseName) {

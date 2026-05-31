@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebElement;
@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 /**
- * @author pramod.singh
+ * @author pksautomation
  */
 public class PopupUtils {
 

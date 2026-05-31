@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import java.io.File;
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import org.openqa.selenium.remote.SessionId;
 import org.testng.asserts.SoftAssert;
 
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.v2.dataHelper.*;
+import com.pksautomation.utils.v2.dataHelper.*;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;

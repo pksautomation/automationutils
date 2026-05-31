@@ -1,8 +1,8 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.Browser.MyImageWriteParam;
-import com.innovaccer.utils.v2.Config;
+import com.pksautomation.utils.Browser.MyImageWriteParam;
+import com.pksautomation.utils.v2.Config;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
@@ -40,7 +40,7 @@ import javax.imageio.stream.ImageOutputStream;
 
 /**
  * 
- * @author i0465
+ * @author pksautomation
  *
  */
 
@@ -113,7 +113,7 @@ public class BrowserUtils {
     }
 
     /* Close the browser
-     * @author pramod.singh
+     * @author pksautomation
      */
 
 
@@ -128,7 +128,7 @@ public class BrowserUtils {
 	 *            test config instance
 	 * @param destination
 	 *            file to which screenshot is to be saved
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void takeScreenShoot(File destination)
 	{
@@ -187,7 +187,7 @@ public class BrowserUtils {
 	/**
 	 * 
 	 * @return
-	 * @author i0465
+	 * @author pksautomation
 	 */
     private byte[] captureScreenshot() {
         byte[] screenshot = null;
@@ -229,7 +229,7 @@ public class BrowserUtils {
 
     /**
      * @param title
-     * @author nikitagatagat
+     * @author pksautomation
      */
     public void waitForPageTitleToContain(String title) {
         loggerUtils.logComment("Wait for page title to contain '" + title + "'.");
@@ -287,7 +287,7 @@ public class BrowserUtils {
 
     /**
      * @throws UnreachableBrowserException
-     * @author nikitagatagat
+     * @author pksautomation
      */
     public void quitBrowser() {
         try {
@@ -362,7 +362,7 @@ public class BrowserUtils {
      *
      * @param dir
      * @return
-     * @author pramod.singh
+     * @author pksautomation
      */
     public File lastFileModified(String dir) {
         File fl = new File(dir);
@@ -463,7 +463,7 @@ public class BrowserUtils {
 
     /**
      * @param windowHandleName
-     * @author nikitagatagat
+     * @author pksautomation
      */
     public void switchToGivenWindow(String windowHandleName) {
         if (configInstance.getDriver() != null) {
@@ -548,7 +548,7 @@ public class BrowserUtils {
     }
 
     /**
-     * @author nikitagatagat
+     * @author pksautomation
      */
     public void quitWindowsApp() {
 
@@ -580,7 +580,7 @@ public class BrowserUtils {
     /**
      * @return new browser instance
      * @throws IOException
-     * @author pramod.singh
+     * @author pksautomation
      */
     private SelfHealingDriver openBrowser(Config configInstance) {
         SelfHealingDriver driver = null;
@@ -800,7 +800,7 @@ public class BrowserUtils {
  	 *            test config instance
  	 * @param destination
  	 *            file to which screenshot is to be saved
- 	 * @author pramod.singh
+ 	 * @author pksautomation
  	 */
  	public String captureScreenShoot(File destination)
  	{

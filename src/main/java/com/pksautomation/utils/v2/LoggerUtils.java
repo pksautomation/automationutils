@@ -1,4 +1,4 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -7,9 +7,9 @@ import org.openqa.selenium.*;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
-import com.innovaccer.utils.Browser;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.Log;
+import com.pksautomation.utils.Browser;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.Log;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -249,7 +249,7 @@ public class LoggerUtils {
         stbr.append("Error location:- ");
         StackTraceElement[] s = e.getStackTrace();
         for (StackTraceElement ss : s) {
-            if (ss.getClassName().startsWith("com.innovaccer")) {
+            if (ss.getClassName().startsWith("com.pksautomation")) {
                 errorFilePath = ss.getClassName() + ":" + ss.getLineNumber();
                 stbr.append(errorFilePath).append("\n");
             }
@@ -353,7 +353,7 @@ public class LoggerUtils {
     /**
 	 * Function for Embed Screen shot
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	private void PageInfo() {
 		configInstance.setEnableScreenshot(true);
@@ -369,7 +369,7 @@ public class LoggerUtils {
     /**
 	 * This method fail test scenarios just after calling it
 	 * @param msg
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public void failFinalTestScenarios(String msg) {
 		configInstance.setEndExecutionOnfailure(true);
@@ -399,7 +399,7 @@ public class LoggerUtils {
 			 * @param message
 			 * @param e
 			 * @param IsTakeScreenShot
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public void logExceptionSkipFailure(String message , Throwable e , boolean ...IsTakeScreenShot) {
 				 configInstance.setIslogExceptionSkip(true);
@@ -418,7 +418,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public <T> void logFail(String what, T expected, T actual,boolean... pageInfo)
 			{
@@ -430,7 +430,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public void logFail(String what, String expected, String actual)
 			{
@@ -445,7 +445,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public void logWarning(String what, String expected, String actual)
 			{
@@ -459,7 +459,7 @@ public class LoggerUtils {
 			 * @param <T>
 			 * @param what
 			 * @param actual
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public <T> void logPass(String what, T actual)
 			{
@@ -472,7 +472,7 @@ public class LoggerUtils {
 			 * 
 			 * @param what
 			 * @param actual
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public void logPass(String what, String actual)
 			{
@@ -486,7 +486,7 @@ public class LoggerUtils {
 			 * 
 			 * @param message
 			 * @param logPageInfo
-			 * @author pramod.singh
+			 * @author pksautomation
 			 */
 			public void logWarning(String message, boolean logPageInfo)
 			{

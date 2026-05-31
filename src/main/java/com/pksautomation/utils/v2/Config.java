@@ -1,12 +1,12 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.epam.healenium.SelfHealingDriver;
-import com.innovaccer.utils.v2.Helper;
-import com.innovaccer.utils.v2.dataHelper.ExcelDataReader;
-import com.innovaccer.utils.v2.reflections.TestScenarioExecuter;
+import com.pksautomation.utils.v2.Helper;
+import com.pksautomation.utils.v2.dataHelper.ExcelDataReader;
+import com.pksautomation.utils.v2.reflections.TestScenarioExecuter;
 import com.jayway.restassured.response.Response;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -95,7 +95,7 @@ public class Config {
      *
      * @param configPath
      * @param scenario
-     * @author pramod.singh
+     * @author pksautomation
      */
     public Config(String configPath, Scenario scenario) {
     	try {
@@ -279,7 +279,7 @@ public class Config {
      *
      * @param input string in which some Arguments are present
      * @return replaced string
-     * @author i0465
+     * @author pksautomation
      */
     public static String replaceArgumentsWithRunTimeProperties(String input) {
         String value = null;
@@ -350,7 +350,7 @@ public class Config {
     }
 
     /* Get Scenarios Name
-     * @author i0465
+     * @author pksautomation
      */
     public String getScenarioName() {
         return scenarioName;
@@ -880,7 +880,7 @@ public class Config {
 	 * fetched using - getCachedTestDataReaderObject()
 	 * 
 	 * @param sheetName
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 //	private void cacheTestDataReaderObject(String sheetName, String path)
 //	{

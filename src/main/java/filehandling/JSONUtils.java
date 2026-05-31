@@ -24,11 +24,11 @@ import org.json.simple.parser.JSONParser;
 import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
-import com.innovaccer.utils.APIHelper;
-import com.innovaccer.utils.Browser;
-import com.innovaccer.utils.Config;
-import com.innovaccer.utils.Helper;
-import com.innovaccer.utils.ISO8601DateFormat;
+import com.pksautomation.utils.APIHelper;
+import com.pksautomation.utils.Browser;
+import com.pksautomation.utils.Config;
+import com.pksautomation.utils.Helper;
+import com.pksautomation.utils.ISO8601DateFormat;
 import com.jayway.restassured.response.Response;
 
 public class JSONUtils {
@@ -44,7 +44,7 @@ public class JSONUtils {
 	
     /**
 	 * Gets the value from json.
-	 * @author nikita.gatagat-i2080
+	 * @author pksautomation
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the value from json
@@ -61,7 +61,7 @@ public class JSONUtils {
 	
 	/**
 	 * Gets the values from json.
-	 * @author nikita.gatagat-i2080
+	 * @author pksautomation
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the values from json
@@ -79,7 +79,7 @@ public class JSONUtils {
 	
 	/**
 	 * Gets the value (HashMap) from JSONResponse.
-	 * @author nikita.gatagat-i2080
+	 * @author pksautomation
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the hashmap of values from json
@@ -272,7 +272,7 @@ public class JSONUtils {
 	 * @param testConfig the test config
 	 * @param parameters the parameters --> map of values
 	 * @return paramaters in JSON format
-	 * @author i0465 (pramod.singh)
+	 * @author pksautomation (pramod.singh)
 	 */
 	public String createJsonParameters(Map<String, String> parameters){
 		LinkedHashMap<String,String> hasMap = new LinkedHashMap<String,String>(parameters);
@@ -304,7 +304,7 @@ public class JSONUtils {
      * @param jo
      * @return
      * @throws JSONException
-     * @author pramod.singh
+     * @author pksautomation
      */
 	 public Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException {
 	        Map<String, Object> model = new HashMap<String, Object>();
@@ -340,7 +340,7 @@ public class JSONUtils {
 	 
 	 /**
 	     * JSONArray is an ordered sequence of values -> convert to List (equivalent to Freemarker "sequence")
-	     * @author pramod.singh
+	     * @author pksautomation
 	     */
 	 public  List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException
 	    {
@@ -376,7 +376,7 @@ public class JSONUtils {
 	  
 	 /* Read data from JSON File and return Map of Map with all the details
       * @return Map of Map of String
-      * @author nikita.gatagat
+      * @author pksautomation
 	  */
 	 public HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
 			JSONArray orgArray;
@@ -425,7 +425,7 @@ public class JSONUtils {
 	  * @param String jsonString
       * @return JSONObject
       * @throws JSONException
-      * @author nikita.gatagat
+      * @author pksautomation
 	  */
 	 public JSONObject convertStringToJSONObject (String jsonString) throws Throwable {
 		 JSONObject jo = null;

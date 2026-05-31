@@ -1,8 +1,8 @@
-package com.innovaccer.utils.v2.dataHelper;
+package com.pksautomation.utils.v2.dataHelper;
 
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.LoggerUtils;
-import com.innovaccer.utils.v2.fileutils.*;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.fileutils.*;
 
 public class TestDataHelper {
     Config configInstance;

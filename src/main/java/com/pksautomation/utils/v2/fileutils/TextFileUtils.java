@@ -1,9 +1,9 @@
-package com.innovaccer.utils.v2.fileutils;
+package com.pksautomation.utils.v2.fileutils;
 
 import com.google.common.base.CharMatcher;
-import com.innovaccer.utils.v2.Config;
-import com.innovaccer.utils.v2.Helper;
-import com.innovaccer.utils.v2.LoggerUtils;
+import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.Helper;
+import com.pksautomation.utils.v2.LoggerUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -86,7 +86,7 @@ public class TextFileUtils {
 	 * @param testConfig
 	 * @param location
 	 * @param textToUpdate
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public  void updateTextFile(String location, String textToUpdate) {
 		try {
@@ -113,7 +113,7 @@ public class TextFileUtils {
 	 * This Method is used to create a file with given format
 	 * 
 	 * @param extension
-	 * @author i0465
+	 * @author pksautomation
 	 * @return -- File Path
 	 */
 	public  String createFileWithGivenFormat(Config testConfig, String extension) {

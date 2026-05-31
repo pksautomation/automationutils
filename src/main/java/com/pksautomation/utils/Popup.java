@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Popup

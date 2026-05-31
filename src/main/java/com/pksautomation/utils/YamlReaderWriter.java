@@ -1,13 +1,13 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
-import com.innovaccer.utils.Config;
+import com.pksautomation.utils.Config;
 
 /**
- * @author I0699
+ * @author pksautomation
  *
  */
 

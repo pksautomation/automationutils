@@ -1,6 +1,6 @@
-package com.innovaccer.utils.v2;
+package com.pksautomation.utils.v2;
 
-import com.innovaccer.utils.v2.dataHelper.TestDataHelper;
+import com.pksautomation.utils.v2.dataHelper.TestDataHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -22,7 +22,7 @@ import org.openqa.selenium.WebElement;
 import pojo.How;
 
 /**
- * @author i0465
+ * @author pksautomation
  */
 public class ElementActionsUtils {
 	private Config scenarioContext;
@@ -86,7 +86,7 @@ public class ElementActionsUtils {
 	 *
 	 * @param Label
 	 * @return
-	 * @author pramod.singh
+	 * @author pksautomation
 	 */
 	public WebElement getDropDownButton(How how) {
 		WebElement element;
@@ -326,7 +326,7 @@ public class ElementActionsUtils {
      * @param element     WebElement to be clicked
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author i0465
+     * @author pksautomation
      */
     public void click(WebElement element, String description) {
         Actions builder = new Actions(scenarioContext.getDriver());
@@ -377,7 +377,7 @@ public class ElementActionsUtils {
      * @param element     WebElement to be double clicked
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author i0465
+     * @author pksautomation
      */
     public void doubleClick(WebElement element, String description) {
         Actions action = new Actions(scenarioContext.getDriver());
@@ -392,7 +392,7 @@ public class ElementActionsUtils {
      * @param value       value to the entered
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author i0465
+     * @author pksautomation
      */
     public void enterData(WebElement element, String value, String description) {
         String message = StringUtils.replaceEach(value, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
@@ -484,7 +484,7 @@ public class ElementActionsUtils {
      *
      * @param element Select WebElement
      * @return String list of options
-     * @author i0465
+     * @author pksautomation
      */
     public List<String> getAllOptionsInSelect(WebElement element) {
         Select sel = new Select(element);
@@ -513,7 +513,7 @@ public class ElementActionsUtils {
      * @param element     WebElement whose text is needed
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author i0465
+     * @author pksautomation
      */
     public String getText(WebElement element, String description) {
         LoggerUtils.logComment("Get text of '" + description + "'");
@@ -620,7 +620,7 @@ public class ElementActionsUtils {
      * @param css
      * @param comment
      * @return cssValue
-     * @author i0465
+     * @author pksautomation
      */
     public String getCSSValue(WebElement element, String css, String comment) {
         LoggerUtils.logComment("Getting value of CSS '" + css + "' for :" + comment);
@@ -749,7 +749,7 @@ public class ElementActionsUtils {
      *
      * @param element
      * @return
-     * @author nikitagatagat
+     * @author pksautomation
      */
 
     public Boolean IsElementDisplayed(WebElement element) {

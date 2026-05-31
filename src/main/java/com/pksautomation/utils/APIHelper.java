@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 
 
@@ -45,7 +45,7 @@ import filehandling.JSONUtils;
 /**
  * The Class APIHelper.
  *
- * @author pramod.singh
+ * @author pksautomation
  */
 public class APIHelper {
 
@@ -58,7 +58,7 @@ public class APIHelper {
 	 * @param methodType
 	 * @param apiHeaders
 	 * @param apiInBody
-	 * @author i0465
+	 * @author pksautomation
 	 * @return Response object
 	 */
 	public static Response executeAndGetResponse(Config testConfig, String fullUrl, String methodType, Map<String, String> apiHeaders,String jsonStringBody) {
@@ -69,7 +69,7 @@ public class APIHelper {
 	 * Get Authorization Token From Yaml Config with Proxy Option 
 	 * It is optional.
 	 * @implNote if it is true then (proxyHost , proxyPort ) will be considered from Yaml.
-	 * @author ranjeetkumar-i0803
+	 * @author pksautomation
 	 * @param testConfig
 	 * @param isProxyEnable
 	 * @return
@@ -144,7 +144,7 @@ public class APIHelper {
 
 	/**
 	 * Gets the value from json.
-	 * @author ranjeetkumar-i0803
+	 * @author pksautomation
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the value from json
@@ -171,7 +171,7 @@ public class APIHelper {
 	
 	/**
 	 * Gets the values from json.
-	 * @author ranjeetkumar-i0803
+	 * @author pksautomation
 	 * @param response the response
 	 * @param nodePath the node path
 	 * @return the values from json
@@ -190,7 +190,7 @@ public class APIHelper {
 	/**
 	 * Execute and get response.
 	 *
-	 * @author i0465
+	 * @author pksautomation
 	 * @param testConfig the test config
 	 * @param fullUrl Complete API request URL (baseUrl + command + parameters)
 	 * @param methodType the method type
@@ -319,7 +319,7 @@ public class APIHelper {
 	/**
 	 * Extracts the Json Body response from the raw restassured Response.
 	 *
-	 * @author i0465
+	 * @author pksautomation
 	 * @param testConfig the test config
 	 * @param response complete raw restassured Response
 	 * @return Json response body
@@ -413,7 +413,7 @@ public class APIHelper {
 	/**
 	 * Function to convert JSON file to JSON object.
 	 *
-	 * @author i0465
+	 * @author pksautomation
 	 * @param fileLocationURL the file location URL
 	 * @return the JSON object
 	 */
@@ -443,7 +443,7 @@ public class APIHelper {
 	/**
 	 * To call API with Parameter in API.
 	 *
-	 * @author i0465
+	 * @author pksautomation
 	 * @param testConfig the test config
 	 * @param fullUrl the full url
 	 * @param methodType the method type
@@ -461,7 +461,7 @@ public class APIHelper {
 	 * Gets the Authorization value for InAPI, which is required by the API's
 	 * @param testConfig
 	 * @param apiUrl	API request URL (baseUrl + command)
-	 * @author i0465
+	 * @author pksautomation
 	 * @param testConfig the test config
 	 * @return the authorization header for in API
 	 */
@@ -496,7 +496,7 @@ public class APIHelper {
 	
 	/**
 	 * Validate Request And Response Schema with Expected Schema Details.
-	 * @author ranjeetkumar-i0803
+	 * @author pksautomation
 	 * @param testConfig
 	 * @param resourceName
 	 * @param schemaFileName
@@ -539,7 +539,7 @@ public class APIHelper {
 	 * Extracts the Json Body response from the raw restassured Response
 	 * @param testConfig
 	 * @param response	complete raw restassured Response
-	 * @author i0465
+	 * @author pksautomation
 	 * @return	Json response body
 	 */
 	public static JSONArray parseResponseAsJSONArray(Config testConfig, Response response)
@@ -579,7 +579,7 @@ public class APIHelper {
 	 * @param methodType
 	 * @param apiHeaders
 	 * @param apiInBody
-	 * @author i0465
+	 * @author pksautomation
 	 * @return
 	 */
 	public static Response executeAndGetResponse(Config testConfig, String fullUrl, String methodType, Map<String, String> apiHeaders,Map<String,String> mapKeyParameter,String apiInBody) {
@@ -619,7 +619,7 @@ public class APIHelper {
 	 * 
 	 * @param Encrypted String
 	 * @return Decrypted String
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static String decryptString(Config testConfig, String toBeDecrypt)  {
 		PyString result = null;
@@ -656,7 +656,7 @@ public class APIHelper {
 	 * @param testConfig
 	 * @param userName
 	 * @param Password
-	 * @author i0465-pramod.singh
+	 * @author pksautomation
 	 * @return --> retyrn encrypted json string
 	 */
 	public static String encryptUserCred(Config testConfig,String userName,String Password) {
@@ -673,7 +673,7 @@ public class APIHelper {
 	 * @param testConfig the test config
 	 * @param parameters the parameters --> map of values
 	 * @return paramaters in JSON format
-	 * @author i0465 (pramod.singh)
+	 * @author pksautomation (pramod.singh)
 	 */
 	public static String createJsonParameters(Config testConfig, Map<String, String> parameters){
 		LinkedHashMap<String,String> hasMap = new LinkedHashMap<String,String>(parameters);
@@ -703,7 +703,7 @@ public class APIHelper {
 	/**
 	 * Execute and get response.
 	 *
-	 * @author i0465
+	 * @author pksautomation
 	 * @param testConfig the test config
 	 * @param fullUrl Complete API request URL (baseUrl + command + parameters)
 	 * @param methodType the method type
@@ -783,7 +783,7 @@ public class APIHelper {
 	/**
 	 * Create Encrypt Creds File from JAR
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void createEncryptCredsFile(Config testConfig) {
 		if(isCreatedEncryptedFile) 

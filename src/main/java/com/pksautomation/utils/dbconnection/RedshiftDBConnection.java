@@ -1,4 +1,4 @@
-package com.innovaccer.utils.dbconnection;
+package com.pksautomation.utils.dbconnection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,7 @@ import java.util.Properties;
 // this class is used only for testing purpose, Code for Relation Database connection is written in DataBase.java class
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 class RedshiftDBConnection {

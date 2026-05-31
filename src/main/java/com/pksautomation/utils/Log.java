@@ -1,4 +1,4 @@
-package com.innovaccer.utils;
+package com.pksautomation.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.testng.Reporter;
 
 /**
  * 
- * @author pramod.singh
+ * @author pksautomation
  *
  */
 public class Log {
@@ -34,7 +34,7 @@ public class Log {
 	 * @param message
 	 * @param testConfig
 	 * @param color
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Comment(String message, Config testConfig, String color) {
 		try {
@@ -53,7 +53,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Comment(String message, Config testConfig) {
 		Comment(message, testConfig, "Black");
@@ -64,7 +64,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Fail(String message, Config testConfig) {
 		testConfig.isFailScenarioStatus = true;
@@ -82,7 +82,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void FailWithoutPageInfoLogging(String message, Config testConfig) {
 		failure(message, testConfig);
@@ -91,7 +91,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void failure(String message, Config testConfig) {
 		String tempMessage =  message;
@@ -118,7 +118,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Failfinal(String message, Config testConfig) {
 		try {
@@ -135,7 +135,7 @@ public class Log {
 	/**
 	 * 
 	 * @param message
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	private static void logToStandard(String message) {
 		System.out.println(message);
@@ -144,7 +144,7 @@ public class Log {
 	/**
 	 * Function for Embed Screen shot
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void PageInfo(Config testConfig) {
 		//testConfig.logComment("Is screenshot enabled = " + testConfig.enableScreenshot);
@@ -163,7 +163,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Pass(String message, Config testConfig) {
 		if (testConfig.logToStandardOut)
@@ -177,7 +177,7 @@ public class Log {
 	 * 
 	 * @param message
 	 * @param testConfig
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	public static void Warning(String message, Config testConfig) {
 		if (testConfig.logToStandardOut)
@@ -197,7 +197,7 @@ public class Log {
 	 * 
 	 * @param testConfig
 	 * @param message
-	 * @author i0465
+	 * @author pksautomation
 	 */
 	private static void writeMessageInReport(Config testConfig,String message) {
 		testConfig.testScenario.write(message);
@@ -206,7 +206,7 @@ public class Log {
 	
 	/**
 	 * Function for Embed Message In Report
-	 * @author ranjeet
+	 * @author pksautomation
 	 * @param testConfig
 	 * @param message
 	 */
