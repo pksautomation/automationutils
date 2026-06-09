@@ -20,7 +20,7 @@ package com.pksautomation.utils.v2.testNG;
 
 	/**
 	 * 
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 *
 	 */
 	public class TestListener implements ITestListener, IInvokedMethodListener

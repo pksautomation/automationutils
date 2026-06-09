@@ -17,15 +17,9 @@ import java.util.Set;
 
 import com.pksautomation.utils.v2.Config;
 import com.pksautomation.utils.v2.EncryptionUtils;
-import com.pksautomation.utils.Helper;
-import com.pksautomation.utils.Log;
 import com.pksautomation.utils.v2.dataHelper.ExcelDataReader;
-import com.pksautomation.utils.dbconnection.DataBaseEnumConstants.DatabaseType;
-import com.pksautomation.utils.v2.BrowserUtils;
+import com.pksautomation.utils.v2.dbconnection.DataBaseEnumConstants.DatabaseType;
 import com.pksautomation.utils.v2.LoggerUtils;
-import com.pksautomation.utils.v2.fileutils.JSONUtils;
-import com.pksautomation.utils.v2.fileutils.YamlUtils;
-import com.pksautomation.utils.v2.dbconnection.*;
 
 public class SQLDBManager {
 	
@@ -53,7 +47,7 @@ public class SQLDBManager {
     /**
 	 * Creates database connection using the Config parameters -
 	 * 'DBConnectionString', 'DBConnectionUsername' and 'DBConnectionPassword'
-	 *            @author pksautomation
+	 *            @author Pramod Singh
 	 * @return Db Connection
 	 */
 	public Connection getConnection(DatabaseType databaseType)
@@ -181,7 +175,7 @@ public class SQLDBManager {
 	 *            query to be executed
 	 * @param DatabaseType
 	 *            online/offline
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return Resultset
 	 */
 
@@ -254,7 +248,7 @@ public class SQLDBManager {
 	 * 	Map<String,String> --> Map<Column Name,Column Data>
 	 * @param DataBaseType  type 
 	 * @param sqlRow Row number of SQl Query in dataSheet 
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return HashMap <Integer, Map<String,String>>
 	 * 	Integer --> Row Numbers
 	 * 	Map->Column Name And Values 
@@ -272,7 +266,7 @@ public class SQLDBManager {
 	 * 	Map<String,String> --> Map<Column Name,Column Data>
 	 * @param DataBaseType  type 
 	 * @param sqlRow Row number of SQl Query in dataSheet 
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return HashMap <Integer, Map<String,String>>
 	 * 	Integer --> Row Numbers
 	 * 	Map->Column Name And Values 
@@ -296,7 +290,7 @@ public class SQLDBManager {
 	 * @param rowNumber
 	 *            row number to be returned (use 1 for first row and -1 for last
 	 *            row)
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return Map containing key:value pairs of specified row
 	 */
 	public Map<String, String> executeSelectQuery(String selectQuery, int rowNumber, DatabaseType dbType)
@@ -390,7 +384,7 @@ public class SQLDBManager {
 	/**
 	 * Put single row of resultSet in HashMap and also in runtime properties
 	 * @param sqlResultSet
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public Map<String, String> addToRunTimeProperties(ResultSet sqlResultSet)
@@ -445,7 +439,7 @@ public class SQLDBManager {
 	 * @param rowNumber
 	 *            row number to be returned (use 1 for first row and -1 for last
 	 *            row)
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return Map containing key:value pairs of specified row
 	 */
 	public int executeUpdateQuery(int sqlToUpdate, DatabaseType dbType)
@@ -460,7 +454,7 @@ public class SQLDBManager {
 	/**
 	 * @param sqlRow
 	 * @param dbType
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public int executeUpdateQuery(String sheetPath, int sqlRow, DatabaseType dbType)
@@ -476,7 +470,7 @@ public class SQLDBManager {
 	 * Executes the update db query
 	 * @param updateQuery
 	 *            query to be executed
-	 *            @author pksautomation
+	 *            @author Pramod Singh
 	 * @return number of rows affected
 	 */
 	public int executeUpdateQuery(String updateQuery, DatabaseType dbType)
@@ -536,7 +530,7 @@ public class SQLDBManager {
 	 * @param sqlRow
 	 * @param dbType
 	 * @param sheetname
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public ResultSet executeSelectQuery( int sqlRow, DatabaseType dbType,String sheetname)
@@ -553,7 +547,7 @@ public class SQLDBManager {
 	 * Executes detele query in DB
 	 * @param sqlRow : row number of sql query in excel
 	 * @param dbType : type of DB
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return 
 	 */
 	public int executeDeleteQuery(int sqlRow, DatabaseType dbType)
@@ -569,7 +563,7 @@ public class SQLDBManager {
 	 * 
 	 * @param resultset
 	 *            SQL resultSet
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return sql data in list<hashmap<string,string>
 	 */
 	public List<HashMap<String, String>> convertResultSetToList(ResultSet rs)
@@ -605,7 +599,7 @@ public class SQLDBManager {
 	 * @param connectString
 	 * @param userName
 	 * @param password
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public ResultSet executeQueryWithoutClosingConnection(String query, String connectionString, String username, String password)
@@ -643,7 +637,7 @@ public class SQLDBManager {
 	 * @param connectString
 	 * @param userName
 	 * @param password
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public ResultSet executePostgresQueryWithoutClosingConnection(String query, String connectionString, String username, String password)
@@ -683,7 +677,7 @@ public class SQLDBManager {
 	 * Executes insert query in DB
 	 * @param sqlRow 		row number of sql query in excel
 	 * @param dbType		type of DB
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public int executeInsertQuery(int sqlRow, DatabaseType dbType)
@@ -740,7 +734,7 @@ public class SQLDBManager {
 	
 	/**
 	 * Close the SQL database connection, if open.
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public void closeSQLDatabaseConnection()
 	{
@@ -760,7 +754,7 @@ public class SQLDBManager {
 	}
 	/**
 	 * Close the SQL database connection, if open.
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public void closeSQLDatabaseConnection(Connection con)
 	{

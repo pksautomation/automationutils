@@ -44,7 +44,7 @@ import com.pksautomation.utils.v2.fileutils.*;
 /**
  * The Class APIHelper.
  *
- * @author pramod.singh
+ * @author Pramod Singh
  */
 public class APIHelper {
 
@@ -79,7 +79,7 @@ public class APIHelper {
 	 * @param methodType
 	 * @param apiHeaders
 	 * @param apiInBody
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @return Response object
 	 */
 	public Response executeAndGetResponse(String fullUrl, String methodType, Map<String, String> apiHeaders,String jsonStringBody) {
@@ -90,7 +90,7 @@ public class APIHelper {
 	 * Get Authorization Token From Yaml Config with Proxy Option 
 	 * It is optional.
 	 * @implNote if it is true then (proxyHost , proxyPort ) will be considered from Yaml.
-	 * @author ranjeetkumar-i0803
+	 * @author Pramod Singh
 	 * @param isProxyEnable
 	 * @return
 	 */
@@ -163,7 +163,7 @@ public class APIHelper {
 	
 	/**
 	 * Execute and get response.
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @param fullUrl Complete API request URL (baseUrl + command + parameters)
 	 * @param methodType the method type
 	 * @param apiParameters API Query parameters, if it is null the excel parameters will be used
@@ -323,7 +323,7 @@ public class APIHelper {
 	/**
 	 * To call API with Parameter in API.
 	 *
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @param fullUrl the full url
 	 * @param methodType the method type
 	 * @param apiParameters the api parameters
@@ -339,7 +339,7 @@ public class APIHelper {
 	/**
 	 * Gets the Authorization value for InAPI, which is required by the API's
 	 * @param apiUrl	API request URL (baseUrl + command)
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @return the authorization header for in API
 	 */
 	public HashMap<String, String> getAuthorizationHeaderForInAPI()
@@ -373,7 +373,7 @@ public class APIHelper {
 	
 	/**
 	 * Validate Request And Response Schema with Expected Schema Details.
-	 * @author ranjeetkumar-i0803
+	 * @author Pramod Singh
 	 * @param resourceName
 	 * @param schemaFileName
 	 * @param response
@@ -410,7 +410,7 @@ public class APIHelper {
 	 * @param methodType
 	 * @param apiHeaders
 	 * @param apiInBody
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public Response executeAndGetResponse(String fullUrl, String methodType, Map<String, String> apiHeaders,Map<String,String> mapKeyParameter,String apiInBody) {
@@ -448,7 +448,7 @@ public class APIHelper {
 	 * Decrypts given String value like Username/Password
 	 * @param Encrypted String
 	 * @return Decrypted String
-	 * @author i0465
+	 * @author Pramod Singh
 	 */
 	public String decryptString(String toBeDecrypt)  {
 		PyString result = null;
@@ -484,7 +484,7 @@ public class APIHelper {
 	 *  Encrypt user name and password
 	 * @param userName
 	 * @param Password
-	 * @author i0465-pramod.singh
+	 * @author Pramod Singh
 	 * @return --> retyrn encrypted json string
 	 */
 	public  String encryptUserCred(String userName,String Password) {
@@ -498,7 +498,7 @@ public class APIHelper {
 	/**
 	 * Execute and get response.
 	 *
-	 * @author i0465
+	 * @author Pramod Singh
 	 * @param fullUrl Complete API request URL (baseUrl + command + parameters)
 	 * @param methodType the method type
 	 * @param apiParameters API Query parameters, if it is null the excel parameters will be used
@@ -577,7 +577,7 @@ public class APIHelper {
 	/**
 	 * Create Encrypt Creds File from JAR
 	 * @param testConfig
-	 * @author i0465
+	 * @author Pramod Singh
 	 */
 	public void createEncryptCredsFile() {
 		if(isCreatedEncryptedFile) 

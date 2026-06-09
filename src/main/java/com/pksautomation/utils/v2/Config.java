@@ -95,7 +95,7 @@ public class Config {
      *
      * @param configPath
      * @param scenario
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public Config(String configPath, Scenario scenario) {
     	try {
@@ -279,7 +279,7 @@ public class Config {
      *
      * @param input string in which some Arguments are present
      * @return replaced string
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public static String replaceArgumentsWithRunTimeProperties(String input) {
         String value = null;
@@ -350,7 +350,7 @@ public class Config {
     }
 
     /* Get Scenarios Name
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public String getScenarioName() {
         return scenarioName;
@@ -880,7 +880,7 @@ public class Config {
 	 * fetched using - getCachedTestDataReaderObject()
 	 * 
 	 * @param sheetName
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 //	private void cacheTestDataReaderObject(String sheetName, String path)
 //	{

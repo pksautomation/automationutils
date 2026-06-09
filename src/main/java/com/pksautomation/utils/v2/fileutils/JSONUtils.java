@@ -1,12 +1,9 @@
 package com.pksautomation.utils.v2.fileutils;
 
-import com.pksautomation.utils.APIHelper;
-import com.pksautomation.utils.Helper;
-import com.pksautomation.utils.ISO8601DateFormat;
 import com.pksautomation.utils.v2.Config;
+import com.pksautomation.utils.v2.Helper;
 import com.pksautomation.utils.v2.LoggerUtils;
 import com.pksautomation.utils.v2.WaitHelper;
-import org.apache.commons.io.IOUtils;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.json.JSONArray;
@@ -14,15 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.simple.parser.JSONParser;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
-import com.google.gson.JsonSyntaxException;
-import com.pksautomation.utils.APIHelper;
-import com.pksautomation.utils.v2.Config;
-import com.pksautomation.utils.Helper;
-import com.pksautomation.utils.ISO8601DateFormat;
-import com.pksautomation.utils.v2.LoggerUtils;
-import com.pksautomation.utils.v2.WaitHelper;
 
 //import io.restassured.response.Response;
 import java.io.*;
@@ -60,7 +48,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the value from json
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public String getValueFromJson(Response response, String nodePath) {
         String value = null;
@@ -78,7 +66,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the values from json
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public List<String> getValuesFromJson(Response response, String nodePath) {
         List<String> value = null;
@@ -97,7 +85,7 @@ public class JSONUtils {
      * @param response the response
      * @param nodePath the node path
      * @return the hashmap of values from json
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public Map<String, Object> getValueInHashMapFromJson(Response response, String nodePath) {
         Map<String, Object> valueMap = null;
@@ -255,7 +243,7 @@ public class JSONUtils {
      * @param testConfig the test config
      * @param parameters the parameters --> map of values
      * @return paramaters in JSON format
-     * @author pksautomation (pramod.singh)
+     * @author Pramod Singh
      */
     public String createJsonParameters(Map<String, String> parameters) {
         LinkedHashMap<String, String> hasMap = new LinkedHashMap<String, String>(parameters);
@@ -287,7 +275,7 @@ public class JSONUtils {
      * @param jo
      * @return
      * @throws JSONException
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public Map<String, Object> convertJSONObjectToMap(JSONObject jo) throws JSONException {
         Map<String, Object> model = new HashMap<String, Object>();
@@ -304,7 +292,7 @@ public class JSONUtils {
                 model.put(key, null); // note: http://freemarker.org/docs/dgui_template_exp.html#dgui_template_exp_missing
             } else {
                 if ((o instanceof String) && autoConvertISO8601 && (matcherISO8601.matcher((String) o).matches())) {
-                    o = ISO8601DateFormat.parse((String) o);
+                    o = parseISO8601((String) o);
                 }
                 model.put(key, o);
             }
@@ -315,7 +303,7 @@ public class JSONUtils {
     /**
      * JSONArray is an ordered sequence of values -> convert to List (equivalent to Freemarker "sequence")
      *
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public List<Object> convertJSONArrayToList(JSONArray ja) throws JSONException {
         List<Object> model = new ArrayList<Object>();
@@ -331,7 +319,7 @@ public class JSONUtils {
                 model.add(null);
             } else {
                 if ((o instanceof String) && autoConvertISO8601 && (matcherISO8601.matcher((String) o).matches())) {
-                    o = ISO8601DateFormat.parse((String) o);
+                    o = parseISO8601((String) o);
                 }
                 model.add(o);
             }
@@ -339,9 +327,23 @@ public class JSONUtils {
         return model;
     }
 
+    /**
+     * Parses an ISO-8601 formatted date string (with offset or 'Z') into a Date.
+     * Returns the original string if parsing fails.
+     *
+     * @author Pramod Singh
+     */
+    private Object parseISO8601(String value) {
+        try {
+            return java.util.Date.from(java.time.OffsetDateTime.parse(value).toInstant());
+        } catch (Exception e) {
+            return value;
+        }
+    }
+
     /* Read data from JSON File and return Map of Map with all the details
      * @return Map of Map of String
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public HashMap<String, HashMap<String, String>> readTestData(String filePath, String fileName) throws Throwable {
         JSONArray orgArray;
@@ -391,7 +393,7 @@ public class JSONUtils {
      * @param String jsonString
      * @return JSONObject
      * @throws JSONException
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public JSONObject convertStringToJSONObject(String jsonString) throws Throwable {
         JSONObject jo = null;
@@ -451,7 +453,7 @@ public class JSONUtils {
 	 * Parse from Document Object into JSONObject
 	 * 
 	 * @param doc
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return JSONObject
 	 */
 	public static JSONObject pareseDocumentIntoJSONObject(Document doc) {
@@ -467,7 +469,7 @@ public class JSONUtils {
 	
 	/**
 	 * Returns a JSON key from JSON object
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public String getJSONKeyValue(Config testConfig, JSONObject jObject, String key) {
 		String value = null;
@@ -486,7 +488,7 @@ public class JSONUtils {
 	 * return Bson Document
 	 * 
 	 * @param jsonString
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public BsonDocument convertJSONStringIntoBsonDocument(String jsonString) {

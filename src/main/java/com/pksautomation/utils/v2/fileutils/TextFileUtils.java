@@ -86,7 +86,7 @@ public class TextFileUtils {
 	 * @param testConfig
 	 * @param location
 	 * @param textToUpdate
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public  void updateTextFile(String location, String textToUpdate) {
 		try {
@@ -113,7 +113,7 @@ public class TextFileUtils {
 	 * This Method is used to create a file with given format
 	 * 
 	 * @param extension
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return -- File Path
 	 */
 	public  String createFileWithGivenFormat(Config testConfig, String extension) {

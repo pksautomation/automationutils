@@ -1,8 +1,6 @@
 package com.pksautomation.utils.v2;
 
 import com.epam.healenium.SelfHealingDriver;
-import com.pksautomation.utils.Browser.MyImageWriteParam;
-import com.pksautomation.utils.v2.Config;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
@@ -40,7 +38,7 @@ import javax.imageio.stream.ImageOutputStream;
 
 /**
  * 
- * @author pksautomation
+ * @author Pramod Singh
  *
  */
 
@@ -113,7 +111,7 @@ public class BrowserUtils {
     }
 
     /* Close the browser
-     * @author pksautomation
+     * @author Pramod Singh
      */
 
 
@@ -128,7 +126,7 @@ public class BrowserUtils {
 	 *            test config instance
 	 * @param destination
 	 *            file to which screenshot is to be saved
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public void takeScreenShoot(File destination)
 	{
@@ -150,7 +148,7 @@ public class BrowserUtils {
 
 				if (screenshot != null)
 				{
-					if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+					if(configInstance.getRunTimeProperty("ExtentReportEnable") !=null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
 					{
 						configInstance.getScenario().embed(screenshot, "image/png");
 						return;
@@ -187,7 +185,7 @@ public class BrowserUtils {
 	/**
 	 * 
 	 * @return
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
     private byte[] captureScreenshot() {
         byte[] screenshot = null;
@@ -229,7 +227,7 @@ public class BrowserUtils {
 
     /**
      * @param title
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void waitForPageTitleToContain(String title) {
         loggerUtils.logComment("Wait for page title to contain '" + title + "'.");
@@ -268,8 +266,9 @@ public class BrowserUtils {
                 break;
             } else if (choise == null)
                 try {
-                    wait(1);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     loggerUtils.logWarning(ExceptionUtils.getFullStackTrace(e));
                 }
             else
@@ -287,7 +286,7 @@ public class BrowserUtils {
 
     /**
      * @throws UnreachableBrowserException
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void quitBrowser() {
         try {
@@ -362,7 +361,7 @@ public class BrowserUtils {
      *
      * @param dir
      * @return
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public File lastFileModified(String dir) {
         File fl = new File(dir);
@@ -463,7 +462,7 @@ public class BrowserUtils {
 
     /**
      * @param windowHandleName
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void switchToGivenWindow(String windowHandleName) {
         if (configInstance.getDriver() != null) {
@@ -548,7 +547,7 @@ public class BrowserUtils {
     }
 
     /**
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void quitWindowsApp() {
 
@@ -580,7 +579,7 @@ public class BrowserUtils {
     /**
      * @return new browser instance
      * @throws IOException
-     * @author pksautomation
+     * @author Pramod Singh
      */
     private SelfHealingDriver openBrowser(Config configInstance) {
         SelfHealingDriver driver = null;
@@ -757,25 +756,37 @@ public class BrowserUtils {
  			// Retrieve jpg image to be compressed
  			RenderedImage rendImage = ImageIO.read(infile);
 
- 			// Find a jpeg writer
+ 			// Find a png writer
  			ImageWriter writer = null;
  			Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("png");
  			if (iter.hasNext())
  			{
  				writer = iter.next();
  			}
+ 			if (writer == null)
+ 			{
+ 				return;
+ 			}
 
  			// Prepare output file
  			ImageOutputStream ios = ImageIO.createImageOutputStream(outfile);
  			writer.setOutput(ios);
 
- 			// Set the compression quality
- 			ImageWriteParam iwparam = new MyImageWriteParam();
- 			iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
- 			iwparam.setCompressionQuality(compressionQuality);
+ 			// Set the compression quality (only if the writer supports it)
+ 			ImageWriteParam iwparam = writer.getDefaultWriteParam();
+ 			if (iwparam.canWriteCompressed())
+ 			{
+ 				iwparam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+ 				String[] compressionTypes = iwparam.getCompressionTypes();
+ 				if (iwparam.getCompressionType() == null && compressionTypes != null && compressionTypes.length > 0)
+ 				{
+ 					iwparam.setCompressionType(compressionTypes[0]);
+ 				}
+ 				iwparam.setCompressionQuality(compressionQuality);
+ 			}
 
  			// Write the image
- 			writer.write(new IIOImage(rendImage, null, null));
+ 			writer.write(null, new IIOImage(rendImage, null, null), iwparam);
 
  			// Cleanup
  			ios.flush();
@@ -800,7 +811,7 @@ public class BrowserUtils {
  	 *            test config instance
  	 * @param destination
  	 *            file to which screenshot is to be saved
- 	 * @author pksautomation
+ 	 * @author Pramod Singh
  	 */
  	public String captureScreenShoot(File destination)
  	{
@@ -821,13 +832,13 @@ public class BrowserUtils {
  					configInstance.setDriver(null);
  				}
 
- 				if (screenshot != null)
- 				{
- 					if(configInstance.getRunTimeProperty("ExtentReportEnable") ==null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
- 					{
- 						configInstance.getScenario().embed(screenshot, "image/png");
- 						return destination.getAbsolutePath();
- 					}
+				if (screenshot != null)
+				{
+					if(configInstance.getRunTimeProperty("ExtentReportEnable") !=null && configInstance.getRunTimeProperty("ExtentReportEnable").equalsIgnoreCase("true"))
+					{
+						configInstance.getScenario().embed(screenshot, "image/png");
+						return destination.getAbsolutePath();
+					}
  					 try {
  						FileUtils.writeByteArrayToFile(destination, screenshot);
 

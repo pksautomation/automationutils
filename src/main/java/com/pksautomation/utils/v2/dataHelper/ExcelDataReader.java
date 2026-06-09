@@ -32,7 +32,7 @@ import com.pksautomation.utils.v2.LoggerUtils;
 //import com.pksautomation.utils.v2.dbconnection.DataBaseConnection;
 
 /**
- *@author pksautomation
+ *@author Pramod Singh
  */
 public class ExcelDataReader
 {
@@ -77,7 +77,7 @@ public class ExcelDataReader
 	 * fetched using - getCachedTestDataReaderObject()
 	 *
 	 * @param sheetName
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	private void cacheTestDataReaderObject(String sheetName, String path)
 	{

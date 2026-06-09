@@ -1,7 +1,7 @@
 package com.pksautomation.commonutilty.CommonUtility;
 
 /**
- * @author pksautomation
+ * @author Pramod Singh
  */
 public class Main {
 

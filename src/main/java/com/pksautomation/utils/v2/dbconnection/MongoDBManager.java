@@ -55,7 +55,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return JSONObject
 	 */
 	public JSONObject executeMongoQuery(int rowNum) {
@@ -73,7 +73,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public ArrayList<JSONObject> executeMongoQueryAndReturnArrayOfJSON(int rowNum) {
@@ -180,7 +180,7 @@ public class MongoDBManager {
 	 * @param testConfig
 	 * @param mongoQueryRowNum
 	 * @param many
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 
@@ -213,7 +213,7 @@ public class MongoDBManager {
 	 * @param dataBaseName   ---> Mongo DataBase Name
 	 * @param collectionName ---> Mongo collection Name
 	 * @param many
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public int updateDocument(BsonDocument filterBson, BsonDocument updateBson,
@@ -254,7 +254,7 @@ public class MongoDBManager {
 	 * Remove document in Mongo DB collection
 	 * @param mongoQueryRowNum
 	 * @param many
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public int removeDocument(int mongoQueryRowNum, boolean many) {
@@ -285,7 +285,7 @@ public class MongoDBManager {
 	 * @param dataBaseName   ---> Mongo DataBase Name
 	 * @param collectionName ---> Mongo collection Name
 	 * @param many
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public int removeDocuments(BsonDocument filterBson, String dataBaseName,
@@ -325,7 +325,7 @@ public class MongoDBManager {
 	 * @param commandRow
 	 * @param sheetname
 	 * @param dbType
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	public boolean insertMultipleDocuments(List<JSONObject> listOfJSONObject, String mongoDatabaseName, String collectionName) {
@@ -366,7 +366,7 @@ public class MongoDBManager {
 	/**
 	 * Get connection with mongo DB
 	 * @param dbType
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 * @return
 	 */
 	private  MongoClient getMongoDBConnection() {
@@ -397,7 +397,7 @@ public class MongoDBManager {
 	 * Connection
 	 * @param userName
 	 * @param password
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	private  MongoClient getMongoServerConnection(String userName, String password,
 			String mongoDatabaseName) {

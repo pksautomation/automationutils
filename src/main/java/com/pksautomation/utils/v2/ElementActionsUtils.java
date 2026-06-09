@@ -22,7 +22,7 @@ import org.openqa.selenium.WebElement;
 import pojo.How;
 
 /**
- * @author pksautomation
+ * @author Pramod Singh
  */
 public class ElementActionsUtils {
 	private Config scenarioContext;
@@ -86,7 +86,7 @@ public class ElementActionsUtils {
 	 *
 	 * @param Label
 	 * @return
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public WebElement getDropDownButton(How how) {
 		WebElement element;
@@ -326,7 +326,7 @@ public class ElementActionsUtils {
      * @param element     WebElement to be clicked
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void click(WebElement element, String description) {
         Actions builder = new Actions(scenarioContext.getDriver());
@@ -377,7 +377,7 @@ public class ElementActionsUtils {
      * @param element     WebElement to be double clicked
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void doubleClick(WebElement element, String description) {
         Actions action = new Actions(scenarioContext.getDriver());
@@ -392,7 +392,7 @@ public class ElementActionsUtils {
      * @param value       value to the entered
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public void enterData(WebElement element, String value, String description) {
         String message = StringUtils.replaceEach(value, new String[]{"&", "\"", "<", ">"}, new String[]{"&amp;", "&quot;", "&lt;", "&gt;"});
@@ -484,7 +484,7 @@ public class ElementActionsUtils {
      *
      * @param element Select WebElement
      * @return String list of options
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public List<String> getAllOptionsInSelect(WebElement element) {
         Select sel = new Select(element);
@@ -513,7 +513,7 @@ public class ElementActionsUtils {
      * @param element     WebElement whose text is needed
      * @param description logical name of specified WebElement, used for Logging
      *                    purposes in report
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public String getText(WebElement element, String description) {
         LoggerUtils.logComment("Get text of '" + description + "'");
@@ -620,7 +620,7 @@ public class ElementActionsUtils {
      * @param css
      * @param comment
      * @return cssValue
-     * @author pksautomation
+     * @author Pramod Singh
      */
     public String getCSSValue(WebElement element, String css, String comment) {
         LoggerUtils.logComment("Getting value of CSS '" + css + "' for :" + comment);
@@ -749,7 +749,7 @@ public class ElementActionsUtils {
      *
      * @param element
      * @return
-     * @author pksautomation
+     * @author Pramod Singh
      */
 
     public Boolean IsElementDisplayed(WebElement element) {

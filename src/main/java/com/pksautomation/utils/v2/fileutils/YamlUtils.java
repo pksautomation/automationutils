@@ -1,6 +1,5 @@
 package com.pksautomation.utils.v2.fileutils;
 
-import com.pksautomation.utils.YamlReaderWriter;
 import com.pksautomation.utils.v2.Config;
 import com.pksautomation.utils.v2.LoggerUtils;
 import org.yaml.snakeyaml.Yaml;

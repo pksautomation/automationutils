@@ -1,15 +1,10 @@
 package com.pksautomation.utils.v2;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.openqa.selenium.*;
 
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
-import com.pksautomation.utils.Browser;
-import com.pksautomation.utils.v2.Config;
-import com.pksautomation.utils.Log;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -353,7 +348,7 @@ public class LoggerUtils {
     /**
 	 * Function for Embed Screen shot
 	 * @param testConfig
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	private void PageInfo() {
 		configInstance.setEnableScreenshot(true);
@@ -369,7 +364,7 @@ public class LoggerUtils {
     /**
 	 * This method fail test scenarios just after calling it
 	 * @param msg
-	 * @author pksautomation
+	 * @author Pramod Singh
 	 */
 	public void failFinalTestScenarios(String msg) {
 		configInstance.setEndExecutionOnfailure(true);
@@ -399,7 +394,7 @@ public class LoggerUtils {
 			 * @param message
 			 * @param e
 			 * @param IsTakeScreenShot
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public void logExceptionSkipFailure(String message , Throwable e , boolean ...IsTakeScreenShot) {
 				 configInstance.setIslogExceptionSkip(true);
@@ -418,7 +413,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public <T> void logFail(String what, T expected, T actual,boolean... pageInfo)
 			{
@@ -430,7 +425,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public void logFail(String what, String expected, String actual)
 			{
@@ -445,7 +440,7 @@ public class LoggerUtils {
 			 * @param what
 			 * @param expected
 			 * @param actual
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public void logWarning(String what, String expected, String actual)
 			{
@@ -459,7 +454,7 @@ public class LoggerUtils {
 			 * @param <T>
 			 * @param what
 			 * @param actual
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public <T> void logPass(String what, T actual)
 			{
@@ -472,7 +467,7 @@ public class LoggerUtils {
 			 * 
 			 * @param what
 			 * @param actual
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public void logPass(String what, String actual)
 			{
@@ -486,7 +481,7 @@ public class LoggerUtils {
 			 * 
 			 * @param message
 			 * @param logPageInfo
-			 * @author pksautomation
+			 * @author Pramod Singh
 			 */
 			public void logWarning(String message, boolean logPageInfo)
 			{
